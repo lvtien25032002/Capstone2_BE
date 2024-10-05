@@ -1,14 +1,16 @@
 package cap2.example.Capstone2_BackEnd.NutriApp.controller;
 
 
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.request.common.ApiResponse;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.request.common.ListReponse;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.common.ApiResponse;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.common.ListReponse;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.request.user.UserCreateRequest;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.request.user.UserUpdateRequest;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.response.UserResponse;
 import cap2.example.Capstone2_BackEnd.NutriApp.model.User;
 import cap2.example.Capstone2_BackEnd.NutriApp.service.UserService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,14 +19,11 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/user")
+@RequiredArgsConstructor
+@FieldDefaults(makeFinal = true, level = lombok.AccessLevel.PRIVATE)
 public class UserController {
+    UserService userService;
 
-    @Autowired
-    private UserService userService;
-
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
 
     @GetMapping("/all")
     public ApiResponse<ListReponse> getAllUsers() {
@@ -35,16 +34,16 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ApiResponse<User> getUserById(@PathVariable UUID id) {
-        ApiResponse<User> userApiResponse = new ApiResponse<>();
+    public ApiResponse<UserResponse> getUserById(@PathVariable UUID id) {
+        ApiResponse<UserResponse> userApiResponse = new ApiResponse<>();
         userApiResponse.setMessage("Get User successfully");
         userApiResponse.setData(userService.getUserById(id));
         return userApiResponse;
     }
 
     @PutMapping("/{id}")
-    public ApiResponse<User> updateUser(@PathVariable UUID id, @RequestBody UserUpdateRequest request) {
-        ApiResponse<User> userApiResponse = new ApiResponse<>();
+    public ApiResponse<UserResponse> updateUser(@PathVariable UUID id, @RequestBody UserUpdateRequest request) {
+        ApiResponse<UserResponse> userApiResponse = new ApiResponse<>();
         try {
             userApiResponse.setMessage("Update User successfully");
             userApiResponse.setData(userService.updateUser(id, request));
@@ -59,7 +58,6 @@ public class UserController {
     @PostMapping("")
     public ApiResponse<User> createUser(@RequestBody @Valid UserCreateRequest request) {
         ApiResponse<User> userApiResponse = new ApiResponse<>();
-
         try {
             userApiResponse.setMessage("Create User successfully");
             userApiResponse.setData(userService.createUser(request));

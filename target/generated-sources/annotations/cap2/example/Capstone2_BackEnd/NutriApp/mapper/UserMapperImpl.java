@@ -2,6 +2,7 @@ package cap2.example.Capstone2_BackEnd.NutriApp.mapper;
 
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.request.user.UserCreateRequest;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.request.user.UserUpdateRequest;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.response.UserResponse;
 import cap2.example.Capstone2_BackEnd.NutriApp.model.User;
 import javax.annotation.processing.Generated;
 import org.springframework.stereotype.Component;
@@ -45,5 +46,27 @@ public class UserMapperImpl implements UserMapper {
         user.setWeight( request.getWeight() );
         user.setHeight( request.getHeight() );
         user.setGoal( request.getGoal() );
+    }
+
+    @Override
+    public UserResponse toUserResponse(User user) {
+        if ( user == null ) {
+            return null;
+        }
+
+        UserResponse.UserResponseBuilder userResponse = UserResponse.builder();
+
+        userResponse.username( user.getUsername() );
+        userResponse.password( user.getPassword() );
+        userResponse.email( user.getEmail() );
+        userResponse.fullname( user.getFullname() );
+        userResponse.age( user.getAge() );
+        userResponse.gender( user.isGender() );
+        userResponse.weight( user.getWeight() );
+        userResponse.height( user.getHeight() );
+        userResponse.goal( user.getGoal() );
+        userResponse.createdAt( user.getCreatedAt() );
+
+        return userResponse.build();
     }
 }

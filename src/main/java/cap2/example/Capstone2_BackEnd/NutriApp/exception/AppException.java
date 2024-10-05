@@ -1,6 +1,7 @@
 package cap2.example.Capstone2_BackEnd.NutriApp.exception;
 
-public class AppException extends RuntimeException{
+
+public class AppException extends RuntimeException {
     private ErrorCode errorCode;
 
     public AppException(ErrorCode errorCode) {

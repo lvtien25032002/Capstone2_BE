@@ -3,12 +3,16 @@ package cap2.example.Capstone2_BackEnd.NutriApp.service;
 
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.request.user.UserCreateRequest;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.request.user.UserUpdateRequest;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.response.UserResponse;
 import cap2.example.Capstone2_BackEnd.NutriApp.exception.AppException;
 import cap2.example.Capstone2_BackEnd.NutriApp.exception.ErrorCode;
 import cap2.example.Capstone2_BackEnd.NutriApp.mapper.UserMapper;
 import cap2.example.Capstone2_BackEnd.NutriApp.model.User;
 import cap2.example.Capstone2_BackEnd.NutriApp.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -17,18 +21,12 @@ import java.util.UUID;
 
 
 @Service
+@RequiredArgsConstructor
+@FieldDefaults(makeFinal = true, level = lombok.AccessLevel.PRIVATE)
 public class UserService {
+    UserRepository userRepository;
+    UserMapper userMapper;
 
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private UserMapper userMapper;
-
-
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
 
     public List<User> getAllUsers() {
         return userRepository.findAll();
@@ -36,8 +34,9 @@ public class UserService {
 
     ;
 
-    public User getUserById(UUID id) {
-        return userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+    public UserResponse getUserById(UUID id) {
+        return userMapper.toUserResponse(userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found")));
     }
 
     ;
@@ -48,6 +47,8 @@ public class UserService {
             throw new AppException(ErrorCode.USER_EXISTED);
         }
         User user = userMapper.toUser(request);
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setCreatedAt(new Timestamp(System.currentTimeMillis()).toLocalDateTime());
         return userRepository.save(user);
     }
@@ -55,10 +56,11 @@ public class UserService {
     ;
 
 
-    public User updateUser(UUID id, UserUpdateRequest request) {
-        User user = getUserById(id);
+    public UserResponse updateUser(UUID id, UserUpdateRequest request) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
         userMapper.updateUser(user, request);
-        return userRepository.save(user);
+        return userMapper.toUserResponse(userRepository.save(user));
     }
 
     ;
