@@ -5,7 +5,7 @@ import cap2.example.Capstone2_BackEnd.NutriApp.dto.common.ApiResponse;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.common.ListReponse;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.request.user.UserCreateRequest;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.request.user.UserUpdateRequest;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.response.UserResponse;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.response.user.UserResponse;
 import cap2.example.Capstone2_BackEnd.NutriApp.model.User;
 import cap2.example.Capstone2_BackEnd.NutriApp.service.UserService;
 import jakarta.validation.Valid;

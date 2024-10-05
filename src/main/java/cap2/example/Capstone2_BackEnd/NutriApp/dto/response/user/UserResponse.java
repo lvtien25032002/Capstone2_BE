@@ -1,4 +1,4 @@
-package cap2.example.Capstone2_BackEnd.NutriApp.dto.response;
+package cap2.example.Capstone2_BackEnd.NutriApp.dto.response.user;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;

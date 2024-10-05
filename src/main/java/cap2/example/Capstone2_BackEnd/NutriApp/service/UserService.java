@@ -3,7 +3,7 @@ package cap2.example.Capstone2_BackEnd.NutriApp.service;
 
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.request.user.UserCreateRequest;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.request.user.UserUpdateRequest;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.response.UserResponse;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.response.user.UserResponse;
 import cap2.example.Capstone2_BackEnd.NutriApp.exception.AppException;
 import cap2.example.Capstone2_BackEnd.NutriApp.exception.ErrorCode;
 import cap2.example.Capstone2_BackEnd.NutriApp.mapper.UserMapper;
