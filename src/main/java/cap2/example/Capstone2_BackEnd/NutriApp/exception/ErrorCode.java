@@ -9,7 +9,10 @@ public enum ErrorCode {
     PASSWORD_INVALID(1005, "Password must be between 8 and 16 characters"),
     EMAIL_INVALID(1006, "Email is invalid"),
     AGE_INVALID(1007, "Age must be between 10 and 100"),
-    FIELD_REQUIRED(1008, " is required ");
+    FIELD_REQUIRED(1008, " is required "),
+    UNAUTHENTICATED(1009, "Unauthenticated"),
+    ;
+
 
     private int code;
     private String message;

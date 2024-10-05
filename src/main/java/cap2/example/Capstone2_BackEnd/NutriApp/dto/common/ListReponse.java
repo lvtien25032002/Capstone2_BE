@@ -1,4 +1,4 @@
-package cap2.example.Capstone2_BackEnd.NutriApp.dto.request.common;
+package cap2.example.Capstone2_BackEnd.NutriApp.dto.common;
 
 
 import lombok.*;
