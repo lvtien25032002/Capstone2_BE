@@ -8,8 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
-import java.util.UUID;
-
 @Entity
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 @Setter
@@ -19,7 +17,7 @@ import java.util.UUID;
 public class Diet_Plan_Recipe {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    UUID Diet_Plan_Recipe_ID;
+    String Diet_Plan_Recipe_ID;
 
 
     @ManyToOne

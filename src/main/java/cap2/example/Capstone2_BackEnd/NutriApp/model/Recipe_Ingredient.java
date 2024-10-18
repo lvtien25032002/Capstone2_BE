@@ -9,7 +9,6 @@ import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
 import java.util.Set;
-import java.util.UUID;
 
 @Entity
 @NoArgsConstructor
@@ -20,12 +19,12 @@ import java.util.UUID;
 public class Recipe_Ingredient {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID Recipe_Ingredient_ID;
+    String Recipe_Ingredient_ID;
 
     @OneToMany(mappedBy = "Recipe_ID")
-    private Set<Recipe> Recipe_ID;
+    Set<Recipe> Recipe_ID;
 
     @OneToMany(mappedBy = "Ingredient_ID")
-    private Set<Ingredient> Ingredient_ID;
+    Set<Ingredient> Ingredient_ID;
 
 }

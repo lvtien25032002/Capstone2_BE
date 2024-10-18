@@ -27,7 +27,6 @@ public class UserController {
     @GetMapping("/all")
     public ApiResponse<ListReponse> getAllUsers() {
         var authentication = SecurityContextHolder.getContext().getAuthentication();
-        log.info("Username:{}", authentication.getName());
         authentication.getAuthorities().forEach(grantedAuthority -> log.info(grantedAuthority.getAuthority()));
         ApiResponse<ListReponse> userApiResponse = new ApiResponse<>();
         userApiResponse.setMessage("Get all users successfully");
