@@ -10,7 +10,6 @@ import lombok.experimental.FieldDefaults;
 
 import java.util.Date;
 import java.util.Set;
-import java.util.UUID;
 
 @Entity
 @NoArgsConstructor
@@ -21,7 +20,7 @@ import java.util.UUID;
 public class Favorite {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    UUID Favorite_ID;
+    String Favorite_ID;
 
     @ManyToOne
     @JoinColumn(name = "User_ID")

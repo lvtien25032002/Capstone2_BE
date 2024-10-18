@@ -8,8 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
-import java.util.UUID;
-
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,7 +17,7 @@ import java.util.UUID;
 public class Meal_Log_Detail {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    UUID Meal_Log_Detail_ID;
+    String Meal_Log_Detail_ID;
 
     @ManyToOne
     @JoinColumn(name = "Meal_Log_ID")

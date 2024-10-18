@@ -9,7 +9,6 @@ import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
 import java.util.Date;
-import java.util.UUID;
 
 @Entity
 @NoArgsConstructor
@@ -20,7 +19,7 @@ import java.util.UUID;
 public class User_Diet_Plan {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    UUID User_Diet_Plan_ID;
+    String User_Diet_Plan_ID;
 
     @ManyToOne
     @JoinColumn(name = "User_ID")

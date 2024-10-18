@@ -12,7 +12,6 @@ import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
 import java.sql.Timestamp;
-import java.util.UUID;
 
 @Entity
 @NoArgsConstructor
@@ -23,7 +22,7 @@ import java.util.UUID;
 public class Diet_Goal {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    UUID Diet_Goal_ID;
+    String Diet_Goal_ID;
     Long User_ID;
     double calorieTarget;
     double proteinTarget;

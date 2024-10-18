@@ -11,8 +11,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
-import java.util.UUID;
-
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
@@ -22,7 +20,7 @@ import java.util.UUID;
 public class Diet_Plan {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    UUID Diet_Plan_ID;
+    String Diet_Plan_ID;
     String dietPlanName;
     String description;
     DietPlanType dietPlanType;
