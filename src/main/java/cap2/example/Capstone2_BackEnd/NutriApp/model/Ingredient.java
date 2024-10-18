@@ -10,8 +10,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.UUID;
-
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
@@ -20,7 +18,8 @@ import java.util.UUID;
 public class Ingredient {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID Ingredient_ID;
+    private String Ingredient_ID;
+
     private String ingredientName;
     private String ingredientType;
     private String ingredientDescription;
