@@ -2,6 +2,7 @@ package cap2.example.Capstone2_BackEnd.NutriApp.exception;
 
 
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.common.ApiResponse;
+import cap2.example.Capstone2_BackEnd.NutriApp.enums.ErrorCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
