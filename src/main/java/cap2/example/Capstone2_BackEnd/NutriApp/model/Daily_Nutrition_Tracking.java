@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 import java.util.Date;
 import java.util.UUID;
@@ -15,6 +16,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Getter
 @Setter
+@FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 public class Daily_Nutrition_Tracking {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -22,12 +24,12 @@ public class Daily_Nutrition_Tracking {
 
     @ManyToOne
     @JoinColumn(name = "User_ID")
-    private User User_ID;
-    private Date date;
-    private double totalCalories;
-    private double totalCarbs;
-    private double totalProtein;
-    private double totalFat;
+    User User_ID;
+    Date date;
+    double totalCalories;
+    double totalCarbs;
+    double totalProtein;
+    double totalFat;
 
-    
+
 }

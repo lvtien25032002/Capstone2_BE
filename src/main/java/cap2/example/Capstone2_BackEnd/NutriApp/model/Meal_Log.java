@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 import java.util.Date;
 import java.util.UUID;
@@ -15,17 +16,19 @@ import java.util.UUID;
 @AllArgsConstructor
 @Getter
 @Setter
+@FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 public class Meal_Log {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID Meal_Log_ID;
+    UUID Meal_Log_ID;
     @ManyToOne
     @JoinColumn(name = "User_ID")
-    private User User_ID;
+    User User_ID;
     @Enumerated(EnumType.STRING)
-    private MealType mealType;
-    private Date date;
+    MealType mealType;
+    Date date;
+
     public enum MealType {
         BREAKFAST,
         LUNCH,

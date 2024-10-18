@@ -1,9 +1,11 @@
 package cap2.example.Capstone2_BackEnd.NutriApp.dto.response.user;
 
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.response.role.RoleResponse;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 
 @Data
@@ -14,6 +16,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class UserResponse {
+    String User_ID;
     String username;
     String password;
     String email;
@@ -24,4 +27,5 @@ public class UserResponse {
     double height;
     String goal;
     LocalDateTime createdAt;
+    Set<RoleResponse> roles;
 }

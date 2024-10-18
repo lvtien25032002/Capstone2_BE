@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 import java.util.UUID;
 
@@ -17,15 +18,16 @@ import java.util.UUID;
 @AllArgsConstructor
 @Getter
 @Setter
+@FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 public class Ingredient {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID Ingredient_ID;
-    private String ingredientName;
-    private String ingredientType;
-    private String ingredientDescription;
-    private double calories;
-    private double protein;
-    private double fat;
-    private double carbs;
+    UUID Ingredient_ID;
+    String ingredientName;
+    String ingredientType;
+    String ingredientDescription;
+    double calories;
+    double protein;
+    double fat;
+    double carbs;
 }
