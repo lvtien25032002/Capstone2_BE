@@ -23,15 +23,15 @@ public class AuthenticationController {
     AuthenticationService authenticationService;
 
 
-    @PostMapping("/login")
-    public ApiResponse<AuthenticationResponse> login(@RequestBody AuthenticationRequest request) {
+    @PostMapping("user/login")
+    public ApiResponse<AuthenticationResponse> userLogin(@RequestBody AuthenticationRequest request) {
         var result = authenticationService.authenticate(request);
         return ApiResponse.<AuthenticationResponse>builder()
                 .data(result)
                 .build();
     }
 
-    @PostMapping("/introspect")
+    @PostMapping("user/introspect")
     public ApiResponse<IntrospectResponse> login(@RequestBody IntrospectRequest request) throws ParseException, JOSEException {
         var result = authenticationService.introspect(request);
         return ApiResponse.<IntrospectResponse>builder()
@@ -39,7 +39,7 @@ public class AuthenticationController {
                 .build();
     }
 
-    @PostMapping("/logout")
+    @PostMapping("user/logout")
     public ApiResponse<Void> logout(@RequestBody LogOutRequest request) throws ParseException, JOSEException {
         authenticationService.logout(request);
         return ApiResponse.<Void>builder()
@@ -47,11 +47,20 @@ public class AuthenticationController {
                 .build();
     }
 
-    @PostMapping("/refresh")
+    @PostMapping("user/refresh")
     public ApiResponse<AuthenticationResponse> logout(@RequestBody RefreshRequest request) throws ParseException, JOSEException {
         var result = authenticationService.refreshToken(request);
         return ApiResponse.<AuthenticationResponse>builder()
                 .data(result)
                 .build();
     }
+
+    @PostMapping("admin/login")
+    public ApiResponse<AuthenticationResponse> adminLogin(@RequestBody AuthenticationRequest request) {
+        var result = authenticationService.authenticate(request);
+        return ApiResponse.<AuthenticationResponse>builder()
+                .data(result)
+                .build();
+    }
+
 }

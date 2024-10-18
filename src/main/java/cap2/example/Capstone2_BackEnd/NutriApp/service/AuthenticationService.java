@@ -3,8 +3,9 @@ package cap2.example.Capstone2_BackEnd.NutriApp.service;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.authentication.*;
 import cap2.example.Capstone2_BackEnd.NutriApp.enums.ErrorCode;
 import cap2.example.Capstone2_BackEnd.NutriApp.exception.AppException;
+import cap2.example.Capstone2_BackEnd.NutriApp.model.BaseUser;
 import cap2.example.Capstone2_BackEnd.NutriApp.model.InvalidatedToken;
-import cap2.example.Capstone2_BackEnd.NutriApp.model.User;
+import cap2.example.Capstone2_BackEnd.NutriApp.repository.BaseUserRepository;
 import cap2.example.Capstone2_BackEnd.NutriApp.repository.InvalidatedTokenRepository;
 import cap2.example.Capstone2_BackEnd.NutriApp.repository.UserRepository;
 import com.nimbusds.jose.*;
@@ -26,6 +27,7 @@ import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.Optional;
 import java.util.StringJoiner;
 import java.util.UUID;
 
@@ -38,7 +40,7 @@ public class AuthenticationService {
     //    protected static String SIGNER_KEY = "PKqMCQ/yWaJHVrem2bWKnl+2zWlqAyYagFMkiSVlwjNR+NM0QKn+17DDwhPuFmm2";
     UserRepository userRepository;
     InvalidatedTokenRepository invalidatedTokenRepository;
-
+    BaseUserRepository baseUserRepository;
 
     @NonFinal
     @Value("${jwt-signerKey}")
@@ -53,14 +55,24 @@ public class AuthenticationService {
 
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
-        var user = userRepository.findByUsername(request.getUsername()).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        Optional<BaseUser> baseUserOptional = baseUserRepository.findByUsername(request.getUsername());
+
+        // Nếu không tìm thấy người dùng, trả về thông báo lỗi
+        if (baseUserOptional.isEmpty()) {
+            return AuthenticationResponse.builder()
+                    .authenticated(false)
+                    .build();
+        }
+
+        // Lấy đối tượng BaseUser ra từ Optional
+        BaseUser baseUser = baseUserOptional.get();
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
 
-        boolean authenticated = passwordEncoder.matches(request.getPassword(), user.getPassword());
+        boolean authenticated = passwordEncoder.matches(request.getPassword(), baseUser.getPassword());
         if (!authenticated) {
             throw new AppException(ErrorCode.USER_NOT_FOUND);
         }
-        var token = generateToken(user);
+        var token = generateToken(baseUser);
 
         return AuthenticationResponse.builder()
                 .token(token)
@@ -103,16 +115,16 @@ public class AuthenticationService {
 
     ;
 
-    private String generateToken(User user) {
+    private String generateToken(BaseUser baseUser) {
         JWSHeader jwsHeader = new JWSHeader(JWSAlgorithm.HS512);
 
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
-                .subject(user.getUsername())
+                .subject(baseUser.getUsername())
                 .issuer("nutriapp.com")
                 .issueTime(new Date())
                 .expirationTime(new Date(Instant.now().plus(EXPIRATION_TIME, ChronoUnit.SECONDS).toEpochMilli()))
                 .jwtID(UUID.randomUUID().toString())
-                .claim("scope", buildScope(user))
+                .claim("scope", buildScope(baseUser))
                 .build();
         Payload payload = new Payload(jwtClaimsSet.toJSONObject());
 
@@ -172,10 +184,10 @@ public class AuthenticationService {
                 .build();
     }
 
-    private String buildScope(User user) {
+    private String buildScope(BaseUser baseUser) {
         StringJoiner stringJoiner = new StringJoiner(" ");
-        if (!CollectionUtils.isEmpty(user.getRoles())) {
-            user.getRoles().forEach(role -> {
+        if (!CollectionUtils.isEmpty(baseUser.getRoles())) {
+            baseUser.getRoles().forEach(role -> {
                 stringJoiner.add("ROLE_" + role.getName());
                 if (!CollectionUtils.isEmpty(role.getPermissions())) {
                     role.getPermissions().forEach(permission -> {

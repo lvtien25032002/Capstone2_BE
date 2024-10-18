@@ -85,7 +85,7 @@ public class UserController {
     }
 
 
-    @PutMapping("/{id}")
+    @PutMapping("/dietary/{id}")
     public ApiResponse<String> updateUser(@PathVariable String id, @RequestBody UpdateDietaryPreference request) {
         ApiResponse<String> userApiResponse = new ApiResponse<>();
         try {

@@ -23,7 +23,6 @@ public abstract class BaseUser {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String User_ID;
-
     String username;
     String password;
     String email;

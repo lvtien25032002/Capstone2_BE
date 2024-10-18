@@ -1,6 +1,8 @@
 package cap2.example.Capstone2_BackEnd.NutriApp.configuration;
 
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.authentication.IntrospectRequest;
+import cap2.example.Capstone2_BackEnd.NutriApp.enums.ErrorCode;
+import cap2.example.Capstone2_BackEnd.NutriApp.exception.AppException;
 import cap2.example.Capstone2_BackEnd.NutriApp.service.AuthenticationService;
 import com.nimbusds.jose.JOSEException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +34,7 @@ public class CustomJwtDecoder implements JwtDecoder {
         try {
             var response = authenticationService.introspect(IntrospectRequest.builder().token(token).build());
             if (!response.isValid())
-                throw new JwtException("Invalid token");
+                throw new AppException(ErrorCode.INVALID_TOKEN);
         } catch (JOSEException | ParseException e) {
             throw new JwtException(e.getMessage());
         }

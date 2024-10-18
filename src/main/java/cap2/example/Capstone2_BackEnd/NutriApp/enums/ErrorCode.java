@@ -26,7 +26,8 @@ public enum ErrorCode {
     PERMISSIONS_NOT_FOUND(1017, "Permissions not found", HttpStatus.NOT_FOUND),
     PERMISSIONS_EXISTED(1018, "Permissions existed", HttpStatus.BAD_REQUEST),
     PERMISSIONS_IN_LIST_NOT_FOUND(1019, "One permission in list not found", HttpStatus.BAD_REQUEST),
-    INVALID_DIETARY_PREFERENCE(1020, "Invalid dietary preference in the Enum", HttpStatus.BAD_REQUEST);
+    INVALID_DIETARY_PREFERENCE(1020, "Invalid dietary preference in the Enum", HttpStatus.BAD_REQUEST),
+    INVALID_TOKEN(1021, "Invalid token", HttpStatus.UNAUTHORIZED);
 
 
     private int code;

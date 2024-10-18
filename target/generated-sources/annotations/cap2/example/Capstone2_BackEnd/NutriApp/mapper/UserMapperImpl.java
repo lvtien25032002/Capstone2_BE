@@ -49,7 +49,6 @@ public class UserMapperImpl implements UserMapper {
         user.setGender( request.isGender() );
         user.setWeight( request.getWeight() );
         user.setHeight( request.getHeight() );
-        user.setGoal( request.getGoal() );
     }
 
     @Override
@@ -69,7 +68,6 @@ public class UserMapperImpl implements UserMapper {
         userResponse.gender( user.isGender() );
         userResponse.weight( user.getWeight() );
         userResponse.height( user.getHeight() );
-        userResponse.goal( user.getGoal() );
         userResponse.createdAt( user.getCreatedAt() );
         userResponse.roles( roleSetToRoleResponseSet( user.getRoles() ) );
 
