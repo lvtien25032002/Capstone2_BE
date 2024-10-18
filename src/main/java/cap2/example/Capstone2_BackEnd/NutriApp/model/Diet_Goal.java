@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 import java.sql.Timestamp;
 import java.util.UUID;
@@ -18,17 +19,18 @@ import java.util.UUID;
 @AllArgsConstructor
 @Getter
 @Setter
+@FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 public class Diet_Goal {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID Diet_Goal_ID;
-    private Long User_ID;
-    private double calorieTarget;
-    private double proteinTarget;
-    private double fatTarget;
-    private double carbTarget;
-    private int mealFrequency;
-    private Timestamp createdDate;
+    UUID Diet_Goal_ID;
+    Long User_ID;
+    double calorieTarget;
+    double proteinTarget;
+    double fatTarget;
+    double carbTarget;
+    int mealFrequency;
+    Timestamp createdDate;
 
-   
+
 }

@@ -10,6 +10,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
+
 
 @Data
 @NoArgsConstructor
@@ -38,4 +40,6 @@ public class UserUpdateRequest {
     @NotEmpty(message = "height is required")
     double height;
     String goal;
+
+    List<String> roles;
 }

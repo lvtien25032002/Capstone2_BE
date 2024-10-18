@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 import java.util.Set;
 import java.util.UUID;
@@ -15,6 +16,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Getter
 @Setter
+@FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 public class Recipe_Ingredient {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -25,5 +27,5 @@ public class Recipe_Ingredient {
 
     @OneToMany(mappedBy = "Ingredient_ID")
     private Set<Ingredient> Ingredient_ID;
-    
+
 }

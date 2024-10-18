@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 import java.util.UUID;
 
@@ -17,21 +18,23 @@ import java.util.UUID;
 @AllArgsConstructor
 @Getter
 @Setter
+@FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 public class Diet_Plan {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID Diet_Plan_ID;
-    private String dietPlanName;
-    private String description;
-    private DietPlanType dietPlanType;
-    private Double calorieRangeMin;
-    private Double calorieRangeMax;
-    private Double proteinRangeMin;
-    private Double proteinRangeMax;
-    private Double fatRangeMin;
-    private Double fatRangeMax;
-    private Double carbsRangeMin;
-    private Double carbsRangeMax;
+    UUID Diet_Plan_ID;
+    String dietPlanName;
+    String description;
+    DietPlanType dietPlanType;
+    Double calorieRangeMin;
+    Double calorieRangeMax;
+    Double proteinRangeMin;
+    Double proteinRangeMax;
+    Double fatRangeMin;
+    Double fatRangeMax;
+    Double carbsRangeMin;
+    Double carbsRangeMax;
+
     public enum DietPlanType {
         BALANCED,
         LOW_CARB,

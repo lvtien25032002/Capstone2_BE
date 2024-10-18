@@ -6,15 +6,19 @@ import cap2.example.Capstone2_BackEnd.NutriApp.dto.request.user.UserUpdateReques
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.response.user.UserResponse;
 import cap2.example.Capstone2_BackEnd.NutriApp.model.User;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
-    // Mapper functions for User Request
+
     User toUser(UserCreateRequest request);
 
+
+    @Mapping(target = "roles", ignore = true)
     void updateUser(@MappingTarget User user, UserUpdateRequest request);
 
-    // Mapper functions for User Response
+
+    @Mapping(source = "user_ID", target = "User_ID")
     UserResponse toUserResponse(User user);
 }

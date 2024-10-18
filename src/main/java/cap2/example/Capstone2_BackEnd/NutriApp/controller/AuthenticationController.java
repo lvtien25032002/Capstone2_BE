@@ -1,10 +1,7 @@
 package cap2.example.Capstone2_BackEnd.NutriApp.controller;
 
 
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.authentication.AuthenticationRequest;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.authentication.AuthenticationResponse;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.authentication.IntrospectRequest;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.authentication.IntrospectResponse;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.authentication.*;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.common.ApiResponse;
 import cap2.example.Capstone2_BackEnd.NutriApp.service.AuthenticationService;
 import com.nimbusds.jose.JOSEException;
@@ -26,19 +23,44 @@ public class AuthenticationController {
     AuthenticationService authenticationService;
 
 
-    @PostMapping("/login")
-    public ApiResponse<AuthenticationResponse> login(@RequestBody AuthenticationRequest request) {
+    @PostMapping("user/login")
+    public ApiResponse<AuthenticationResponse> userLogin(@RequestBody AuthenticationRequest request) {
         var result = authenticationService.authenticate(request);
         return ApiResponse.<AuthenticationResponse>builder()
                 .data(result)
                 .build();
     }
 
-    @PostMapping("/introspect")
+    @PostMapping("user/introspect")
     public ApiResponse<IntrospectResponse> login(@RequestBody IntrospectRequest request) throws ParseException, JOSEException {
         var result = authenticationService.introspect(request);
         return ApiResponse.<IntrospectResponse>builder()
                 .data(result)
                 .build();
     }
+
+    @PostMapping("user/logout")
+    public ApiResponse<Void> logout(@RequestBody LogOutRequest request) throws ParseException, JOSEException {
+        authenticationService.logout(request);
+        return ApiResponse.<Void>builder()
+                .message("Logged out")
+                .build();
+    }
+
+    @PostMapping("user/refresh")
+    public ApiResponse<AuthenticationResponse> logout(@RequestBody RefreshRequest request) throws ParseException, JOSEException {
+        var result = authenticationService.refreshToken(request);
+        return ApiResponse.<AuthenticationResponse>builder()
+                .data(result)
+                .build();
+    }
+
+    @PostMapping("admin/login")
+    public ApiResponse<AuthenticationResponse> adminLogin(@RequestBody AuthenticationRequest request) {
+        var result = authenticationService.authenticate(request);
+        return ApiResponse.<AuthenticationResponse>builder()
+                .data(result)
+                .build();
+    }
+
 }
