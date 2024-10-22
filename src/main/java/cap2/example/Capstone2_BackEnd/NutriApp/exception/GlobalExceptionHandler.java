@@ -1,15 +1,17 @@
 package cap2.example.Capstone2_BackEnd.NutriApp.exception;
 
 
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.common.ApiResponse;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.common.response.ApiResponse;
 import cap2.example.Capstone2_BackEnd.NutriApp.enums.ErrorCode;
+import org.springframework.beans.InvalidPropertyException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.nio.file.AccessDeniedException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -74,5 +76,19 @@ public class GlobalExceptionHandler {
                 .build();
         return ResponseEntity.badRequest().body(apiResponse);
     }
+
+    // Xử lý ngoại lệ InvalidPropertyException
+    @ExceptionHandler(InvalidPropertyException.class)
+    public ResponseEntity<ApiResponse> handleInvalidPropertyException(InvalidPropertyException ex) {
+        ErrorCode errorCode = ErrorCode.INVALID_PROPERTY;
+        ApiResponse response = ApiResponse.builder()
+                .code(errorCode.getCode())
+                .message("Error occurred with property: " + ex.getPropertyName() + " - Root cause: " + ex.getCause())
+                .build();
+
+        // Trả về ResponseEntity với status code BAD_REQUEST (400)
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
 
 }

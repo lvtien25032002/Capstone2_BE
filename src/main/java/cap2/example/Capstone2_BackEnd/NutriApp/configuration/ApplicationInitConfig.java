@@ -1,10 +1,10 @@
 package cap2.example.Capstone2_BackEnd.NutriApp.configuration;
 
-
+import cap2.example.Capstone2_BackEnd.NutriApp.constant.PredefinedRole;
 import cap2.example.Capstone2_BackEnd.NutriApp.model.Admin;
 import cap2.example.Capstone2_BackEnd.NutriApp.model.Role;
-import cap2.example.Capstone2_BackEnd.NutriApp.repository.AdminRepository;
-import cap2.example.Capstone2_BackEnd.NutriApp.repository.RoleRepository;
+import cap2.example.Capstone2_BackEnd.NutriApp.repository.authenAndAuthorRepository.RoleRepository;
+import cap2.example.Capstone2_BackEnd.NutriApp.repository.userRepository.AdminRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
@@ -34,6 +34,15 @@ public class ApplicationInitConfig {
     ApplicationRunner applicationRunner(AdminRepository adminRepository, RoleRepository roleRepository) {
         return args -> {
             if (adminRepository.findByUsername(ADMIN_USER_NAME).isEmpty()) {
+                roleRepository.save(Role.builder()
+                        .name(PredefinedRole.USER_ROLE)
+                        .description("User role")
+                        .build());
+
+                Role adminRole = roleRepository.save(Role.builder()
+                        .name(PredefinedRole.ADMIN_ROLE)
+                        .description("Admin role")
+                        .build());
                 Set<Role> roles = Set.of(roleRepository.findByName("ADMIN"));
                 Admin admin = Admin.builder()
                         .username(ADMIN_USER_NAME)

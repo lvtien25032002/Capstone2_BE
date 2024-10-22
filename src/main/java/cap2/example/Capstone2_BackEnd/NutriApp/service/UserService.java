@@ -8,11 +8,12 @@ import cap2.example.Capstone2_BackEnd.NutriApp.dto.response.user.UserResponse;
 import cap2.example.Capstone2_BackEnd.NutriApp.enums.DietaryPreference;
 import cap2.example.Capstone2_BackEnd.NutriApp.enums.ErrorCode;
 import cap2.example.Capstone2_BackEnd.NutriApp.exception.AppException;
-import cap2.example.Capstone2_BackEnd.NutriApp.mapper.UserMapper;
+import cap2.example.Capstone2_BackEnd.NutriApp.mapper.userMapper.UserMapper;
+import cap2.example.Capstone2_BackEnd.NutriApp.model.Role;
 import cap2.example.Capstone2_BackEnd.NutriApp.model.User;
-import cap2.example.Capstone2_BackEnd.NutriApp.repository.BaseUserRepository;
-import cap2.example.Capstone2_BackEnd.NutriApp.repository.RoleRepository;
-import cap2.example.Capstone2_BackEnd.NutriApp.repository.UserRepository;
+import cap2.example.Capstone2_BackEnd.NutriApp.repository.authenAndAuthorRepository.RoleRepository;
+import cap2.example.Capstone2_BackEnd.NutriApp.repository.userRepository.BaseUserRepository;
+import cap2.example.Capstone2_BackEnd.NutriApp.repository.userRepository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +26,7 @@ import org.springframework.stereotype.Service;
 import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 @Service
@@ -38,8 +40,8 @@ public class UserService {
     PasswordEncoder passwordEncoder;
     private final BaseUserRepository baseUserRepository;
 
-    //    @PreAuthorize("hasRole('ADMIN')")
-    @PreAuthorize("hasAuthority('APPROVE_POST')")
+    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasAuthority('APPROVE_POST')")
     public List<UserResponse> getAllUsers() {
         var users = userRepository.findAll();
         return users.stream().map(userMapper::toUserResponse).toList();
@@ -70,9 +72,11 @@ public class UserService {
         if (baseUserRepository.existsByUsername(request.getUsername())) {
             throw new AppException(ErrorCode.USER_EXISTED);
         }
+        Set<Role> roles = Set.of(roleRepository.findByName("USER"));
         User user = userMapper.toUser(request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setCreatedAt(new Timestamp(System.currentTimeMillis()).toLocalDateTime());
+        user.setRoles(roles);
         return userMapper.toUserResponse(userRepository.save(user));
     }
 

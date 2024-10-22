@@ -1,9 +1,13 @@
 package cap2.example.Capstone2_BackEnd.NutriApp.dto.request.user;
 
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+import java.util.Set;
 
 
 @Data
@@ -22,16 +26,16 @@ public class UserCreateRequest {
     @Size(min = 8, max = 20, message = "PASSWORD_INVALID")
     String password;
 
-    
+
     @NotEmpty(message = "EMAIL_INVALID")
     String email;
     @NotEmpty(message = "Fullname is required")
     String fullname;
 
-//    @Min(value = 10, message = "AGE_INVALID")
-//    @Max(value = 100, message = "AGE_INVALID")
-//    int age;
-//    boolean gender;
-//    Set<String> roles;
+    @Min(value = 10, message = "AGE_INVALID")
+    @Max(value = 100, message = "AGE_INVALID")
+    int age;
+    boolean gender;
+    Set<String> roles;
 
 }

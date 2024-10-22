@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -17,12 +18,14 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.Arrays;
+
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
-    private final String[] PUBLIC_ENDPOINT = {"/user", "/auth/login", "/auth/introspect", "/auth/logout", "/auth/refresh"};
+    private final String[] PUBLIC_ENDPOINT = {"/user", "/auth/user/login", "/auth/admin/login", "/auth/user/introspect", "/auth/admin/introspect", "/auth/logout", "/auth/refresh", "/ingredient", "/recipe", "/recipe/*", "/image/*"};
 //    "/permissions", "/permissions/*", "/roles", "/roles/*"
 
     @Autowired
@@ -51,10 +54,23 @@ public class SecurityConfig {
 
         );
 
-        httpSecurity.cors(AbstractHttpConfigurer::disable)
+        httpSecurity.cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable);
 
         return httpSecurity.build();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
+        configuration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 
     @Bean
@@ -71,15 +87,5 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder(10);
     }
 
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.addAllowedOrigin("*");  // Hoặc chỉ định frontend origin của bạn
-        configuration.addAllowedMethod("*");  // Cho phép tất cả các phương thức HTTP
-        configuration.addAllowedHeader("*");
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
 
 }

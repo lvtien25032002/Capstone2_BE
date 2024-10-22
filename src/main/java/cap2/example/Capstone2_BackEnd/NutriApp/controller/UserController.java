@@ -1,8 +1,8 @@
 package cap2.example.Capstone2_BackEnd.NutriApp.controller;
 
 
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.common.ApiResponse;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.common.ListReponse;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.common.response.ApiResponse;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.common.response.ListReponse;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.request.user.UpdateDietaryPreference;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.request.user.UserCreateRequest;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.request.user.UserUpdateRequest;
@@ -27,7 +27,6 @@ public class UserController {
     @GetMapping("/all")
     public ApiResponse<ListReponse> getAllUsers() {
         var authentication = SecurityContextHolder.getContext().getAuthentication();
-        authentication.getAuthorities().forEach(grantedAuthority -> log.info(grantedAuthority.getAuthority()));
         ApiResponse<ListReponse> userApiResponse = new ApiResponse<>();
         userApiResponse.setMessage("Get all users successfully");
         userApiResponse.setData(new ListReponse<>(userService.getAllUsers()));

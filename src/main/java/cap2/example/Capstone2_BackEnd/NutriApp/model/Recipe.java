@@ -1,15 +1,14 @@
 package cap2.example.Capstone2_BackEnd.NutriApp.model;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
+
+import java.util.Set;
 
 @Entity
 @NoArgsConstructor
@@ -24,9 +23,16 @@ public class Recipe {
     String recipeName;
     String description;
     String cookingInstructions;
+
+    @ManyToOne
+    @JoinColumn(name = "image_id", unique = false)
+    Image imageURL;
+
     Double totalCalories;
     Double totalProtein;
     Double totalCarbs;
     Double totalFat;
-
+    
+    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
+    Set<Recipe_Ingredient> recipeIngredients;
 }

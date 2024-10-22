@@ -3,7 +3,7 @@ package cap2.example.Capstone2_BackEnd.NutriApp.configuration;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.authentication.IntrospectRequest;
 import cap2.example.Capstone2_BackEnd.NutriApp.enums.ErrorCode;
 import cap2.example.Capstone2_BackEnd.NutriApp.exception.AppException;
-import cap2.example.Capstone2_BackEnd.NutriApp.service.AuthenticationService;
+import cap2.example.Capstone2_BackEnd.NutriApp.service.authenAndAuthorService.AuthenticationService;
 import com.nimbusds.jose.JOSEException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
