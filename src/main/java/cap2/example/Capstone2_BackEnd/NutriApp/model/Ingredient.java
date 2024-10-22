@@ -1,30 +1,32 @@
 package cap2.example.Capstone2_BackEnd.NutriApp.model;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
+@Builder
+@FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 public class Ingredient {
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String Ingredient_ID;
+    String Ingredient_ID;
+    String ingredientName;
+    String ingredientType;
+    String ingredientDescription;
 
-    private String ingredientName;
-    private String ingredientType;
-    private String ingredientDescription;
-    private double calories;
-    private double protein;
-    private double fat;
-    private double carbs;
+    @ManyToOne
+    @JoinColumn(name = "image_id", unique = false)
+    Image imageURL;
+
+    double calories;
+    double protein;
+    double fat;
+    double carbs;
 }

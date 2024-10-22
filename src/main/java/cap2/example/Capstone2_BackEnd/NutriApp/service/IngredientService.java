@@ -6,27 +6,38 @@ import cap2.example.Capstone2_BackEnd.NutriApp.dto.response.ingredient.Ingredien
 import cap2.example.Capstone2_BackEnd.NutriApp.enums.ErrorCode;
 import cap2.example.Capstone2_BackEnd.NutriApp.exception.AppException;
 import cap2.example.Capstone2_BackEnd.NutriApp.mapper.IngredientMapper;
+import cap2.example.Capstone2_BackEnd.NutriApp.model.Image;
 import cap2.example.Capstone2_BackEnd.NutriApp.model.Ingredient;
 import cap2.example.Capstone2_BackEnd.NutriApp.repository.IngredientRepository;
+import cap2.example.Capstone2_BackEnd.NutriApp.repository.commonRepository.ImageRepository;
+import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class IngredientService {
     IngredientRepository ingredientRepository;
     IngredientMapper ingredientMapper;
+    ImageRepository imageRepository;
 
-    public Ingredient createIngredient(IngredientCreateRequest request) {
+    public IngredientResponse createIngredient(IngredientCreateRequest request) {
         if (ingredientRepository.existsByIngredientName(request.getIngredientName()))
             throw new AppException(ErrorCode.INGREDIENT_EXIST);
+        Image image = imageRepository.findImageByUrl(request.getImageURL());
+        if (image == null)
+            throw new AppException(ErrorCode.IMAGE_NOT_FOUND);
         Ingredient ingredient = ingredientMapper.toIngredient(request);
-        return ingredientRepository.save(ingredient);
+        ingredient.setImageURL(image);
+        return ingredientMapper.toIngredientResponse(ingredientRepository.save(ingredient));
     }
 
     public List<IngredientResponse> getAllIngredients() {
@@ -48,10 +59,13 @@ public class IngredientService {
         return ingredientMapper.toIngredientResponse(ingredientRepository.save(ingredient));
     }
 
+    @Transactional
     public String deleteIngredient(String id) {
         Ingredient ingredient = ingredientRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.INGREDIENT_NOT_FOUND));
         ingredientRepository.deleteById(id);
         return "Ingredient deleted";
     }
+
+
 }

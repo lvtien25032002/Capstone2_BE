@@ -8,8 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
-import java.util.Set;
-
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
@@ -21,10 +19,15 @@ public class Recipe_Ingredient {
     @GeneratedValue(strategy = GenerationType.UUID)
     String Recipe_Ingredient_ID;
 
-    @OneToMany(mappedBy = "Recipe_ID")
-    Set<Recipe> Recipe_ID;
+    int Quantity;
+    String Unit;
 
-    @OneToMany(mappedBy = "Ingredient_ID")
-    Set<Ingredient> Ingredient_ID;
+    @ManyToOne
+    @JoinColumn(name = "recipe_id")
+    Recipe recipe;
+
+    @ManyToOne
+    @JoinColumn(name = "ingredient_id")
+    Ingredient ingredient;
 
 }

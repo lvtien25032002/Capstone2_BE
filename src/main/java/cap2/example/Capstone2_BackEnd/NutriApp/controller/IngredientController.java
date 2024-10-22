@@ -1,6 +1,6 @@
 package cap2.example.Capstone2_BackEnd.NutriApp.controller;
 
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.common.ApiResponse;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.common.response.ApiResponse;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.request.ingredient.IngredientCreateRequest;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.request.ingredient.IngredientUpdateRequest;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.response.ingredient.IngredientResponse;
@@ -23,9 +23,9 @@ public class IngredientController {
     IngredientService ingredientService;
 
 
-    @PostMapping
-    ApiResponse<Ingredient> createIngredient(@RequestBody @Valid IngredientCreateRequest request) {
-        ApiResponse<Ingredient> apiResponse = new ApiResponse<>();
+    @PostMapping()
+    ApiResponse<IngredientResponse> createIngredient(@RequestBody @Valid IngredientCreateRequest request) {
+        ApiResponse<IngredientResponse> apiResponse = new ApiResponse<>();
         apiResponse.setData(ingredientService.createIngredient(request));
         apiResponse.setMessage("Ingredient created");
         return apiResponse;

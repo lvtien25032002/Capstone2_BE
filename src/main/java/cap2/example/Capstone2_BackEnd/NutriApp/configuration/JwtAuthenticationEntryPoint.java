@@ -1,6 +1,6 @@
 package cap2.example.Capstone2_BackEnd.NutriApp.configuration;
 
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.common.ApiResponse;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.common.response.ApiResponse;
 import cap2.example.Capstone2_BackEnd.NutriApp.enums.ErrorCode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;

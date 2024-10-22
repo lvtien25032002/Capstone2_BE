@@ -17,9 +17,9 @@ public class RecipeUpdateRequest {
     String recipeName;
 
     String description;
-    @NotEmpty(message = "RECIPE_TOTAL_CALORIES_REQUIRED" )
+    @NotEmpty(message = "RECIPE_TOTAL_CALORIES_REQUIRED")
     String cookingInstructions;
-
+    String imageURL;
     @NotNull(message = "RECIPE_TOTAL_CALORIES_REQUIRED")
     Double totalCalories;
     @NotNull(message = "RECIPE_TOTAL_PROTEIN_REQUIRED")
