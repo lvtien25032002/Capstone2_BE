@@ -4,16 +4,18 @@ import cap2.example.Capstone2_BackEnd.NutriApp.dto.common.response.ApiResponse;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.request.ingredient.IngredientCreateRequest;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.request.ingredient.IngredientUpdateRequest;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.response.ingredient.IngredientResponse;
-import cap2.example.Capstone2_BackEnd.NutriApp.model.Ingredient;
 import cap2.example.Capstone2_BackEnd.NutriApp.service.IngredientService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+
+@Slf4j
 @RestController
 @RequestMapping("/ingredient")
 @RequiredArgsConstructor
@@ -23,6 +25,33 @@ public class IngredientController {
     IngredientService ingredientService;
 
 
+    @GetMapping
+    Object getAllIngredients(
+            @RequestParam(required = false) Integer pageNo,
+            @RequestParam(required = false) Integer pageSize,
+            @RequestParam(required = false) String[] sort) {
+        if (pageNo == null) {
+            throw new IllegalArgumentException("Page number must be not null");
+        }
+        if ((pageNo == null && pageSize == null && sort == null) || pageNo == -1) {
+            ApiResponse<List<IngredientResponse>> response = new ApiResponse<>();
+            response.setData(ingredientService.getAllIngredients());
+            response.setMessage("Get all Ingredients successfully");
+            return response;
+        } else {
+            if (pageSize < 1 && pageSize != -1) {
+                throw new IllegalArgumentException("Page size must be greater than 0");
+            }
+            pageNo = pageNo - 1;
+            if (pageSize == null) {
+                pageSize = 10;
+            }
+
+            return ingredientService.getPagingAllIngredients(pageNo, pageSize, sort);
+        }
+
+    }
+
     @PostMapping()
     ApiResponse<IngredientResponse> createIngredient(@RequestBody @Valid IngredientCreateRequest request) {
         ApiResponse<IngredientResponse> apiResponse = new ApiResponse<>();
@@ -31,13 +60,6 @@ public class IngredientController {
         return apiResponse;
     }
 
-    @GetMapping
-    ApiResponse<List<Ingredient>> getAllIngredients() {
-        ApiResponse apiResponse = new ApiResponse<>();
-        apiResponse.setData(ingredientService.getAllIngredients());
-        apiResponse.setMessage("Get all Ingredients successfully");
-        return apiResponse;
-    }
 
     @GetMapping("/{ingredientId}")
     ApiResponse<IngredientResponse> getIngredient(@PathVariable("ingredientId") String ingredientId) {

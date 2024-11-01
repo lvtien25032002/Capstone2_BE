@@ -22,19 +22,38 @@ import java.util.List;
 public class RecipeController {
     RecipeService recipeService;
 
+
+    @GetMapping
+    Object getAllRecipes(
+            @RequestParam(required = false) Integer pageNo,
+            @RequestParam(required = false) Integer pageSize,
+            @RequestParam(required = false) String[] sort) {
+        if (pageNo == null) {
+            throw new IllegalArgumentException("Page number must be not null");
+        }
+        if ((pageNo == null && pageSize == null && sort == null) || pageNo == -1) {
+            ApiResponse<List<RecipeResponse>> apiResponse = new ApiResponse<>();
+            apiResponse.setData(recipeService.getAllRecipes());
+            apiResponse.setMessage("Success");
+            return apiResponse;
+        } else {
+            if (pageSize < 1 && pageSize != -1) {
+                throw new IllegalArgumentException("Page size must be greater than 0");
+            }
+            pageNo = pageNo - 1;
+            if (pageSize == null) {
+                pageSize = 10;
+            }
+            return recipeService.getPagingAllRecipes(pageNo, pageSize, sort);
+        }
+
+    }
+
     @PostMapping
     ApiResponse<RecipeResponse> createRecipe(@RequestBody RecipeCreateRequest request) {
         ApiResponse<RecipeResponse> apiResponse = new ApiResponse<>();
         apiResponse.setData(recipeService.createRecipe(request));
         apiResponse.setMessage("Successfully created recipe");
-        return apiResponse;
-    }
-
-    @GetMapping
-    ApiResponse<List<RecipeResponse>> getAllRecipes() {
-        ApiResponse<List<RecipeResponse>> apiResponse = new ApiResponse<>();
-        apiResponse.setData(recipeService.getAllRecipes());
-        apiResponse.setMessage("Success");
         return apiResponse;
     }
 

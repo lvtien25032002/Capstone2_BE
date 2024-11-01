@@ -11,7 +11,6 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class IngredientForRecipeRequest {
-    String ingredientName;
+    String ingredientId;
     int quantity;
-    String unit;
 }

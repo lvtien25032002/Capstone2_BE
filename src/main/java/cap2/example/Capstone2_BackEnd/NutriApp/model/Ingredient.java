@@ -20,10 +20,9 @@ public class Ingredient {
     String ingredientName;
     String ingredientType;
     String ingredientDescription;
+    String unit;
 
-    @ManyToOne
-    @JoinColumn(name = "image_id", unique = false)
-    Image imageURL;
+    String imageURL;
 
     double calories;
     double protein;

@@ -17,7 +17,7 @@ public class RecipeResponse {
     String recipeName;
     String description;
     String cookingInstructions;
-    ImageResponse imageURL;
+    String imageURL;
     Double totalCalories;
     Double totalProtein;
     Double totalCarbs;

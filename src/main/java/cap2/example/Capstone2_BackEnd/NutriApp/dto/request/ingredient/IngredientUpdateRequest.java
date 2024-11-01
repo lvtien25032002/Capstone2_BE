@@ -21,6 +21,7 @@ public class IngredientUpdateRequest {
     @NotEmpty(message = "INGREDIENT_TYPE_REQUIRED")
     String ingredientType;
     String ingredientDescription;
+    String unit;
     String imageURL;
     @NotNull(message = " INGREDIENT_CALORIES_REQUIRED")
     double calories;

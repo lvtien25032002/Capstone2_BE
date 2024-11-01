@@ -1,5 +1,6 @@
 package cap2.example.Capstone2_BackEnd.NutriApp.service;
 
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.common.response.PagingAndSortingAPIResponse;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.request.recipe.RecipeCreateRequest;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.request.recipe.RecipeUpdateRequest;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.request.recipe_ingredient.IngredientForRecipeRequest;
@@ -8,16 +9,15 @@ import cap2.example.Capstone2_BackEnd.NutriApp.dto.response.recipe_ingredient.In
 import cap2.example.Capstone2_BackEnd.NutriApp.enums.ErrorCode;
 import cap2.example.Capstone2_BackEnd.NutriApp.exception.AppException;
 import cap2.example.Capstone2_BackEnd.NutriApp.mapper.RecipeMapper;
-import cap2.example.Capstone2_BackEnd.NutriApp.model.Image;
 import cap2.example.Capstone2_BackEnd.NutriApp.model.Recipe;
 import cap2.example.Capstone2_BackEnd.NutriApp.repository.IngredientRepository;
-import cap2.example.Capstone2_BackEnd.NutriApp.repository.RecipeIngredientRepository;
 import cap2.example.Capstone2_BackEnd.NutriApp.repository.RecipeRepository;
-import cap2.example.Capstone2_BackEnd.NutriApp.repository.commonRepository.ImageRepository;
+import cap2.example.Capstone2_BackEnd.NutriApp.service.commonService.GenericPagingAndSortingService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,9 +33,40 @@ public class RecipeService {
     RecipeRepository recipeRepository;
     IngredientRepository ingredientRepository;
     RecipeMapper recipeMapper;
-    ImageRepository imageRepository;
     RecipeIngredientService recipeIngredientService;
-    private final RecipeIngredientRepository recipeIngredientRepository;
+    GenericPagingAndSortingService genericPagingAndSortingService;
+
+
+    public PagingAndSortingAPIResponse<RecipeResponse> getPagingAllRecipes(int page, int size, String[] sort) {
+        Page<Recipe> recipes = recipeRepository.findAll(genericPagingAndSortingService.createPageable(page, size, sort));
+        List<RecipeResponse> recipeResponses = recipes.map(recipe -> {
+            RecipeResponse recipeResponse = recipeMapper.toRecipeResponse(recipe);
+            List<IngredientForRecipeResponse> ingredientList = recipeIngredientService.getIngredientsForRecipeResponse(recipe);
+            recipeResponse.setIngredientList(ingredientList);
+            return recipeResponse;
+        }).toList();
+
+        return PagingAndSortingAPIResponse.<RecipeResponse>builder()
+                .message("Success")
+                .data(recipeResponses)
+                .totalRecords(recipes.getTotalElements())
+                .totalPages(recipes.getTotalPages())
+                .pageNo(recipes.getNumber() + 1)
+                .pageSize(recipes.getSize())
+                .build();
+    }
+
+
+    public List<RecipeResponse> getAllRecipes() {
+        return recipeRepository.findAll().stream().map(recipe -> {
+            RecipeResponse recipeResponse = recipeMapper.toRecipeResponse(recipe);
+            List<IngredientForRecipeResponse> ingredientList = recipeIngredientService.getIngredientsForRecipeResponse(recipe);
+            recipeResponse.setIngredientList(ingredientList);
+            return recipeResponse;
+        }).toList();
+
+    }
+
 
     public RecipeResponse createRecipe(RecipeCreateRequest request) {
         if (recipeRepository.existsByRecipeName(request.getRecipeName())) {
@@ -44,14 +75,12 @@ public class RecipeService {
         UUID uuid = UUID.randomUUID();
         Recipe recipe = recipeMapper.toRecipe(request);
         recipe.setRecipe_ID(uuid.toString());
-        Image image = imageRepository.findImageByUrl(request.getImageURL());
-        if (image == null)
-            throw new AppException(ErrorCode.IMAGE_NOT_FOUND);
-
-        recipe.setImageURL(image);
         Set<IngredientForRecipeRequest> ingredients = Set.copyOf(request.getIngredientList());
         for (IngredientForRecipeRequest ingredient : ingredients) {
-            if (!ingredientRepository.existsByIngredientName(ingredient.getIngredientName())) {
+            if (ingredient.getIngredientId() == null) {
+                throw new AppException(ErrorCode.INGREDIENT_IN_LIST_NOT_NULL);
+            }
+            if (ingredientRepository.findById(ingredient.getIngredientId()).isEmpty()) {
                 throw new AppException(ErrorCode.INGREDIENT_IN_LIST_NOT_FOUND);
             }
         }
@@ -65,16 +94,6 @@ public class RecipeService {
         return recipeResponse;
     }
 
-    public List<RecipeResponse> getAllRecipes() {
-        List<RecipeResponse> recipeListResponse = recipeRepository.findAll().stream().map(recipe -> {
-            RecipeResponse recipeResponse = recipeMapper.toRecipeResponse(recipe);
-            List<IngredientForRecipeResponse> ingredientList = recipeIngredientService.getIngredientsForRecipeResponse(recipe);
-            recipeResponse.setIngredientList(ingredientList);
-            return recipeResponse;
-        }).toList();
-        return recipeListResponse;
-
-    }
 
     public RecipeResponse getRecipe(String id) {
         Recipe recipe = recipeRepository.findById(id)

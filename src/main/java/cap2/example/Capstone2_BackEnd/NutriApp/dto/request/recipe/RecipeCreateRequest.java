@@ -20,13 +20,10 @@ import java.util.List;
 public class RecipeCreateRequest {
     @NotEmpty(message = "RECIPE_NAME_REQUIRED")
     String recipeName;
-
     String description;
     @NotEmpty(message = "COOKING_INSTRUCTIONS_REQUIRED")
     String cookingInstructions;
     String imageURL;
-
-
     @NotNull(message = "RECIPE_TOTAL_CALORIES_REQUIRED")
     Double totalCalories;
     @NotNull(message = "RECIPE_TOTAL_PROTEIN_REQUIRED")
