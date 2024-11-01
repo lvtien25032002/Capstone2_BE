@@ -25,7 +25,7 @@ import java.util.Arrays;
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
-    private final String[] PUBLIC_ENDPOINT = {"/user", "/auth/user/login", "/auth/admin/login", "/auth/user/introspect", "/auth/admin/introspect", "/auth/logout", "/auth/refresh", "/ingredient", "/recipe", "/recipe/*", "/image/*"};
+    private final String[] PUBLIC_ENDPOINT = {"/user", "/auth/user/login", "/auth/admin/login", "/auth/user/introspect", "/auth/admin/introspect", "/auth/logout", "/auth/refresh", "/ingredient","/ingredient/*", "/recipe", "/recipe/*", "/image/*"};
 //    "/permissions", "/permissions/*", "/roles", "/roles/*"
 
     @Autowired

@@ -14,7 +14,8 @@ public class IngredientResponse {
     String ingredientName;
     String ingredientType;
     String ingredientDescription;
-    ImageResponse imageURL;
+    String unit;
+    String imageURL;
     double calories;
     double protein;
     double fat;

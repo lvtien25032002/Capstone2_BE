@@ -13,13 +13,12 @@ import java.util.Set;
 
 @Mapper(componentModel = "spring")
 public interface IngredientMapper {
-    @Mapping(target = "imageURL", ignore = true)
     Ingredient toIngredient(IngredientCreateRequest request);
 
     @Mapping(source = "ingredient_ID", target = "Ingredient_ID")
     IngredientResponse toIngredientResponse(Ingredient ingredient);
 
-    @Mapping(target = "imageURL", ignore = true)
+
     void updateIngredient(@MappingTarget Ingredient ingredient, IngredientUpdateRequest request);
 
     Set<IngredientForRecipeRequest> toSetIngredientForRecipeRequest(Set<IngredientForRecipeRequest> request);

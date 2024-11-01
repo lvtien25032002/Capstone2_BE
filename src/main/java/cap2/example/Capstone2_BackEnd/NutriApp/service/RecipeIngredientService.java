@@ -34,9 +34,9 @@ public class RecipeIngredientService {
     public RecipeIngredientResponse createRecipeIngredient(Recipe recipe, IngredientForRecipeRequest request) {
         Recipe_Ingredient recipeIngredient = new Recipe_Ingredient();
         recipeIngredient.setRecipe(recipe);
-        recipeIngredient.setIngredient(ingredientRepository.findByIngredientName(request.getIngredientName()));
+        Ingredient ingredient = ingredientRepository.findById(request.getIngredientId()).orElseThrow(() -> new AppException(ErrorCode.INGREDIENT_IN_LIST_NOT_FOUND));
+        recipeIngredient.setIngredient(ingredient);
         recipeIngredient.setQuantity(request.getQuantity());
-        recipeIngredient.setUnit(request.getUnit());
         return recipeIngredientMapper.toRecipeIngredientResponse(recipeIngredientRepository.save(recipeIngredient));
     }
 
@@ -46,15 +46,14 @@ public class RecipeIngredientService {
 
     public List<IngredientForRecipeResponse> getIngredientsForRecipeResponse(Recipe recipe) {
         List<Recipe_Ingredient> recipeIngredient_List = recipeIngredientRepository.findRecipe_IngredientByRecipe(recipe);
-        List<IngredientForRecipeResponse> ingredientsForRecipeResponses = recipeIngredient_List.stream().map(recipe_ingredient -> {
+        return recipeIngredient_List.stream().map(recipe_ingredient -> {
             IngredientForRecipeResponse ingredientForRecipeResponse = new IngredientForRecipeResponse();
             Ingredient ingredient = recipe_ingredient.getIngredient();
             ingredientForRecipeResponse.setIngredientName(ingredient.getIngredientName());
             ingredientForRecipeResponse.setQuantity(recipe_ingredient.getQuantity());
-            ingredientForRecipeResponse.setUnit(recipe_ingredient.getUnit());
+            ingredientForRecipeResponse.setUnit(ingredient.getUnit());
             return ingredientForRecipeResponse;
         }).toList();
-        return ingredientsForRecipeResponses;
     }
 
     public RecipeIngredientResponse updateRecipeIngredient(String id, RecipeIngredientUpdateRequest request) {

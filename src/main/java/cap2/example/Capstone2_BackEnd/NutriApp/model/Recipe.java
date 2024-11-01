@@ -23,11 +23,7 @@ public class Recipe {
     String recipeName;
     String description;
     String cookingInstructions;
-
-    @ManyToOne
-    @JoinColumn(name = "image_id", unique = false)
-    Image imageURL;
-
+    String imageURL;
     Double totalCalories;
     Double totalProtein;
     Double totalCarbs;

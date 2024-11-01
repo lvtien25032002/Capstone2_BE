@@ -1,6 +1,7 @@
 package cap2.example.Capstone2_BackEnd.NutriApp.service;
 
 
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.common.response.PagingAndSortingAPIResponse;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.request.user.UpdateDietaryPreference;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.request.user.UserCreateRequest;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.request.user.UserUpdateRequest;
@@ -14,9 +15,11 @@ import cap2.example.Capstone2_BackEnd.NutriApp.model.User;
 import cap2.example.Capstone2_BackEnd.NutriApp.repository.authenAndAuthorRepository.RoleRepository;
 import cap2.example.Capstone2_BackEnd.NutriApp.repository.userRepository.BaseUserRepository;
 import cap2.example.Capstone2_BackEnd.NutriApp.repository.userRepository.UserRepository;
+import cap2.example.Capstone2_BackEnd.NutriApp.service.commonService.GenericPagingAndSortingService;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -38,10 +41,24 @@ public class UserService {
     RoleRepository roleRepository;
     UserMapper userMapper;
     PasswordEncoder passwordEncoder;
-    private final BaseUserRepository baseUserRepository;
+    BaseUserRepository baseUserRepository;
+    GenericPagingAndSortingService genericPagingAndSortingService;
 
+
+    public PagingAndSortingAPIResponse<UserResponse> getPagingAllUsers(int page, int size, String[] sort) {
+        Page<User> users = userRepository.findAll(genericPagingAndSortingService.createPageable(page, size, sort));
+        List<UserResponse> usersResponse = users.map(userMapper::toUserResponse).toList();
+        return PagingAndSortingAPIResponse.<UserResponse>builder()
+                .data(usersResponse)
+                .totalRecords(users.getTotalElements())
+                .totalPages(users.getTotalPages())
+                .pageNo(users.getNumber() + 1)
+                .pageSize(users.getSize())
+                .build();
+    }
+
+    //    @PreAuthorize("hasAuthority('APPROVE_POST')")
     @PreAuthorize("hasRole('ADMIN')")
-//    @PreAuthorize("hasAuthority('APPROVE_POST')")
     public List<UserResponse> getAllUsers() {
         var users = userRepository.findAll();
         return users.stream().map(userMapper::toUserResponse).toList();
