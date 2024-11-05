@@ -1,9 +1,12 @@
 package cap2.example.Capstone2_BackEnd.NutriApp.dto.request.recipe;
 
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.request.recipe_ingredient.IngredientForRecipeRequest;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+import java.util.List;
 
 @Data
 @Builder
@@ -20,12 +23,5 @@ public class RecipeUpdateRequest {
     @NotEmpty(message = "RECIPE_TOTAL_CALORIES_REQUIRED")
     String cookingInstructions;
     String imageURL;
-    @NotNull(message = "RECIPE_TOTAL_CALORIES_REQUIRED")
-    Double totalCalories;
-    @NotNull(message = "RECIPE_TOTAL_PROTEIN_REQUIRED")
-    Double totalProtein;
-    @NotNull(message = "RECIPE_TOTAL_CARBS_REQUIRED")
-    Double totalCarbs;
-    @NotNull(message = "RECIPE_TOTAL_FAT_REQUIRED")
-    Double totalFat;
+    List<IngredientForRecipeRequest> ingredientList;
 }

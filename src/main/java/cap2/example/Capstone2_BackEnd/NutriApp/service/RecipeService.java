@@ -79,9 +79,15 @@ public class RecipeService {
             throw new AppException(ErrorCode.RECIPE_EXIST);
         }
         UUID uuid = UUID.randomUUID();
+        log.info("1");
         Recipe recipe = recipeMapper.toRecipe(request);
+        log.info("2");
         recipe.setRecipe_ID(uuid.toString());
         Set<IngredientForRecipeRequest> ingredients = Set.copyOf(request.getIngredientList());
+        Double totalCalories = 0.0;
+        Double totalProtein  = 0.0;
+        Double totalCarbs    = 0.0;
+        Double totalFat      = 0.0;
         for (IngredientForRecipeRequest ingredient : ingredients) {
             if (ingredient.getIngredientId() == null) {
                 throw new AppException(ErrorCode.INGREDIENT_IN_LIST_NOT_NULL);
@@ -89,7 +95,16 @@ public class RecipeService {
             if (ingredientRepository.findById(ingredient.getIngredientId()).isEmpty()) {
                 throw new AppException(ErrorCode.INGREDIENT_IN_LIST_NOT_FOUND);
             }
+            totalCalories += ingredientRepository.findById(ingredient.getIngredientId()).get().getCalories() * ingredient.getQuantity();
+            totalProtein  += ingredientRepository.findById(ingredient.getIngredientId()).get().getProtein() * ingredient.getQuantity();
+            totalCarbs    += ingredientRepository.findById(ingredient.getIngredientId()).get().getCarbs() * ingredient.getQuantity();
+            totalFat      += ingredientRepository.findById(ingredient.getIngredientId()).get().getFat() * ingredient.getQuantity();
         }
+        log.info("Total Calories: " + totalCalories);
+        recipe.setTotalCalories(totalCalories);
+        recipe.setTotalProtein(totalProtein);
+        recipe.setTotalCarbs(totalCarbs);
+        recipe.setTotalFat(totalFat);
         recipe = recipeRepository.save(recipe);
         RecipeResponse recipeResponse = recipeMapper.toRecipeResponse(recipe);
         for (IngredientForRecipeRequest ingredient : ingredients) {
