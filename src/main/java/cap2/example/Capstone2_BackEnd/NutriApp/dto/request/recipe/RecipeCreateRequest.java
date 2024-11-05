@@ -24,14 +24,6 @@ public class RecipeCreateRequest {
     @NotEmpty(message = "COOKING_INSTRUCTIONS_REQUIRED")
     String cookingInstructions;
     String imageURL;
-    @NotNull(message = "RECIPE_TOTAL_CALORIES_REQUIRED")
-    Double totalCalories;
-    @NotNull(message = "RECIPE_TOTAL_PROTEIN_REQUIRED")
-    Double totalProtein;
-    @NotNull(message = "RECIPE_TOTAL_CARBS_REQUIRED")
-    Double totalCarbs;
-    @NotNull(message = "RECIPE_TOTAL_FAT_REQUIRED")
-    Double totalFat;
 
     List<IngredientForRecipeRequest> ingredientList;
 }

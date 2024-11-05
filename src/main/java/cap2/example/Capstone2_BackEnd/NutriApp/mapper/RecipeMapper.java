@@ -10,6 +10,10 @@ import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring")
 public interface RecipeMapper {
+    @Mapping(ignore = true, target = "totalCalories")
+    @Mapping(ignore = true, target = "totalProtein")
+    @Mapping(ignore = true, target = "totalFat")
+    @Mapping(ignore = true, target = "totalCarbs")
     Recipe toRecipe(RecipeCreateRequest request);
 
     @Mapping(source = "recipe_ID", target = "recipe_ID")

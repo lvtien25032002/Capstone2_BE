@@ -25,24 +25,36 @@ import java.util.Arrays;
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
-    private final String[] PUBLIC_ENDPOINT = {"/user", "/auth/user/login", "/auth/admin/login", "/auth/user/introspect", "/auth/admin/introspect", "/auth/logout", "/auth/refresh", "/ingredient","/ingredient/*", "/recipe", "/recipe/*", "/image/*"};
-//    "/permissions", "/permissions/*", "/roles", "/roles/*"
-
+    //    "/permissions", "/permissions/*", "/roles", "/roles/*"
+    private static final String[] AUTH_WHITELIST = {
+            "/v1/api/**",
+            "/v2/api-docs",
+            "/v3/api-docs",
+            "/v3/api-docs/**",
+            "/swagger-resources",
+            "/swagger-resources/**",
+            "/configuration/ui",
+            "/configuration/security",
+            "/swagger-ui/**",
+            "/webjars/**",
+            "/swagger-ui.html"
+    };
+    private final String[] PUBLIC_ENDPOINT = {"/user", "/auth/user/login", "/auth/admin/login", "/auth/user/introspect",
+            "/auth/admin/introspect", "/auth/logout", "/auth/refresh", "/ingredient", "/ingredient/*", "/recipe",
+            "/recipe/*", "/image/*", "/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**",};
     @Autowired
     private CustomJwtDecoder customJwtDecoder;
 
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-//        httpSecurity.authorizeHttpRequests(request ->
-//                request.anyRequest().permitAll()
-//        );
         httpSecurity.authorizeHttpRequests(request ->
                 request
                         .requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINT).permitAll()
                         .requestMatchers(HttpMethod.GET, PUBLIC_ENDPOINT).permitAll()
                         .requestMatchers(HttpMethod.PUT, PUBLIC_ENDPOINT).permitAll()
                         .requestMatchers(HttpMethod.DELETE, PUBLIC_ENDPOINT).permitAll()
+                        .requestMatchers(AUTH_WHITELIST).permitAll()
                         .anyRequest().authenticated());
 
 
@@ -63,7 +75,8 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://localhost:8080",
+                "https://web-nutri-cook-git-main-huutuanns-projects.vercel.app"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
         configuration.setAllowCredentials(true);
@@ -86,6 +99,4 @@ public class SecurityConfig {
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(10);
     }
-
-
 }

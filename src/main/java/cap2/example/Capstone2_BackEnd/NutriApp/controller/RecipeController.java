@@ -3,6 +3,7 @@ package cap2.example.Capstone2_BackEnd.NutriApp.controller;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.common.response.ApiResponse;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.request.recipe.RecipeCreateRequest;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.request.recipe.RecipeUpdateRequest;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.request.recipe.SearchRecipeByIngredientsRequest;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.response.recipe.RecipeResponse;
 import cap2.example.Capstone2_BackEnd.NutriApp.service.RecipeService;
 import lombok.AccessLevel;
@@ -12,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 
 @Slf4j
@@ -46,7 +48,27 @@ public class RecipeController {
             }
             return recipeService.getPagingAllRecipes(pageNo, pageSize, sort);
         }
+    }
 
+    @GetMapping("/all")
+    ApiResponse<List<RecipeResponse>> getAllRecipes() {
+        ApiResponse<List<RecipeResponse>> apiResponse = new ApiResponse<>();
+        apiResponse.setData(recipeService.getAllRecipes());
+        apiResponse.setMessage("Success");
+        return apiResponse;
+    }
+
+    @PostMapping("/searchByIngredient")
+    ApiResponse<Set<RecipeResponse>> searchByIngredient(@RequestBody SearchRecipeByIngredientsRequest request) {
+        ApiResponse<Set<RecipeResponse>> apiResponse = new ApiResponse<>();
+        Set<RecipeResponse> recipeResponses = recipeService.searchByIngredient(request);
+        if (recipeResponses.isEmpty()) {
+            apiResponse.setMessage("No recipes found with the given ingredients");
+        } else {
+            apiResponse.setMessage("Success");
+        }
+        apiResponse.setData(recipeService.searchByIngredient(request));
+        return apiResponse;
     }
 
     @PostMapping
@@ -77,6 +99,46 @@ public class RecipeController {
     ApiResponse<String> deleteRecipe(@PathVariable String recipeId) {
         ApiResponse<String> apiResponse = new ApiResponse<>();
         apiResponse.setData(recipeService.deleteRecipe(recipeId));
+        return apiResponse;
+    }
+
+    @GetMapping("/filterByCalories")
+    public ApiResponse<List<RecipeResponse>> filterByCalories(
+            @RequestParam(required = false) Double minCalories,
+            @RequestParam(required = false) Double maxCalories) {
+        ApiResponse<List<RecipeResponse>> apiResponse = new ApiResponse<>();
+        apiResponse.setData(recipeService.getRecipesByCaloriesRange(minCalories, maxCalories));
+        apiResponse.setMessage("Success");
+        return apiResponse;
+    }
+
+    @GetMapping("/filterByProtein")
+    public ApiResponse<List<RecipeResponse>> filterByProtein(
+            @RequestParam(required = false) Double minProtein,
+            @RequestParam(required = false) Double maxProtein) {
+        ApiResponse<List<RecipeResponse>> apiResponse = new ApiResponse<>();
+        apiResponse.setData(recipeService.getRecipesByProteinRange(minProtein, maxProtein));
+        apiResponse.setMessage("Success");
+        return apiResponse;
+    }
+
+    @GetMapping("/filterByCarbs")
+    public ApiResponse<List<RecipeResponse>> filterByCarbs(
+            @RequestParam(required = false) Double minCarbs,
+            @RequestParam(required = false) Double maxCarbs) {
+        ApiResponse<List<RecipeResponse>> apiResponse = new ApiResponse<>();
+        apiResponse.setData(recipeService.getRecipesByCarbsRange(minCarbs, maxCarbs));
+        apiResponse.setMessage("Success");
+        return apiResponse;
+    }
+
+    @GetMapping("/filterByFat")
+    public ApiResponse<List<RecipeResponse>> filterByFat(
+            @RequestParam(required = false) Double minFat,
+            @RequestParam(required = false) Double maxFat) {
+        ApiResponse<List<RecipeResponse>> apiResponse = new ApiResponse<>();
+        apiResponse.setData(recipeService.getRecipesByFatRange(minFat, maxFat));
+        apiResponse.setMessage("Success");
         return apiResponse;
     }
 }
