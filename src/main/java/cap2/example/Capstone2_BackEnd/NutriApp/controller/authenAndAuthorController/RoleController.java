@@ -2,9 +2,9 @@ package cap2.example.Capstone2_BackEnd.NutriApp.controller.authenAndAuthorContro
 
 
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.common.response.ApiResponse;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.request.role.RoleRequest;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.request.role.RoleUpdateRequest;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.response.role.RoleResponse;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.authenAndAuthor.author.role.RoleRequest;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.authenAndAuthor.author.role.RoleUpdateRequest;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.authenAndAuthor.author.role.RoleResponse;
 import cap2.example.Capstone2_BackEnd.NutriApp.service.authenAndAuthorService.RoleService;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;

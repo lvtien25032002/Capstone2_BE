@@ -1,6 +1,6 @@
 package cap2.example.Capstone2_BackEnd.NutriApp.service.authenAndAuthorService;
 
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.authentication.*;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.authenAndAuthor.authen.*;
 import cap2.example.Capstone2_BackEnd.NutriApp.enums.ErrorCode;
 import cap2.example.Capstone2_BackEnd.NutriApp.exception.AppException;
 import cap2.example.Capstone2_BackEnd.NutriApp.model.BaseUser;

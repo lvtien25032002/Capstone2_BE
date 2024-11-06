@@ -1,10 +1,9 @@
 package cap2.example.Capstone2_BackEnd.NutriApp.controller;
 
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.common.response.ApiResponse;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.request.recipe.RecipeCreateRequest;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.request.recipe.RecipeUpdateRequest;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.request.recipe.SearchRecipeByIngredientsRequest;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.response.recipe.RecipeResponse;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.recipe.RecipeRequest;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.recipe.SearchRecipeByIngredientsRequest;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.recipe.RecipeResponse;
 import cap2.example.Capstone2_BackEnd.NutriApp.service.RecipeService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -72,7 +71,7 @@ public class RecipeController {
     }
 
     @PostMapping
-    ApiResponse<RecipeResponse> createRecipe(@RequestBody RecipeCreateRequest request) {
+    ApiResponse<RecipeResponse> createRecipe(@RequestBody RecipeRequest request) {
         ApiResponse<RecipeResponse> apiResponse = new ApiResponse<>();
         apiResponse.setData(recipeService.createRecipe(request));
         apiResponse.setMessage("Successfully created recipe");
@@ -88,7 +87,7 @@ public class RecipeController {
     }
 
     @PutMapping("/{recipeId}")
-    ApiResponse<RecipeResponse> updateRecipe(@PathVariable String recipeId, @RequestBody RecipeUpdateRequest request) {
+    ApiResponse<RecipeResponse> updateRecipe(@PathVariable String recipeId, @RequestBody RecipeRequest request) {
         ApiResponse<RecipeResponse> apiResponse = new ApiResponse<>();
         apiResponse.setData(recipeService.updateRecipe(recipeId, request));
         apiResponse.setMessage("Success");

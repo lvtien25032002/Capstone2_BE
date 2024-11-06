@@ -1,13 +1,14 @@
 package cap2.example.Capstone2_BackEnd.NutriApp.service;
 
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.common.response.MealTypeResponse;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.common.response.PagingAndSortingAPIResponse;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.request.recipe.RecipeCreateRequest;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.request.recipe.RecipeUpdateRequest;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.request.recipe.SearchRecipeByIngredientsRequest;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.request.recipe_ingredient.IngredientForRecipeRequest;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.response.recipe.RecipeResponse;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.response.recipe_ingredient.IngredientForRecipeResponse;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.recipe.RecipeRequest;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.recipe.SearchRecipeByIngredientsRequest;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.recipe_ingredient.IngredientForRecipeRequest;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.recipe.RecipeResponse;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.recipe_ingredient.IngredientForRecipeResponse;
 import cap2.example.Capstone2_BackEnd.NutriApp.enums.ErrorCode;
+import cap2.example.Capstone2_BackEnd.NutriApp.enums.MealType;
 import cap2.example.Capstone2_BackEnd.NutriApp.exception.AppException;
 import cap2.example.Capstone2_BackEnd.NutriApp.mapper.RecipeMapper;
 import cap2.example.Capstone2_BackEnd.NutriApp.model.Recipe;
@@ -22,6 +23,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.List;
@@ -34,7 +36,8 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class RecipeService {
+public class RecipeService
+{
     RecipeRepository recipeRepository;
     IngredientRepository ingredientRepository;
     RecipeMapper recipeMapper;
@@ -66,73 +69,47 @@ public class RecipeService {
     public List<RecipeResponse> getAllRecipes() {
         return recipeRepository.findAll().stream().map(recipe -> {
             RecipeResponse recipeResponse = recipeMapper.toRecipeResponse(recipe);
-            List<IngredientForRecipeResponse> ingredientList = recipeIngredientService.getIngredientsForRecipeResponse(recipe);
-            recipeResponse.setIngredientList(ingredientList);
+            // Logic for Ingredient Response
+            recipeResponse.setIngredientList(recipeIngredientService.getIngredientsForRecipeResponse(recipe));
+
+            // Logic for MealType Response
+            recipeResponse.setMealTypeList(setMealTypeResponse(recipe.getMealType()));
             return recipeResponse;
         }).toList();
 
     }
 
-
-    public RecipeResponse createRecipe(RecipeCreateRequest request) {
+    @Transactional
+    public RecipeResponse createRecipe(RecipeRequest request) {
         if (recipeRepository.existsByRecipeName(request.getRecipeName())) {
             throw new AppException(ErrorCode.RECIPE_EXIST);
         }
-        UUID uuid = UUID.randomUUID();
-        log.info("1");
-        Recipe recipe = recipeMapper.toRecipe(request);
-        log.info("2");
-        recipe.setRecipe_ID(uuid.toString());
-        Set<IngredientForRecipeRequest> ingredients = Set.copyOf(request.getIngredientList());
-        Double totalCalories = 0.0;
-        Double totalProtein  = 0.0;
-        Double totalCarbs    = 0.0;
-        Double totalFat      = 0.0;
-        for (IngredientForRecipeRequest ingredient : ingredients) {
-            if (ingredient.getIngredientId() == null) {
-                throw new AppException(ErrorCode.INGREDIENT_IN_LIST_NOT_NULL);
-            }
-            if (ingredientRepository.findById(ingredient.getIngredientId()).isEmpty()) {
-                throw new AppException(ErrorCode.INGREDIENT_IN_LIST_NOT_FOUND);
-            }
-            totalCalories += ingredientRepository.findById(ingredient.getIngredientId()).get().getCalories() * ingredient.getQuantity();
-            totalProtein  += ingredientRepository.findById(ingredient.getIngredientId()).get().getProtein() * ingredient.getQuantity();
-            totalCarbs    += ingredientRepository.findById(ingredient.getIngredientId()).get().getCarbs() * ingredient.getQuantity();
-            totalFat      += ingredientRepository.findById(ingredient.getIngredientId()).get().getFat() * ingredient.getQuantity();
-        }
-        log.info("Total Calories: " + totalCalories);
-        recipe.setTotalCalories(totalCalories);
-        recipe.setTotalProtein(totalProtein);
-        recipe.setTotalCarbs(totalCarbs);
-        recipe.setTotalFat(totalFat);
-        recipe = recipeRepository.save(recipe);
-        RecipeResponse recipeResponse = recipeMapper.toRecipeResponse(recipe);
-        for (IngredientForRecipeRequest ingredient : ingredients) {
-            recipeIngredientService.createRecipeIngredient(recipe, ingredient);
-        }
-        List<IngredientForRecipeResponse> ingredientList = recipeIngredientService.getIngredientsForRecipeResponse(recipe);
-        recipeResponse.setIngredientList(ingredientList);
-        return recipeResponse;
+        return setRecipeToSaveAndResponse(request,null);
     }
 
 
     public RecipeResponse getRecipe(String id) {
         Recipe recipe = recipeRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.RECIPE_NOT_FOUND));
-        List<IngredientForRecipeResponse> ingredientList = recipeIngredientService.getIngredientsForRecipeResponse(recipe);
+
+        //Logic for Ingredient Response
         RecipeResponse recipeResponse = recipeMapper.toRecipeResponse(recipe);
-        recipeResponse.setIngredientList(ingredientList);
+        recipeResponse.setIngredientList(recipeIngredientService.getIngredientsForRecipeResponse(recipe));
+
+        //Logic for MealType Response
+        recipeResponse.setMealTypeList(setMealTypeResponse(recipe.getMealType()));
         return recipeResponse;
     }
 
-
-    public RecipeResponse updateRecipe(String id, RecipeUpdateRequest request) {
+    @Transactional
+    public RecipeResponse updateRecipe(String id, RecipeRequest request) {
         Recipe recipe = recipeRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.RECIPE_NOT_FOUND));
-        recipeMapper.updateRecipe(recipe, request);
-
-        return recipeMapper.toRecipeResponse(recipeRepository.save(recipe));
+        recipeIngredientRepository.deleteRecipe_IngredientByRecipe(recipe);
+        return setRecipeToSaveAndResponse(request, id);
     }
+
+
 
     public String deleteRecipe(String id) {
         Recipe recipe = recipeRepository.findById(id)
@@ -214,6 +191,72 @@ public class RecipeService {
             recipeResponse.setIngredientList(ingredientList);
             return recipeResponse;
         }).toList();
+    }
+
+
+    // Private Methods for Business Logic
+    private Set<MealTypeResponse> setMealTypeResponse(Set<MealType> mealTypes){
+        Set<MealTypeResponse> mealTypeResponse = new HashSet<>();
+        for(MealType mealType : mealTypes){
+            mealTypeResponse.add(MealTypeResponse.builder()
+                    .name(mealType.name())
+                    .displayName(mealType.getDisplayName())
+                    .build());
+        }
+        return mealTypeResponse;
+    }
+
+
+    @Transactional
+    protected RecipeResponse setRecipeToSaveAndResponse(RecipeRequest request, String id) {
+        Recipe recipe = new Recipe();
+        if (id != null){
+            recipe = recipeRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.RECIPE_NOT_FOUND));
+            recipeIngredientRepository.deleteRecipe_IngredientByRecipe(recipe);
+            recipeMapper.updateRecipe(recipe, request);
+        }
+        else{
+            UUID uuid = UUID.randomUUID();
+            id = uuid.toString();
+            recipe.setRecipe_ID(id);
+            recipe = recipeMapper.toRecipe(request);
+        }
+        // Logic for totalCalories, totalProtein, totalCarbs, totalFat and validation for ingredients
+        Double totalCalories = 0.0;
+        Double totalProtein  = 0.0;
+        Double totalCarbs    = 0.0;
+        Double totalFat      = 0.0;
+        for (IngredientForRecipeRequest ingredient : request.getIngredientList()) {
+            if (ingredient.getIngredientId() == null) {
+                throw new AppException(ErrorCode.INGREDIENT_IN_LIST_NOT_NULL);
+            }
+            if (ingredientRepository.findById(ingredient.getIngredientId()).isEmpty()) {
+                throw new AppException(ErrorCode.INGREDIENT_IN_LIST_NOT_FOUND);
+            }
+            totalCalories += ingredientRepository.findById(ingredient.getIngredientId()).get().getCalories() * ingredient.getQuantity();
+            totalProtein  += ingredientRepository.findById(ingredient.getIngredientId()).get().getProtein() * ingredient.getQuantity();
+            totalCarbs    += ingredientRepository.findById(ingredient.getIngredientId()).get().getCarbs() * ingredient.getQuantity();
+            totalFat      += ingredientRepository.findById(ingredient.getIngredientId()).get().getFat() * ingredient.getQuantity();
+        }
+        recipe.setTotalCalories(totalCalories);
+        recipe.setTotalProtein(totalProtein);
+        recipe.setTotalCarbs(totalCarbs);
+        recipe.setTotalFat(totalFat);
+        // Logic for MealType Create
+        Set<MealType> mealTypeSet = new HashSet<>();
+        for(String meal : request.getMealType()){
+            mealTypeSet.add(MealType.valueOf(meal));
+        }
+        recipe.setMealType(mealTypeSet);
+        recipe = recipeRepository.save(recipe);
+        // Logic for Recipe_Ingredient Create
+        RecipeResponse recipeResponse = recipeMapper.toRecipeResponse(recipe);
+        for (IngredientForRecipeRequest ingredient : request.getIngredientList()) {
+            recipeIngredientService.createRecipeIngredient(recipe, ingredient);
+        }
+        //Logic for Ingredient Response
+        recipeResponse.setIngredientList(recipeIngredientService.getIngredientsForRecipeResponse(recipe));
+        return recipeResponse;
     }
 }
 

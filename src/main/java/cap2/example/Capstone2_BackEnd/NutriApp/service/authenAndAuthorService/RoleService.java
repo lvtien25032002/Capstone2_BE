@@ -1,9 +1,9 @@
 package cap2.example.Capstone2_BackEnd.NutriApp.service.authenAndAuthorService;
 
 
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.request.role.RoleRequest;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.request.role.RoleUpdateRequest;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.response.role.RoleResponse;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.authenAndAuthor.author.role.RoleRequest;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.authenAndAuthor.author.role.RoleUpdateRequest;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.authenAndAuthor.author.role.RoleResponse;
 import cap2.example.Capstone2_BackEnd.NutriApp.enums.ErrorCode;
 import cap2.example.Capstone2_BackEnd.NutriApp.exception.AppException;
 import cap2.example.Capstone2_BackEnd.NutriApp.mapper.authenAndAuthorMapper.RoleMapper;
