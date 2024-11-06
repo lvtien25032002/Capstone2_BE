@@ -3,7 +3,6 @@ package cap2.example.Capstone2_BackEnd.NutriApp.configuration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -25,8 +24,10 @@ import java.util.Arrays;
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
-    //    "/permissions", "/permissions/*", "/roles", "/roles/*"
-    private static final String[] AUTH_WHITELIST = {
+    private final String[] PUBLIC_ENDPOINT = {"/auth/user/login", "/auth/admin/login", "/auth/user/introspect",
+            "/auth/admin/introspect", "/auth/logout", "/auth/refresh", "/ingredient", "/ingredient/*", "/recipe",
+            "meal-types", "meal-types/*",
+
             "/v1/api/**",
             "/v2/api-docs",
             "/v3/api-docs",
@@ -37,11 +38,7 @@ public class SecurityConfig {
             "/configuration/security",
             "/swagger-ui/**",
             "/webjars/**",
-            "/swagger-ui.html"
-    };
-    private final String[] PUBLIC_ENDPOINT = {"/user", "/auth/user/login", "/auth/admin/login", "/auth/user/introspect",
-            "/auth/admin/introspect", "/auth/logout", "/auth/refresh", "/ingredient", "/ingredient/*", "/recipe",
-            "/recipe/*", "/image/*", "/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**",};
+            "/swagger-ui.html"};
     @Autowired
     private CustomJwtDecoder customJwtDecoder;
 
@@ -50,11 +47,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.authorizeHttpRequests(request ->
                 request
-                        .requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINT).permitAll()
-                        .requestMatchers(HttpMethod.GET, PUBLIC_ENDPOINT).permitAll()
-                        .requestMatchers(HttpMethod.PUT, PUBLIC_ENDPOINT).permitAll()
-                        .requestMatchers(HttpMethod.DELETE, PUBLIC_ENDPOINT).permitAll()
-                        .requestMatchers(AUTH_WHITELIST).permitAll()
+                        .requestMatchers(PUBLIC_ENDPOINT).permitAll()
                         .anyRequest().authenticated());
 
 
@@ -76,7 +69,7 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://localhost:8080",
-                "https://web-nutri-cook-git-main-huutuanns-projects.vercel.app"));
+                "https://web-nutri-cook-au9rs09xw-huutuanns-projects.vercel.app"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
         configuration.setAllowCredentials(true);

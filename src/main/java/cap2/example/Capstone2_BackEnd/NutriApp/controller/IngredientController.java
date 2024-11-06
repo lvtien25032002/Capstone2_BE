@@ -1,10 +1,9 @@
 package cap2.example.Capstone2_BackEnd.NutriApp.controller;
 
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.common.response.ApiResponse;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.request.ingredient.IngredientCreateRequest;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.request.ingredient.IngredientUpdateRequest;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.response.ingredient.IngredientResponse;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.response.recipe.RecipeResponse;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.ingredient.ingredient.IngredientCreateRequest;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.ingredient.ingredient.IngredientUpdateRequest;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.ingredient.ingredient.IngredientResponse;
 import cap2.example.Capstone2_BackEnd.NutriApp.service.IngredientService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;

@@ -1,7 +1,7 @@
 package cap2.example.Capstone2_BackEnd.NutriApp.controller.authenAndAuthorController;
 
 
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.authentication.*;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.authenAndAuthor.authen.*;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.common.response.ApiResponse;
 import cap2.example.Capstone2_BackEnd.NutriApp.service.authenAndAuthorService.AuthenticationService;
 import com.nimbusds.jose.JOSEException;

@@ -1,8 +1,8 @@
 package cap2.example.Capstone2_BackEnd.NutriApp.mapper.authenAndAuthorMapper;
 
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.request.role.RoleRequest;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.request.role.RoleUpdateRequest;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.response.role.RoleResponse;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.authenAndAuthor.author.role.RoleRequest;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.authenAndAuthor.author.role.RoleUpdateRequest;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.authenAndAuthor.author.role.RoleResponse;
 import cap2.example.Capstone2_BackEnd.NutriApp.model.Role;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

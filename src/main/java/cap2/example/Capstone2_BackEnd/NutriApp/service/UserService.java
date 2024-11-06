@@ -2,10 +2,10 @@ package cap2.example.Capstone2_BackEnd.NutriApp.service;
 
 
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.common.response.PagingAndSortingAPIResponse;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.request.user.UpdateDietaryPreference;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.request.user.UserCreateRequest;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.request.user.UserUpdateRequest;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.response.user.UserResponse;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.user.UpdateDietaryPreference;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.user.UserCreateRequest;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.user.UserUpdateRequest;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.user.UserResponse;
 import cap2.example.Capstone2_BackEnd.NutriApp.enums.DietaryPreference;
 import cap2.example.Capstone2_BackEnd.NutriApp.enums.ErrorCode;
 import cap2.example.Capstone2_BackEnd.NutriApp.exception.AppException;

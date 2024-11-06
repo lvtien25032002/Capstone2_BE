@@ -1,9 +1,9 @@
 package cap2.example.Capstone2_BackEnd.NutriApp.service;
 
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.common.response.PagingAndSortingAPIResponse;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.request.ingredient.IngredientCreateRequest;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.request.ingredient.IngredientUpdateRequest;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.response.ingredient.IngredientResponse;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.ingredient.ingredient.IngredientCreateRequest;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.ingredient.ingredient.IngredientUpdateRequest;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.ingredient.ingredient.IngredientResponse;
 import cap2.example.Capstone2_BackEnd.NutriApp.enums.ErrorCode;
 import cap2.example.Capstone2_BackEnd.NutriApp.exception.AppException;
 import cap2.example.Capstone2_BackEnd.NutriApp.mapper.IngredientMapper;
