@@ -1,6 +1,5 @@
 package cap2.example.Capstone2_BackEnd.NutriApp.dto.response.ingredient;
 
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.common.response.ImageResponse;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -14,7 +13,7 @@ public class IngredientResponse {
     String ingredientName;
     String ingredientType;
     String ingredientDescription;
-    ImageResponse imageURL;
+    String imageURL;
     double calories;
     double protein;
     double fat;

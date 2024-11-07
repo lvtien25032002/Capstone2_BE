@@ -24,15 +24,13 @@ public class Recipe {
     String description;
     String cookingInstructions;
 
-    @ManyToOne
-    @JoinColumn(name = "image_id", unique = false)
-    Image imageURL;
+    String imageURL;
 
     Double totalCalories;
     Double totalProtein;
     Double totalCarbs;
     Double totalFat;
-    
+
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
     Set<Recipe_Ingredient> recipeIngredients;
 }

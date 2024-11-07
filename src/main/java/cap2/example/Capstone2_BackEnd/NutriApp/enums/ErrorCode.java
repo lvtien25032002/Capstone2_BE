@@ -67,8 +67,31 @@ public enum ErrorCode {
     RECIPE_NOT_FOUND(3009, "Recipe not found", HttpStatus.NOT_FOUND),
 
     // Recipe Ingredient Errors
-    RECIPE_INGREDIENT_NOT_FOUND(3020, "Recipe Ingredient not found", HttpStatus.NOT_FOUND);
+    RECIPE_INGREDIENT_NOT_FOUND(3020, "Recipe Ingredient not found", HttpStatus.NOT_FOUND),
 
+    // Daily_Nutrition_Tracking Errors
+    DATE_REQUIRED(4001, "Date cannot be null", HttpStatus.BAD_REQUEST),
+    DATE_DUPLICATE(4002, "Date already exists for this user", HttpStatus.CONFLICT),
+    DATE_INVALID(4003, "Invalid date format", HttpStatus.BAD_REQUEST),
+    RECIPE_IN_DISHNAME_NOT_FOUND(4004, "Recipe in Dish name list request to daily nutrition tracking " +
+            "not found in database", HttpStatus.NOT_FOUND),
+
+    // Lỗi liên quan đến giá trị calo
+    CALORIES_REQUIRED(4004, "Total calories is required", HttpStatus.BAD_REQUEST),
+    CALORIES_NEGATIVE(4005, "Total calories cannot be negative", HttpStatus.BAD_REQUEST),
+
+    // Lỗi liên quan đến giá trị carbohydrates
+    CARBS_REQUIRED(4006, "Total carbs is required", HttpStatus.BAD_REQUEST),
+    CARBS_NEGATIVE(4007, "Total carbs cannot be negative", HttpStatus.BAD_REQUEST),
+
+    // Lỗi liên quan đến giá trị protein
+    PROTEIN_REQUIRED(4008, "Total protein is required", HttpStatus.BAD_REQUEST),
+    PROTEIN_NEGATIVE(4009, "Total protein cannot be negative", HttpStatus.BAD_REQUEST),
+
+    // Lỗi liên quan đến giá trị chất béo
+    FAT_REQUIRED(4010, "Total fat is required", HttpStatus.BAD_REQUEST),
+    FAT_NEGATIVE(4011, "Total fat cannot be negative", HttpStatus.BAD_REQUEST),
+    NUTRITION_NOT_FOUND(4012, "Nutrition not found", HttpStatus.NOT_FOUND);
 
     private int code;
     private String message;

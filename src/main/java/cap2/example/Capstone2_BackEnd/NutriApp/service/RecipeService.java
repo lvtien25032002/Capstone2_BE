@@ -8,7 +8,6 @@ import cap2.example.Capstone2_BackEnd.NutriApp.dto.response.recipe_ingredient.In
 import cap2.example.Capstone2_BackEnd.NutriApp.enums.ErrorCode;
 import cap2.example.Capstone2_BackEnd.NutriApp.exception.AppException;
 import cap2.example.Capstone2_BackEnd.NutriApp.mapper.RecipeMapper;
-import cap2.example.Capstone2_BackEnd.NutriApp.model.Image;
 import cap2.example.Capstone2_BackEnd.NutriApp.model.Recipe;
 import cap2.example.Capstone2_BackEnd.NutriApp.repository.IngredientRepository;
 import cap2.example.Capstone2_BackEnd.NutriApp.repository.RecipeIngredientRepository;
@@ -44,11 +43,6 @@ public class RecipeService {
         UUID uuid = UUID.randomUUID();
         Recipe recipe = recipeMapper.toRecipe(request);
         recipe.setRecipe_ID(uuid.toString());
-        Image image = imageRepository.findImageByUrl(request.getImageURL());
-        if (image == null)
-            throw new AppException(ErrorCode.IMAGE_NOT_FOUND);
-
-        recipe.setImageURL(image);
         Set<IngredientForRecipeRequest> ingredients = Set.copyOf(request.getIngredientList());
         for (IngredientForRecipeRequest ingredient : ingredients) {
             if (!ingredientRepository.existsByIngredientName(ingredient.getIngredientName())) {

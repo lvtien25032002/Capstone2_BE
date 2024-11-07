@@ -6,7 +6,6 @@ import cap2.example.Capstone2_BackEnd.NutriApp.dto.response.ingredient.Ingredien
 import cap2.example.Capstone2_BackEnd.NutriApp.enums.ErrorCode;
 import cap2.example.Capstone2_BackEnd.NutriApp.exception.AppException;
 import cap2.example.Capstone2_BackEnd.NutriApp.mapper.IngredientMapper;
-import cap2.example.Capstone2_BackEnd.NutriApp.model.Image;
 import cap2.example.Capstone2_BackEnd.NutriApp.model.Ingredient;
 import cap2.example.Capstone2_BackEnd.NutriApp.repository.IngredientRepository;
 import cap2.example.Capstone2_BackEnd.NutriApp.repository.commonRepository.ImageRepository;
@@ -32,11 +31,7 @@ public class IngredientService {
     public IngredientResponse createIngredient(IngredientCreateRequest request) {
         if (ingredientRepository.existsByIngredientName(request.getIngredientName()))
             throw new AppException(ErrorCode.INGREDIENT_EXIST);
-        Image image = imageRepository.findImageByUrl(request.getImageURL());
-        if (image == null)
-            throw new AppException(ErrorCode.IMAGE_NOT_FOUND);
         Ingredient ingredient = ingredientMapper.toIngredient(request);
-        ingredient.setImageURL(image);
         return ingredientMapper.toIngredientResponse(ingredientRepository.save(ingredient));
     }
 

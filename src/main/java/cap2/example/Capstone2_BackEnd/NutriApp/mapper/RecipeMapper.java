@@ -10,13 +10,11 @@ import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring")
 public interface RecipeMapper {
-    @Mapping(target = "imageURL", ignore = true)
     Recipe toRecipe(RecipeCreateRequest request);
 
     @Mapping(source = "recipe_ID", target = "recipe_ID")
     RecipeResponse toRecipeResponse(Recipe recipe);
 
-    @Mapping(target = "imageURL", ignore = true)
     void updateRecipe(@MappingTarget Recipe recipe, RecipeUpdateRequest request);
 
 }
