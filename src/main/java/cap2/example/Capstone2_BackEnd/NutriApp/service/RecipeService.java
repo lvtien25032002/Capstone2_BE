@@ -71,7 +71,7 @@ public class RecipeService {
             recipeResponse.setIngredientList(recipeIngredientService.getIngredientsForRecipeResponse(recipe));
 
             // Logic for MealType Response
-            recipeResponse.setMealTypeList(setMealTypeResponse(recipe.getMealType()));
+            recipeResponse.setMealType(setMealTypeResponse(recipe.getMealType()));
             return recipeResponse;
         }).toList();
 
@@ -95,7 +95,7 @@ public class RecipeService {
         recipeResponse.setIngredientList(recipeIngredientService.getIngredientsForRecipeResponse(recipe));
 
         //Logic for MealType Response
-        recipeResponse.setMealTypeList(setMealTypeResponse(recipe.getMealType()));
+        recipeResponse.setMealType(setMealTypeResponse(recipe.getMealType()));
         return recipeResponse;
     }
 
@@ -249,7 +249,7 @@ public class RecipeService {
         recipeResponse.setIngredientList(recipeIngredientService.getIngredientsForRecipeResponse(recipe));
 
         //Logic for MealType Response
-        recipeResponse.setMealTypeList(setMealTypeResponse(recipe.getMealType()));
+        recipeResponse.setMealType(setMealTypeResponse(recipe.getMealType()));
         return recipeResponse;
     }
 }
