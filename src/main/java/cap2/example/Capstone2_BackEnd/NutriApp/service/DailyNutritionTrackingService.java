@@ -69,8 +69,7 @@ public class DailyNutritionTrackingService {
         for (NutritionUpdateRequest.MealForUpdate meal : request.getMeals()) {
             // Duyệt qua từng món ăn trong danh sách dishNames
             for (String dishName : meal.getDishNames()) {
-                Recipe recipe = recipeRepository.findByRecipeName(dishName)
-                        .orElseThrow(() -> new RuntimeException("Recipe not found: " + dishName));
+                Recipe recipe = recipeRepository.findByRecipeName(dishName);
 
                 // Cộng dồn các giá trị dinh dưỡng từ mỗi món ăn
                 totalCalories += recipe.getTotalCalories();
@@ -122,9 +121,7 @@ public class DailyNutritionTrackingService {
         for (MealRequest meal : request.getMeals()) {
             // Duyệt qua từng món ăn trong danh sách dishNames
             for (String dishName : meal.getDishNames()) {
-                Recipe recipe = recipeRepository.findByRecipeName(dishName)
-                        .orElseThrow(() -> new AppException(ErrorCode.RECIPE_IN_DISHNAME_NOT_FOUND));
-
+                Recipe recipe = recipeRepository.findByRecipeName(dishName);
                 // Cộng dồn các giá trị dinh dưỡng từ mỗi món ăn
                 totalCalories += recipe.getTotalCalories();
                 totalProtein += recipe.getTotalProtein();
