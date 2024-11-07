@@ -13,5 +13,4 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 public class MealTypeResponse {
     String name;
-    String displayName;
 }

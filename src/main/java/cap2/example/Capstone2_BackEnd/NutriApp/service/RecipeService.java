@@ -1,11 +1,10 @@
 package cap2.example.Capstone2_BackEnd.NutriApp.service;
 
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.common.response.MealTypeResponse;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.common.response.PagingAndSortingAPIResponse;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.recipe.RecipeRequest;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.recipe.RecipeResponse;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.recipe.SearchRecipeByIngredientsRequest;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.recipe_ingredient.IngredientForRecipeRequest;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.recipe.RecipeResponse;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.recipe_ingredient.IngredientForRecipeResponse;
 import cap2.example.Capstone2_BackEnd.NutriApp.enums.ErrorCode;
 import cap2.example.Capstone2_BackEnd.NutriApp.enums.MealType;
@@ -36,8 +35,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class RecipeService
-{
+public class RecipeService {
     RecipeRepository recipeRepository;
     IngredientRepository ingredientRepository;
     RecipeMapper recipeMapper;
@@ -73,7 +71,7 @@ public class RecipeService
             recipeResponse.setIngredientList(recipeIngredientService.getIngredientsForRecipeResponse(recipe));
 
             // Logic for MealType Response
-            recipeResponse.setMealTypeList(setMealTypeResponse(recipe.getMealType()));
+            recipeResponse.setMealType(setMealTypeResponse(recipe.getMealType()));
             return recipeResponse;
         }).toList();
 
@@ -84,7 +82,7 @@ public class RecipeService
         if (recipeRepository.existsByRecipeName(request.getRecipeName())) {
             throw new AppException(ErrorCode.RECIPE_EXIST);
         }
-        return setRecipeToSaveAndResponse(request,null);
+        return setRecipeToSaveAndResponse(request, null);
     }
 
 
@@ -97,7 +95,7 @@ public class RecipeService
         recipeResponse.setIngredientList(recipeIngredientService.getIngredientsForRecipeResponse(recipe));
 
         //Logic for MealType Response
-        recipeResponse.setMealTypeList(setMealTypeResponse(recipe.getMealType()));
+        recipeResponse.setMealType(setMealTypeResponse(recipe.getMealType()));
         return recipeResponse;
     }
 
@@ -108,7 +106,6 @@ public class RecipeService
         recipeIngredientRepository.deleteRecipe_IngredientByRecipe(recipe);
         return setRecipeToSaveAndResponse(request, id);
     }
-
 
 
     public String deleteRecipe(String id) {
@@ -195,14 +192,9 @@ public class RecipeService
 
 
     // Private Methods for Business Logic
-    private Set<MealTypeResponse> setMealTypeResponse(Set<MealType> mealTypes){
-        Set<MealTypeResponse> mealTypeResponse = new HashSet<>();
-        for(MealType mealType : mealTypes){
-            mealTypeResponse.add(MealTypeResponse.builder()
-                    .name(mealType.name())
-                    .displayName(mealType.getDisplayName())
-                    .build());
-        }
+    private Set<MealType> setMealTypeResponse(Set<MealType> mealTypes) {
+        Set<MealType> mealTypeResponse = new HashSet<>();
+        mealTypeResponse.addAll(mealTypes);
         return mealTypeResponse;
     }
 
@@ -210,12 +202,11 @@ public class RecipeService
     @Transactional
     protected RecipeResponse setRecipeToSaveAndResponse(RecipeRequest request, String id) {
         Recipe recipe = new Recipe();
-        if (id != null){
+        if (id != null) {
             recipe = recipeRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.RECIPE_NOT_FOUND));
             recipeIngredientRepository.deleteRecipe_IngredientByRecipe(recipe);
             recipeMapper.updateRecipe(recipe, request);
-        }
-        else{
+        } else {
             UUID uuid = UUID.randomUUID();
             id = uuid.toString();
             recipe.setRecipe_ID(id);
@@ -223,9 +214,9 @@ public class RecipeService
         }
         // Logic for totalCalories, totalProtein, totalCarbs, totalFat and validation for ingredients
         Double totalCalories = 0.0;
-        Double totalProtein  = 0.0;
-        Double totalCarbs    = 0.0;
-        Double totalFat      = 0.0;
+        Double totalProtein = 0.0;
+        Double totalCarbs = 0.0;
+        Double totalFat = 0.0;
         for (IngredientForRecipeRequest ingredient : request.getIngredientList()) {
             if (ingredient.getIngredientId() == null) {
                 throw new AppException(ErrorCode.INGREDIENT_IN_LIST_NOT_NULL);
@@ -234,9 +225,9 @@ public class RecipeService
                 throw new AppException(ErrorCode.INGREDIENT_IN_LIST_NOT_FOUND);
             }
             totalCalories += ingredientRepository.findById(ingredient.getIngredientId()).get().getCalories() * ingredient.getQuantity();
-            totalProtein  += ingredientRepository.findById(ingredient.getIngredientId()).get().getProtein() * ingredient.getQuantity();
-            totalCarbs    += ingredientRepository.findById(ingredient.getIngredientId()).get().getCarbs() * ingredient.getQuantity();
-            totalFat      += ingredientRepository.findById(ingredient.getIngredientId()).get().getFat() * ingredient.getQuantity();
+            totalProtein += ingredientRepository.findById(ingredient.getIngredientId()).get().getProtein() * ingredient.getQuantity();
+            totalCarbs += ingredientRepository.findById(ingredient.getIngredientId()).get().getCarbs() * ingredient.getQuantity();
+            totalFat += ingredientRepository.findById(ingredient.getIngredientId()).get().getFat() * ingredient.getQuantity();
         }
         recipe.setTotalCalories(totalCalories);
         recipe.setTotalProtein(totalProtein);
@@ -244,7 +235,7 @@ public class RecipeService
         recipe.setTotalFat(totalFat);
         // Logic for MealType Create
         Set<MealType> mealTypeSet = new HashSet<>();
-        for(String meal : request.getMealType()){
+        for (String meal : request.getMealType()) {
             mealTypeSet.add(MealType.valueOf(meal));
         }
         recipe.setMealType(mealTypeSet);
@@ -256,6 +247,9 @@ public class RecipeService
         }
         //Logic for Ingredient Response
         recipeResponse.setIngredientList(recipeIngredientService.getIngredientsForRecipeResponse(recipe));
+
+        //Logic for MealType Response
+        recipeResponse.setMealType(setMealTypeResponse(recipe.getMealType()));
         return recipeResponse;
     }
 }
