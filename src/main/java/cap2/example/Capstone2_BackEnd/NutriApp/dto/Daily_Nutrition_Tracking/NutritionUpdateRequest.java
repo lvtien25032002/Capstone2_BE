@@ -1,4 +1,4 @@
-package cap2.example.Capstone2_BackEnd.NutriApp.dto.request.Daily_Nutrition_Tracking;
+package cap2.example.Capstone2_BackEnd.NutriApp.dto.Daily_Nutrition_Tracking;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;

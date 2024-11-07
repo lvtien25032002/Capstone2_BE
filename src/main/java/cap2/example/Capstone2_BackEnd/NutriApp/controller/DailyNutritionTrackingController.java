@@ -1,10 +1,10 @@
 package cap2.example.Capstone2_BackEnd.NutriApp.controller;
 
 
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.Daily_Nutrition_Tracking.DailyNutritionRequest;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.Daily_Nutrition_Tracking.NutritionResponse;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.Daily_Nutrition_Tracking.NutritionUpdateRequest;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.common.response.ApiResponse;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.request.Daily_Nutrition_Tracking.DailyNutritionRequest;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.request.Daily_Nutrition_Tracking.NutritionUpdateRequest;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.response.Daily_Nutrition_Tracking.NutritionResponse;
 import cap2.example.Capstone2_BackEnd.NutriApp.model.Daily_Nutrition_Tracking;
 import cap2.example.Capstone2_BackEnd.NutriApp.service.DailyNutritionTrackingService;
 import lombok.AccessLevel;

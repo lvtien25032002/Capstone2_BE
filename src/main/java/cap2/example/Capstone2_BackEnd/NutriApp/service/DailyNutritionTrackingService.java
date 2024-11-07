@@ -1,9 +1,9 @@
 package cap2.example.Capstone2_BackEnd.NutriApp.service;
 
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.request.Daily_Nutrition_Tracking.DailyNutritionRequest;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.request.Daily_Nutrition_Tracking.MealRequest;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.request.Daily_Nutrition_Tracking.NutritionUpdateRequest;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.response.Daily_Nutrition_Tracking.NutritionResponse;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.Daily_Nutrition_Tracking.DailyNutritionRequest;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.Daily_Nutrition_Tracking.MealRequest;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.Daily_Nutrition_Tracking.NutritionResponse;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.Daily_Nutrition_Tracking.NutritionUpdateRequest;
 import cap2.example.Capstone2_BackEnd.NutriApp.enums.ErrorCode;
 import cap2.example.Capstone2_BackEnd.NutriApp.exception.AppException;
 import cap2.example.Capstone2_BackEnd.NutriApp.mapper.Daily_Nutrition_TrackingMapper;

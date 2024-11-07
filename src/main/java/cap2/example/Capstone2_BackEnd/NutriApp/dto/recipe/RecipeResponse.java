@@ -1,7 +1,7 @@
 package cap2.example.Capstone2_BackEnd.NutriApp.dto.recipe;
 
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.common.response.MealTypeResponse;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.recipe_ingredient.IngredientForRecipeResponse;
+import cap2.example.Capstone2_BackEnd.NutriApp.enums.MealType;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -23,6 +23,6 @@ public class RecipeResponse {
     Double totalProtein;
     Double totalCarbs;
     Double totalFat;
-    Set<MealTypeResponse> mealTypeList;
+    Set<MealType> mealType;
     List<IngredientForRecipeResponse> ingredientList;
 }

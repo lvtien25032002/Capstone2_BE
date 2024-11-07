@@ -1,4 +1,4 @@
-package cap2.example.Capstone2_BackEnd.NutriApp.dto.ingredient.ingredient;
+package cap2.example.Capstone2_BackEnd.NutriApp.dto.ingredient;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -7,22 +7,26 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class IngredientUpdateRequest {
+public class IngredientCreateRequest {
+
     @Size(min = 2, max = 50, message = "INGREDIENT_NAME_INVALID")
     @NotEmpty(message = "INGREDIENT_NAME_REQUIRED")
     String ingredientName;
 
     @NotEmpty(message = "INGREDIENT_TYPE_REQUIRED")
     String ingredientType;
+
     String ingredientDescription;
     String unit;
     String imageURL;
+
+
     @NotNull(message = " INGREDIENT_CALORIES_REQUIRED")
     double calories;
     @NotNull(message = "INGREDIENT_PROTEIN_REQUIRED")

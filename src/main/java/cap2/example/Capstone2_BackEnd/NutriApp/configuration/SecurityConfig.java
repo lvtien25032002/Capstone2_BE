@@ -25,7 +25,7 @@ import java.util.Arrays;
 @EnableMethodSecurity
 public class SecurityConfig {
     private final String[] PUBLIC_ENDPOINT = {"/auth/user/login", "/auth/admin/login", "/auth/user/introspect",
-            "/auth/admin/introspect", "/auth/logout", "/auth/refresh", "/ingredient", "/ingredient/*", "/recipe",
+            "/auth/admin/introspect", "/auth/logout", "/auth/refresh", "/ingredient", "/ingredient/*", "/recipe", "/recipe/*",
             "meal-types", "meal-types/*",
 
             "/v1/api/**",

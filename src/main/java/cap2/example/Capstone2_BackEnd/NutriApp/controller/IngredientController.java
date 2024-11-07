@@ -1,9 +1,9 @@
 package cap2.example.Capstone2_BackEnd.NutriApp.controller;
 
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.common.response.ApiResponse;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.ingredient.ingredient.IngredientCreateRequest;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.ingredient.ingredient.IngredientUpdateRequest;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.ingredient.ingredient.IngredientResponse;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.ingredient.IngredientCreateRequest;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.ingredient.IngredientResponse;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.ingredient.IngredientUpdateRequest;
 import cap2.example.Capstone2_BackEnd.NutriApp.service.IngredientService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -51,6 +51,7 @@ public class IngredientController {
         }
 
     }
+
     @GetMapping("/all")
     ApiResponse<List<IngredientResponse>> getAllRecipes() {
         ApiResponse<List<IngredientResponse>> apiResponse = new ApiResponse<>();

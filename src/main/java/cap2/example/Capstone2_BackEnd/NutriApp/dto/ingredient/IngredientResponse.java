@@ -1,6 +1,5 @@
-package cap2.example.Capstone2_BackEnd.NutriApp.dto.ingredient.ingredient;
+package cap2.example.Capstone2_BackEnd.NutriApp.dto.ingredient;
 
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.common.response.ImageResponse;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 

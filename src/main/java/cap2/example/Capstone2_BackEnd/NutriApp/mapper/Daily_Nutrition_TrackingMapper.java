@@ -1,7 +1,7 @@
 package cap2.example.Capstone2_BackEnd.NutriApp.mapper;
 
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.request.Daily_Nutrition_Tracking.NutritionCreateRequest;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.response.Daily_Nutrition_Tracking.NutritionResponse;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.Daily_Nutrition_Tracking.NutritionCreateRequest;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.Daily_Nutrition_Tracking.NutritionResponse;
 import cap2.example.Capstone2_BackEnd.NutriApp.model.Daily_Nutrition_Tracking;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
