@@ -54,15 +54,13 @@ public enum ErrorCode {
     INGREDIENT_EXIST(2007, "Ingredient exist", HttpStatus.BAD_REQUEST),
     INGREDIENT_NOT_FOUND(2008, "Ingredient not found", HttpStatus.NOT_FOUND),
     INGREDIENT_IN_LIST_NOT_FOUND(2009, "Ingredient in list of request not found", HttpStatus.BAD_REQUEST),
+    INGREDIENT_IN_LIST_NOT_NULL(2010, "Ingredient in list of request must not be null", HttpStatus.BAD_REQUEST),
+    INGREDIENT_LIST_NOT_NULL(2011, "Ingredient list must not be null", HttpStatus.BAD_REQUEST),
 
     // Recipe Errors
     RECIPE_NAME_INVALID(3001, "Recipe name must be between 5 and 100 characters", HttpStatus.BAD_REQUEST),
     RECIPE_NAME_REQUIRED(3002, "Recipe name is required", HttpStatus.BAD_REQUEST),
     RECIPE_COOKING_INSTRUCTIONS_INVALID(3003, "Cooking instructions must be between 10 and 200 characters", HttpStatus.BAD_REQUEST),
-    RECIPE_TOTAL_CALORIES_REQUIRED(3004, "Total calories are required", HttpStatus.BAD_REQUEST),
-    RECIPE_TOTAL_PROTEIN_REQUIRED(3005, "Total protein is required", HttpStatus.BAD_REQUEST),
-    RECIPE_TOTAL_CARBS_REQUIRED(3006, "Total carbohydrates are required", HttpStatus.BAD_REQUEST),
-    RECIPE_TOTAL_FAT_REQUIRED(3007, "Total fat is required", HttpStatus.BAD_REQUEST),
     RECIPE_EXIST(3008, "Recipe exist", HttpStatus.BAD_REQUEST),
     RECIPE_NOT_FOUND(3009, "Recipe not found", HttpStatus.NOT_FOUND),
 

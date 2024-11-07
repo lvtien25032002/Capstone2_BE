@@ -23,6 +23,7 @@ public class Ingredient {
     String ingredientName;
     String ingredientType;
     String ingredientDescription;
+    String unit;
 
     String imageURL;
 

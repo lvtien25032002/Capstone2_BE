@@ -1,6 +1,7 @@
 package cap2.example.Capstone2_BackEnd.NutriApp.model;
 
 
+import cap2.example.Capstone2_BackEnd.NutriApp.enums.MealType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,14 +24,16 @@ public class Recipe {
     String recipeName;
     String description;
     String cookingInstructions;
-
     String imageURL;
-
     Double totalCalories;
     Double totalProtein;
     Double totalCarbs;
     Double totalFat;
 
+    @ElementCollection(targetClass = MealType.class)
+    @Enumerated(EnumType.STRING)
+    Set<MealType> mealType;
+    
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
     Set<Recipe_Ingredient> recipeIngredients;
 }

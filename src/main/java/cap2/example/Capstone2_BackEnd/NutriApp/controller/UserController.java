@@ -2,18 +2,18 @@ package cap2.example.Capstone2_BackEnd.NutriApp.controller;
 
 
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.common.response.ApiResponse;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.common.response.ListReponse;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.request.user.UpdateDietaryPreference;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.request.user.UserCreateRequest;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.request.user.UserUpdateRequest;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.response.user.UserResponse;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.user.UpdateDietaryPreference;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.user.UserCreateRequest;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.user.UserUpdateRequest;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.user.UserResponse;
 import cap2.example.Capstone2_BackEnd.NutriApp.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/user")
@@ -25,12 +25,29 @@ public class UserController {
 
 
     @GetMapping("/all")
-    public ApiResponse<ListReponse> getAllUsers() {
-        var authentication = SecurityContextHolder.getContext().getAuthentication();
-        ApiResponse<ListReponse> userApiResponse = new ApiResponse<>();
-        userApiResponse.setMessage("Get all users successfully");
-        userApiResponse.setData(new ListReponse<>(userService.getAllUsers()));
-        return userApiResponse;
+    public Object getAllUsers(
+            @RequestParam(required = false) Integer pageNo,
+            @RequestParam(required = false) Integer pageSize,
+            @RequestParam(required = false) String[] sort) {
+
+        // If no pagination parameters are provided, return all users
+        if ((pageNo == null && pageSize == null && sort == null) || pageNo == -1) {
+            ApiResponse<List<UserResponse>> response = new ApiResponse<>();
+            response.setCode(1000);
+            response.setMessage("Get All Users successfully");
+            response.setData(userService.getAllUsers()); // Call your existing method to get all users
+            return response;
+        } else {
+
+            pageNo = pageNo - 1;
+            if (pageSize == null) {
+                pageSize = 10;
+            }
+            if (pageSize < 1) {
+                throw new IllegalArgumentException("Page size must be greater than 0");
+            }
+            return userService.getPagingAllUsers(pageNo, pageSize, sort);
+        }
     }
 
     @GetMapping("/{id}")

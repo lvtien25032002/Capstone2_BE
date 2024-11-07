@@ -2,8 +2,8 @@ package cap2.example.Capstone2_BackEnd.NutriApp.controller.authenAndAuthorContro
 
 
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.common.response.ApiResponse;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.request.permission.PermissionRequest;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.response.permission.PermissionResponse;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.authenAndAuthor.author.permission.PermissionRequest;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.authenAndAuthor.author.permission.PermissionResponse;
 import cap2.example.Capstone2_BackEnd.NutriApp.service.authenAndAuthorService.PermissionService;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
