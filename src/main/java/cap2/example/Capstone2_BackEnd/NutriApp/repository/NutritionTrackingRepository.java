@@ -7,10 +7,17 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Repository
 public interface NutritionTrackingRepository extends JpaRepository<Daily_Nutrition_Tracking, String> {
 
     @Query("SELECT COUNT(u) > 0 FROM Daily_Nutrition_Tracking u WHERE  u.User.User_ID  = :user_id AND u.date = :date ")
     boolean existsByUserAndDate(@Param("user_id") String user_id, @Param("date") LocalDate date);
+
+    @Query("SELECT u FROM Daily_Nutrition_Tracking u WHERE  u.User.User_ID  = :user_id AND u.date = :date ")
+    Daily_Nutrition_Tracking findDaily_Nutrition_TrackingByUserAndDate(@Param("user_id") String user_id, @Param("date") LocalDate date);
+
+    @Query("SELECT u FROM Daily_Nutrition_Tracking u WHERE  u.User.User_ID  = :user_id ")
+    List<Daily_Nutrition_Tracking> findDaily_Nutrition_TrackingByUser(@Param("user_id") String user_id);
 }

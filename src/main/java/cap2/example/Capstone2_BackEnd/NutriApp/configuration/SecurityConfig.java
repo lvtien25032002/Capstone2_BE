@@ -26,7 +26,8 @@ import java.util.Arrays;
 public class SecurityConfig {
     private final String[] PUBLIC_ENDPOINT = {"/auth/user/login", "/auth/admin/login", "/auth/user/introspect",
             "/auth/admin/introspect", "/auth/logout", "/auth/refresh", "/ingredient", "/ingredient/*", "/recipe", "/recipe/*",
-            "meal-types", "meal-types/*",
+            "meal-types", "meal-types/*", "/daily-tracking", "/daily-tracking/*", "/daily-tracking/*", "/daily-tracking/*/*",
+            "user/*", "/user",
 
             "/v1/api/**",
             "/v2/api-docs",

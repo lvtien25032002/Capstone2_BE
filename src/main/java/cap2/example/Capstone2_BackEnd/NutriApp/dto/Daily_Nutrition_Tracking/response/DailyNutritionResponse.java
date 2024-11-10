@@ -1,5 +1,6 @@
-package cap2.example.Capstone2_BackEnd.NutriApp.dto.Daily_Nutrition_Tracking;
+package cap2.example.Capstone2_BackEnd.NutriApp.dto.Daily_Nutrition_Tracking.response;
 
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.Daily_Nutrition_Tracking.MealRequest;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -13,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class DailyNutritionRequest {
+public class DailyNutritionResponse {
     String User_ID;
     List<MealRequest> meals;
     LocalDate date;

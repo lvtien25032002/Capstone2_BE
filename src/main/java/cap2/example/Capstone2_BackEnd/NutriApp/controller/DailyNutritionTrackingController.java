@@ -1,39 +1,40 @@
 package cap2.example.Capstone2_BackEnd.NutriApp.controller;
 
 
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.Daily_Nutrition_Tracking.DailyNutritionRequest;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.Daily_Nutrition_Tracking.NutritionResponse;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.Daily_Nutrition_Tracking.NutritionUpdateRequest;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.Daily_Nutrition_Tracking.request.DailyNutritionRequest;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.Daily_Nutrition_Tracking.response.NutritionResponse;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.Daily_Nutrition_Tracking.response.TrackingResponseBasedOnDate;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.common.response.ApiResponse;
-import cap2.example.Capstone2_BackEnd.NutriApp.model.Daily_Nutrition_Tracking;
 import cap2.example.Capstone2_BackEnd.NutriApp.service.DailyNutritionTrackingService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 
 @Slf4j
 @RestController
-@RequestMapping("/nutrition")
+@RequestMapping("/daily-tracking")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class DailyNutritionTrackingController {
     DailyNutritionTrackingService dailyNutritionTrackingService;
 
-    @PostMapping("/daily-tracking")
-    public ResponseEntity<?> TrackingDailyNutrition(@RequestBody DailyNutritionRequest request) {
-        Daily_Nutrition_Tracking dailyNutritionTracking = dailyNutritionTrackingService.createDailyNutrition(request);
-        return ResponseEntity.ok(dailyNutritionTracking);
+    @PostMapping("")
+    public ApiResponse<NutritionResponse> createTrackingDailyNutrition(@RequestBody DailyNutritionRequest request) {
+        ApiResponse<NutritionResponse> apiResponse = new ApiResponse<>();
+        apiResponse.setData(dailyNutritionTrackingService.createDailyNutrition(request));
+        apiResponse.setMessage("Create nutrition tracking successfully");
+        return apiResponse;
     }
 
     @GetMapping()
     ApiResponse<List<NutritionResponse>> getAllNutritionTracking() {
-        ApiResponse apiResponse = new ApiResponse<>();
+        ApiResponse<List<NutritionResponse>> apiResponse = new ApiResponse<>();
         apiResponse.setData(dailyNutritionTrackingService.getAllNutritionTracking());
         apiResponse.setMessage("Get all nutrition tracking successfully");
         return apiResponse;
@@ -51,12 +52,10 @@ public class DailyNutritionTrackingController {
     @PutMapping("/{nutritionId}")
     public ApiResponse<NutritionResponse> updateNutritionTracking(
             @PathVariable String nutritionId,
-            @RequestBody NutritionUpdateRequest request) {
-
+            @RequestBody DailyNutritionRequest request) {
         ApiResponse<NutritionResponse> apiResponse = new ApiResponse<>();
         apiResponse.setData(dailyNutritionTrackingService.updateNutrition(nutritionId, request));
-        apiResponse.setMessage("Nutrition updated successfully");
-
+        apiResponse.setMessage("Create nutrition tracking successfully");
         return apiResponse;
     }
 
@@ -66,4 +65,27 @@ public class DailyNutritionTrackingController {
         apiResponse.setData(dailyNutritionTrackingService.deleteNutrition(nutritionId));
         return apiResponse;
     }
+
+
+    @GetMapping("/detail/{userId}")
+    ApiResponse<TrackingResponseBasedOnDate> getNutritionTrackingDetail(
+            @PathVariable String userId,
+            @RequestParam LocalDate date
+    ) {
+        ApiResponse<TrackingResponseBasedOnDate> apiResponse = new ApiResponse<>();
+        apiResponse.setData(dailyNutritionTrackingService.getNutritionTrackingUserByDate(userId, date));
+        apiResponse.setMessage("Get nutrition tracking detail successfully");
+        return apiResponse;
+    }
+
+    @GetMapping("/user/{userId}")
+    ApiResponse<List<TrackingResponseBasedOnDate>> getNutritionTrackingByUser(
+            @PathVariable String userId
+    ) {
+        ApiResponse<List<TrackingResponseBasedOnDate>> apiResponse = new ApiResponse<>();
+        apiResponse.setData(dailyNutritionTrackingService.getNutritionTrackingByUser(userId));
+        apiResponse.setMessage("Get nutrition tracking of user successfully");
+        return apiResponse;
+    }
+
 }

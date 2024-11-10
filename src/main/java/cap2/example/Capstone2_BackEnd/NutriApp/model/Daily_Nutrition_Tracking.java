@@ -9,6 +9,7 @@ import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -20,14 +21,15 @@ public class Daily_Nutrition_Tracking {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String Daily_Nutrition_Tracking_ID;
-
     @ManyToOne
     User User;
     LocalDate date;
-    double totalCalories;
-    double totalCarbs;
-    double totalProtein;
-    double totalFat;
 
+    double calories;
+    double carbs;
+    double protein;
+    double fat;
 
+    @OneToMany(mappedBy = "daily_Nutrition_Tracking_ID", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    List<Daily_Nutrition_Tracking_Detail> daily_Nutrition_Tracking_Details;
 }

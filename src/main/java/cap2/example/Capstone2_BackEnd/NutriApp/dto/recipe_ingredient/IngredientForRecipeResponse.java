@@ -9,6 +9,7 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class IngredientForRecipeResponse {
+    String ingredientId;
     String ingredientName;
     int quantity;
     String unit;
