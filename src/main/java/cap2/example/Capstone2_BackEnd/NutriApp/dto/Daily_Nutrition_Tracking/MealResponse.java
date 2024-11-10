@@ -1,6 +1,5 @@
 package cap2.example.Capstone2_BackEnd.NutriApp.dto.Daily_Nutrition_Tracking;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -13,9 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class MealRequest {
-    @NotNull(message = "MEAL_TYPE_REQUIRED")
+public class MealResponse {
     String mealType;
-    @NotNull(message = "RECIPE_LIST_REQUIRED")
     List<String> recipeList;
 }

@@ -1,9 +1,9 @@
 package cap2.example.Capstone2_BackEnd.NutriApp.service;
 
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.recipe_ingredient.IngredientForRecipeRequest;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.recipe_ingredient.RecipeIngredientUpdateRequest;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.recipe_ingredient.IngredientForRecipeResponse;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.recipe_ingredient.RecipeIngredientResponse;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.recipe_ingredient.RecipeIngredientUpdateRequest;
 import cap2.example.Capstone2_BackEnd.NutriApp.enums.ErrorCode;
 import cap2.example.Capstone2_BackEnd.NutriApp.exception.AppException;
 import cap2.example.Capstone2_BackEnd.NutriApp.mapper.RecipeIngredientMapper;
@@ -49,6 +49,7 @@ public class RecipeIngredientService {
         return recipeIngredient_List.stream().map(recipe_ingredient -> {
             IngredientForRecipeResponse ingredientForRecipeResponse = new IngredientForRecipeResponse();
             Ingredient ingredient = recipe_ingredient.getIngredient();
+            ingredientForRecipeResponse.setIngredientId(ingredient.getIngredient_ID());
             ingredientForRecipeResponse.setIngredientName(ingredient.getIngredientName());
             ingredientForRecipeResponse.setQuantity(recipe_ingredient.getQuantity());
             ingredientForRecipeResponse.setUnit(ingredient.getUnit());

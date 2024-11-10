@@ -1,4 +1,4 @@
-package cap2.example.Capstone2_BackEnd.NutriApp.dto.Daily_Nutrition_Tracking;
+package cap2.example.Capstone2_BackEnd.NutriApp.dto.Daily_Nutrition_Tracking.response;
 
 
 import lombok.*;
@@ -15,8 +15,8 @@ public class NutritionResponse {
     String Daily_Nutrition_Tracking_ID;
     String user_ID;
     LocalDate date;
-    double totalCalories;
-    double totalCarbs;
-    double totalProtein;
-    double totalFat;
+    double calories;
+    double protein;
+    double fat;
+    double carbs;
 }

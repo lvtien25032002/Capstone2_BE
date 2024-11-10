@@ -73,6 +73,7 @@ public enum ErrorCode {
     DATE_INVALID(4003, "Invalid date format", HttpStatus.BAD_REQUEST),
     RECIPE_IN_DISHNAME_NOT_FOUND(4004, "Recipe in Dish name list request to daily nutrition tracking " +
             "not found in database", HttpStatus.NOT_FOUND),
+    MEAL_TYPE_INVALID(4005, "Meal type in Daily Tracking Request is not suitable ", HttpStatus.BAD_REQUEST),
 
     // Lỗi liên quan đến giá trị calo
     CALORIES_REQUIRED(4004, "Total calories is required", HttpStatus.BAD_REQUEST),
@@ -89,7 +90,14 @@ public enum ErrorCode {
     // Lỗi liên quan đến giá trị chất béo
     FAT_REQUIRED(4010, "Total fat is required", HttpStatus.BAD_REQUEST),
     FAT_NEGATIVE(4011, "Total fat cannot be negative", HttpStatus.BAD_REQUEST),
-    NUTRITION_NOT_FOUND(4012, "Nutrition not found", HttpStatus.NOT_FOUND);
+
+    // Lỗi liên quan đến giá trị dinh dưỡng
+    NUTRITION_TRACKING_NOT_FOUND(4012, "Nutrition Tracking not found", HttpStatus.NOT_FOUND),
+    DATE_OR_USER_NOT_VALID(4013, "Date or user in request to find daily nutrition tracking is not valid", HttpStatus.BAD_REQUEST),
+    DAILY_NUTRITION_TRACKING_FOR_DATE_IS_EMPTY_OR_NOT_FOUND(4014, "Daily nutrition tracking for date is emplty or not found", HttpStatus.NOT_FOUND),
+    NUTRITION_TRACKING_BY_USER_NOT_FOUND(4015, "Nutrition Tracking by user not found", HttpStatus.NOT_FOUND),
+
+    ;
 
     private int code;
     private String message;
