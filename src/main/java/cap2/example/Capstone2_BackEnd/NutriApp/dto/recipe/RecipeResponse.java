@@ -23,6 +23,10 @@ public class RecipeResponse {
     Double totalProtein;
     Double totalCarbs;
     Double totalFat;
+    Double prepTime;
+    Double cookTime;
+    String nutritionalQuality;
+    String difficultyLevel;
     Set<MealType> mealType;
     List<IngredientForRecipeResponse> ingredientList;
 }

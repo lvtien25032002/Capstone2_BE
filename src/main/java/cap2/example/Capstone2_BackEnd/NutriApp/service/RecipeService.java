@@ -6,8 +6,10 @@ import cap2.example.Capstone2_BackEnd.NutriApp.dto.recipe.RecipeResponse;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.recipe.SearchRecipeByIngredientsRequest;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.recipe_ingredient.IngredientForRecipeRequest;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.recipe_ingredient.IngredientForRecipeResponse;
+import cap2.example.Capstone2_BackEnd.NutriApp.enums.DifficultyLevel;
 import cap2.example.Capstone2_BackEnd.NutriApp.enums.ErrorCode;
 import cap2.example.Capstone2_BackEnd.NutriApp.enums.MealType;
+import cap2.example.Capstone2_BackEnd.NutriApp.enums.NutritionalQuality;
 import cap2.example.Capstone2_BackEnd.NutriApp.exception.AppException;
 import cap2.example.Capstone2_BackEnd.NutriApp.mapper.RecipeMapper;
 import cap2.example.Capstone2_BackEnd.NutriApp.model.Recipe;
@@ -24,10 +26,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -127,8 +126,7 @@ public class RecipeService {
             if (recipe_ingredient_obj == null) {
                 throw new AppException(ErrorCode.INGREDIENT_NOT_FOUND);
             }
-            for (Recipe_Ingredient recipe_ingredient : recipe_ingredient_obj)
-                recipe_ingrediens_list.add(recipe_ingredient);
+            recipe_ingrediens_list.addAll(recipe_ingredient_obj);
         }
         if (recipe_ingrediens_list.isEmpty()) {
             throw new AppException(ErrorCode.INGREDIENT_NOT_FOUND);
@@ -150,8 +148,13 @@ public class RecipeService {
         }).collect(Collectors.toSet());
     }
 
-    public List<RecipeResponse> getRecipesByCaloriesRange(Double minCalories, Double maxCalories) {
-        List<Recipe> recipelist = recipeRepository.findByCaloriesRange(minCalories, maxCalories);
+    public List<RecipeResponse> getRecipesByMealType(String mealType) {
+        try {
+            MealType.valueOf(mealType);
+        } catch (Exception e) {
+            throw new AppException(ErrorCode.MEAL_TYPE_IS_INVALID);
+        }
+        List<Recipe> recipelist = recipeRepository.findByMealType(MealType.valueOf(mealType));
         return recipelist.stream().map(recipe -> {
             List<IngredientForRecipeResponse> ingredientList = recipeIngredientService.getIngredientsForRecipeResponse(recipe);
             RecipeResponse recipeResponse = recipeMapper.toRecipeResponse(recipe);
@@ -160,8 +163,13 @@ public class RecipeService {
         }).toList();
     }
 
-    public List<RecipeResponse> getRecipesByProteinRange(Double minProtein, Double maxProtein) {
-        List<Recipe> recipelist = recipeRepository.findByProteinRange(minProtein, maxProtein);
+    public List<RecipeResponse> getRecipesByNutritionalQuality(String nutritionalQuality) {
+        try {
+            NutritionalQuality.valueOf(nutritionalQuality);
+        } catch (Exception e) {
+            throw new AppException(ErrorCode.NUTRITIONAL_QUALITY_IS_iNVALID);
+        }
+        List<Recipe> recipelist = recipeRepository.findByNutritionalQuality(NutritionalQuality.valueOf(nutritionalQuality));
         return recipelist.stream().map(recipe -> {
             List<IngredientForRecipeResponse> ingredientList = recipeIngredientService.getIngredientsForRecipeResponse(recipe);
             RecipeResponse recipeResponse = recipeMapper.toRecipeResponse(recipe);
@@ -170,8 +178,13 @@ public class RecipeService {
         }).toList();
     }
 
-    public List<RecipeResponse> getRecipesByCarbsRange(Double minCarbs, Double maxCarbs) {
-        List<Recipe> recipelist = recipeRepository.findByCarbsRange(minCarbs, maxCarbs);
+    public List<RecipeResponse> getRecipesByDifficultyLevel(String difficultyLevel) {
+        try {
+            DifficultyLevel.valueOf(difficultyLevel);
+        } catch (Exception e) {
+            throw new AppException(ErrorCode.DIFFICULTY_LEVEL_IS_INVALID);
+        }
+        List<Recipe> recipelist = recipeRepository.findByDifficultyLevel(DifficultyLevel.valueOf(difficultyLevel));
         return recipelist.stream().map(recipe -> {
             List<IngredientForRecipeResponse> ingredientList = recipeIngredientService.getIngredientsForRecipeResponse(recipe);
             RecipeResponse recipeResponse = recipeMapper.toRecipeResponse(recipe);
@@ -180,8 +193,21 @@ public class RecipeService {
         }).toList();
     }
 
-    public List<RecipeResponse> getRecipesByFatRange(Double minFat, Double maxFat) {
-        List<Recipe> recipelist = recipeRepository.findByFatRange(minFat, maxFat);
+    public List<RecipeResponse> getRecipesByMacroNutrients(String macroNutrient, Double minMacro, Double maxMacro) {
+
+        List<Recipe> recipelist = null;
+        if (Objects.equals(macroNutrient, "Calories")) {
+            recipelist = recipeRepository.findByCaloriesRange(minMacro, maxMacro);
+        }
+        if (Objects.equals(macroNutrient, "Protein"))
+            recipelist = recipeRepository.findByProteinRange(minMacro, maxMacro);
+        if (Objects.equals(macroNutrient, "Carbs"))
+            recipelist = recipeRepository.findByCarbsRange(minMacro, maxMacro);
+        if (Objects.equals(macroNutrient, "Fat"))
+            recipelist = recipeRepository.findByFatRange(minMacro, maxMacro);
+        if (recipelist == null) {
+            throw new AppException(ErrorCode.RECIPE_NOT_FOUND);
+        }
         return recipelist.stream().map(recipe -> {
             List<IngredientForRecipeResponse> ingredientList = recipeIngredientService.getIngredientsForRecipeResponse(recipe);
             RecipeResponse recipeResponse = recipeMapper.toRecipeResponse(recipe);
@@ -189,7 +215,6 @@ public class RecipeService {
             return recipeResponse;
         }).toList();
     }
-
 
     // Private Methods for Business Logic
     private Set<MealType> setMealTypeResponse(Set<MealType> mealTypes) {
@@ -201,6 +226,11 @@ public class RecipeService {
 
     @Transactional
     protected RecipeResponse setRecipeToSaveAndResponse(RecipeRequest request, String id) {
+        // Check Valid Request
+
+        RequestValidChecker(request);
+
+        // Logic for Recipe Create and Update
         Recipe recipe = new Recipe();
         if (id != null) {
             recipe = recipeRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.RECIPE_NOT_FOUND));
@@ -212,6 +242,7 @@ public class RecipeService {
             recipe.setRecipe_ID(id);
             recipe = recipeMapper.toRecipe(request);
         }
+
         // Logic for totalCalories, totalProtein, totalCarbs, totalFat and validation for ingredients
         Double totalCalories = 0.0;
         Double totalProtein = 0.0;
@@ -251,6 +282,49 @@ public class RecipeService {
         //Logic for MealType Response
         recipeResponse.setMealType(setMealTypeResponse(recipe.getMealType()));
         return recipeResponse;
+    }
+
+
+    // Check Method
+    public void RequestValidChecker(RecipeRequest request) {
+        if (request.getRecipeName() == null) {
+            throw new AppException(ErrorCode.RECIPE_NAME_REQUIRED);
+        }
+        if (request.getCookingInstructions() == null) {
+            throw new AppException(ErrorCode.COOKING_INSTRUCTIONS_REQUIRED);
+        }
+        if (request.getImageURL() == null) {
+            throw new AppException(ErrorCode.IMAGE_URL_REQUIRED);
+        }
+        if (request.getPrepTime() == null) {
+            throw new AppException(ErrorCode.PREP_TIME_REQUIRED);
+        }
+        if (request.getPrepTime() < 0 || request.getPrepTime() > 120) {
+            throw new AppException(ErrorCode.PREP_TIME_INVALID);
+        }
+        if (request.getCookTime() == null) {
+            throw new AppException(ErrorCode.COOK_TIME_REQUIRED);
+        }
+        if (request.getCookTime() < 0 || request.getCookTime() > 120) {
+            throw new AppException(ErrorCode.PREP_TIME_INVALID);
+        }
+        if (request.getNutritionalQuality() == null) {
+            throw new AppException(ErrorCode.NUTRITIONAL_QUALITY_REQUIRED);
+        }
+        if (request.getMealType() == null) {
+            throw new AppException(ErrorCode.MEAL_TYPE_REQUIRED);
+        }
+        if (request.getIngredientList() == null) {
+            throw new AppException(ErrorCode.INGREDIENT_LIST_REQUIRED);
+        }
+        if (request.getDifficultyLevel() == null) {
+            throw new AppException(ErrorCode.DIFFICULTY_LEVEL_REQUIRED);
+        }
+        try {
+            NutritionalQuality.valueOf(request.getNutritionalQuality());
+        } catch (Exception e) {
+            throw new AppException(ErrorCode.NUTRITIONAL_QUALITY_IS_iNVALID);
+        }
     }
 }
 

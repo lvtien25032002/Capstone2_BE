@@ -1,10 +1,10 @@
 package cap2.example.Capstone2_BackEnd.NutriApp.service;
 
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.common.response.PagingAndSortingAPIResponse;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.ingredient.IngredientCreateRequest;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.ingredient.IngredientRequest;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.ingredient.IngredientResponse;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.ingredient.IngredientUpdateRequest;
 import cap2.example.Capstone2_BackEnd.NutriApp.enums.ErrorCode;
+import cap2.example.Capstone2_BackEnd.NutriApp.enums.IngredientType;
 import cap2.example.Capstone2_BackEnd.NutriApp.exception.AppException;
 import cap2.example.Capstone2_BackEnd.NutriApp.mapper.IngredientMapper;
 import cap2.example.Capstone2_BackEnd.NutriApp.model.Ingredient;
@@ -48,9 +48,12 @@ public class IngredientService {
         return ingredients.stream().map(ingredientMapper::toIngredientResponse).toList();
     }
 
-    public IngredientResponse createIngredient(IngredientCreateRequest request) {
+    public IngredientResponse createIngredient(IngredientRequest request) {
+        // Valid Checker
+        IngredientValidChecker(request);
         if (ingredientRepository.existsByIngredientName(request.getIngredientName()))
             throw new AppException(ErrorCode.INGREDIENT_EXIST);
+
         Ingredient ingredient = ingredientMapper.toIngredient(request);
         return ingredientMapper.toIngredientResponse(ingredientRepository.save(ingredient));
     }
@@ -60,12 +63,15 @@ public class IngredientService {
                 .orElseThrow(() -> new AppException(ErrorCode.INGREDIENT_NOT_FOUND)));
     }
 
-    public IngredientResponse updateIngredient(String id, IngredientUpdateRequest request) {
+    public IngredientResponse updateIngredient(String id, IngredientRequest request) {
+        // Valid Checker
+        IngredientValidChecker(request);
+
+
         Ingredient ingredient = ingredientRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.INGREDIENT_NOT_FOUND));
 
         ingredientMapper.updateIngredient(ingredient, request);
-
         return ingredientMapper.toIngredientResponse(ingredientRepository.save(ingredient));
     }
 
@@ -77,5 +83,30 @@ public class IngredientService {
         return "Ingredient deleted";
     }
 
+
+    // Valid Checker Method
+    public void IngredientValidChecker(IngredientRequest request) {
+        try {
+            IngredientType.valueOf(request.getIngredientType());
+        } catch (IllegalArgumentException e) {
+            throw new AppException(ErrorCode.INGREDIENT_TYPE_INVALID);
+        }
+        if (request.getIngredientName().length() < 2 || request.getIngredientName().length() > 50 || request.getIngredientName() == null)
+            throw new AppException(ErrorCode.INGREDIENT_NAME_INVALID);
+        if (request.getIngredientType() == null)
+            throw new AppException(ErrorCode.INGREDIENT_TYPE_REQUIRED);
+        if (request.getCalories() == 0)
+            throw new AppException(ErrorCode.INGREDIENT_CALORIES_REQUIRED);
+        if (request.getProtein() == 0)
+            throw new AppException(ErrorCode.INGREDIENT_PROTEIN_REQUIRED);
+        if (request.getFat() == 0)
+            throw new AppException(ErrorCode.INGREDIENT_FAT_REQUIRED);
+        if (request.getCarbs() == 0)
+            throw new AppException(ErrorCode.INGREDIENT_CARBS_REQUIRED);
+        if (request.getUnit() == null)
+            throw new AppException(ErrorCode.INGREDIENT_UNIT_REQUIRED);
+        if (request.getImageURL() == null)
+            throw new AppException(ErrorCode.IMAGE_URL_REQUIRED);
+    }
 
 }

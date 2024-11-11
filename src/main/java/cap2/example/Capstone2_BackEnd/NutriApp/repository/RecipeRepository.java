@@ -1,5 +1,8 @@
 package cap2.example.Capstone2_BackEnd.NutriApp.repository;
 
+import cap2.example.Capstone2_BackEnd.NutriApp.enums.DifficultyLevel;
+import cap2.example.Capstone2_BackEnd.NutriApp.enums.MealType;
+import cap2.example.Capstone2_BackEnd.NutriApp.enums.NutritionalQuality;
 import cap2.example.Capstone2_BackEnd.NutriApp.model.Recipe;
 import cap2.example.Capstone2_BackEnd.NutriApp.model.Recipe_Ingredient;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,6 +19,7 @@ public interface RecipeRepository extends JpaRepository<Recipe, String> {
 
     Recipe findByRecipeName(String recipeName);
 
+
     @Query("SELECT r FROM Recipe r WHERE (:minCalories IS NULL OR r.totalCalories >= :minCalories) " +
             "AND (:maxCalories IS NULL OR r.totalCalories <= :maxCalories)")
     List<Recipe> findByCaloriesRange(@Param("minCalories") Double minCalories, @Param("maxCalories") Double maxCalories);
@@ -31,4 +35,10 @@ public interface RecipeRepository extends JpaRepository<Recipe, String> {
     @Query("SELECT r FROM Recipe r WHERE (:minFat IS NULL OR r.totalFat >= :minFat) " +
             "AND (:maxFat IS NULL OR r.totalFat <= :maxFat)")
     List<Recipe> findByFatRange(@Param("minFat") Double minFat, @Param("maxFat") Double maxFat);
+
+    List<Recipe> findByMealType(MealType mealType);
+
+    List<Recipe> findByNutritionalQuality(NutritionalQuality nutritionalQuality);
+
+    List<Recipe> findByDifficultyLevel(DifficultyLevel difficultyLevel);
 }

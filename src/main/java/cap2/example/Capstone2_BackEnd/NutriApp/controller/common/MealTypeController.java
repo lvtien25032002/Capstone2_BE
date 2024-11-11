@@ -1,4 +1,4 @@
-package cap2.example.Capstone2_BackEnd.NutriApp.controller;
+package cap2.example.Capstone2_BackEnd.NutriApp.controller.common;
 
 
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.common.response.ApiResponse;

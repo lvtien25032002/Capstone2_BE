@@ -56,6 +56,8 @@ public enum ErrorCode {
     INGREDIENT_IN_LIST_NOT_FOUND(2009, "Ingredient in list of request not found", HttpStatus.BAD_REQUEST),
     INGREDIENT_IN_LIST_NOT_NULL(2010, "Ingredient in list of request must not be null", HttpStatus.BAD_REQUEST),
     INGREDIENT_LIST_NOT_NULL(2011, "Ingredient list must not be null", HttpStatus.BAD_REQUEST),
+    INGREDIENT_TYPE_INVALID(2012, "Ingredient type is invalid", HttpStatus.BAD_REQUEST),
+    INGREDIENT_UNIT_REQUIRED(2013, "Unit is required", HttpStatus.BAD_REQUEST),
 
     // Recipe Errors
     RECIPE_NAME_INVALID(3001, "Recipe name must be between 5 and 100 characters", HttpStatus.BAD_REQUEST),
@@ -63,9 +65,21 @@ public enum ErrorCode {
     RECIPE_COOKING_INSTRUCTIONS_INVALID(3003, "Cooking instructions must be between 10 and 200 characters", HttpStatus.BAD_REQUEST),
     RECIPE_EXIST(3008, "Recipe exist", HttpStatus.BAD_REQUEST),
     RECIPE_NOT_FOUND(3009, "Recipe not found", HttpStatus.NOT_FOUND),
+    NUTRITIONAL_QUALITY_IS_iNVALID(3010, "Nutritional quality is invalid", HttpStatus.BAD_REQUEST),
+    COOKING_INSTRUCTIONS_REQUIRED(3011, "Cooking instructions is required", HttpStatus.BAD_REQUEST),
+    IMAGE_URL_REQUIRED(3012, "Image URL is required", HttpStatus.BAD_REQUEST),
+    PREP_TIME_REQUIRED(3013, "Prep time is required", HttpStatus.BAD_REQUEST),
+    COOK_TIME_REQUIRED(3014, "Cook time is required", HttpStatus.BAD_REQUEST),
+    NUTRITIONAL_QUALITY_REQUIRED(3015, "Nutritional quality is required", HttpStatus.BAD_REQUEST),
+    MEAL_TYPE_REQUIRED(3016, "Meal type is required", HttpStatus.BAD_REQUEST),
+    INGREDIENT_LIST_REQUIRED(3017, "Ingredient list is required", HttpStatus.BAD_REQUEST),
+    PREP_TIME_INVALID(3018, "Prep time is invalid", HttpStatus.BAD_REQUEST),
+    MEAL_TYPE_IS_INVALID(3019, "Meal type is invalid", HttpStatus.BAD_REQUEST),
+    DIFFICULTY_LEVEL_REQUIRED(3020, "Difficulty level is required", HttpStatus.BAD_REQUEST),
+    DIFFICULTY_LEVEL_IS_INVALID(3021, "Difficulty level is invalid", HttpStatus.BAD_REQUEST),
 
     // Recipe Ingredient Errors
-    RECIPE_INGREDIENT_NOT_FOUND(3020, "Recipe Ingredient not found", HttpStatus.NOT_FOUND),
+    RECIPE_INGREDIENT_NOT_FOUND(3030, "Recipe Ingredient not found", HttpStatus.NOT_FOUND),
 
     // Daily_Nutrition_Tracking Errors
     DATE_REQUIRED(4001, "Date cannot be null", HttpStatus.BAD_REQUEST),

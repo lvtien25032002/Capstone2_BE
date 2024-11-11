@@ -1,6 +1,7 @@
 package cap2.example.Capstone2_BackEnd.NutriApp.model;
 
 
+import cap2.example.Capstone2_BackEnd.NutriApp.enums.IngredientType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -21,7 +22,7 @@ public class Ingredient {
     @GeneratedValue(strategy = GenerationType.UUID)
     String Ingredient_ID;
     String ingredientName;
-    String ingredientType;
+    IngredientType ingredientType;
     String ingredientDescription;
     String unit;
 
