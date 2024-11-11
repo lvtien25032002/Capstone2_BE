@@ -1,7 +1,9 @@
 package cap2.example.Capstone2_BackEnd.NutriApp.model;
 
 
+import cap2.example.Capstone2_BackEnd.NutriApp.enums.DifficultyLevel;
 import cap2.example.Capstone2_BackEnd.NutriApp.enums.MealType;
+import cap2.example.Capstone2_BackEnd.NutriApp.enums.NutritionalQuality;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -29,11 +31,16 @@ public class Recipe {
     Double totalProtein;
     Double totalCarbs;
     Double totalFat;
+    Double prepTime;
+    Double cookTime;
+    DifficultyLevel difficultyLevel;
+
+    NutritionalQuality nutritionalQuality;
 
     @ElementCollection(targetClass = MealType.class)
     @Enumerated(EnumType.STRING)
     Set<MealType> mealType;
-    
+
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
     Set<Recipe_Ingredient> recipeIngredients;
 }

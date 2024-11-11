@@ -1,9 +1,8 @@
 package cap2.example.Capstone2_BackEnd.NutriApp.controller;
 
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.common.response.ApiResponse;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.ingredient.IngredientCreateRequest;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.ingredient.IngredientRequest;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.ingredient.IngredientResponse;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.ingredient.IngredientUpdateRequest;
 import cap2.example.Capstone2_BackEnd.NutriApp.service.IngredientService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -61,7 +60,7 @@ public class IngredientController {
     }
 
     @PostMapping()
-    ApiResponse<IngredientResponse> createIngredient(@RequestBody @Valid IngredientCreateRequest request) {
+    ApiResponse<IngredientResponse> createIngredient(@RequestBody @Valid IngredientRequest request) {
         ApiResponse<IngredientResponse> apiResponse = new ApiResponse<>();
         apiResponse.setData(ingredientService.createIngredient(request));
         apiResponse.setMessage("Ingredient created");
@@ -78,7 +77,7 @@ public class IngredientController {
     }
 
     @PutMapping("/{ingredientId}")
-    ApiResponse<IngredientResponse> updateIngredient(@PathVariable String ingredientId, @RequestBody IngredientUpdateRequest request) {
+    ApiResponse<IngredientResponse> updateIngredient(@PathVariable String ingredientId, @RequestBody IngredientRequest request) {
         ApiResponse<IngredientResponse> apiResponse = new ApiResponse<>();
         apiResponse.setData(ingredientService.updateIngredient(ingredientId, request));
         apiResponse.setMessage("Update Ingredient successfully");

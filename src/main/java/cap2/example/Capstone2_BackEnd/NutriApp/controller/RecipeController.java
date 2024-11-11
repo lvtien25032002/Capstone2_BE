@@ -2,8 +2,8 @@ package cap2.example.Capstone2_BackEnd.NutriApp.controller;
 
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.common.response.ApiResponse;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.recipe.RecipeRequest;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.recipe.SearchRecipeByIngredientsRequest;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.recipe.RecipeResponse;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.recipe.SearchRecipeByIngredientsRequest;
 import cap2.example.Capstone2_BackEnd.NutriApp.service.RecipeService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -101,42 +101,34 @@ public class RecipeController {
         return apiResponse;
     }
 
-    @GetMapping("/filterByCalories")
-    public ApiResponse<List<RecipeResponse>> filterByCalories(
-            @RequestParam(required = false) Double minCalories,
-            @RequestParam(required = false) Double maxCalories) {
+
+    @GetMapping("/filter")
+    public ApiResponse<List<RecipeResponse>> filterByMealType(
+            @RequestParam(required = false) String mealType,
+            @RequestParam(required = false) String nutritionalQuality,
+            @RequestParam(required = false) String difficultyLevel
+    ) {
         ApiResponse<List<RecipeResponse>> apiResponse = new ApiResponse<>();
-        apiResponse.setData(recipeService.getRecipesByCaloriesRange(minCalories, maxCalories));
-        apiResponse.setMessage("Success");
+        if (mealType != null) {
+            apiResponse.setData(recipeService.getRecipesByMealType(mealType));
+        } else if (nutritionalQuality != null) {
+            apiResponse.setData(recipeService.getRecipesByNutritionalQuality(nutritionalQuality));
+        } else if (difficultyLevel != null) {
+            apiResponse.setData(recipeService.getRecipesByDifficultyLevel(difficultyLevel));
+        } else {
+            throw new IllegalArgumentException("Please provide either mealType or nutritionalQuality");
+        }
+        apiResponse.setMessage("Successful");
         return apiResponse;
     }
 
-    @GetMapping("/filterByProtein")
-    public ApiResponse<List<RecipeResponse>> filterByProtein(
-            @RequestParam(required = false) Double minProtein,
-            @RequestParam(required = false) Double maxProtein) {
+    @GetMapping("/filterByMacroNutrients")
+    public ApiResponse<List<RecipeResponse>> filterByMacroNutrients(
+            @RequestParam(required = true) String macroNutrient,
+            @RequestParam(required = false) Double minMacro,
+            @RequestParam(required = false) Double maxMacro) {
         ApiResponse<List<RecipeResponse>> apiResponse = new ApiResponse<>();
-        apiResponse.setData(recipeService.getRecipesByProteinRange(minProtein, maxProtein));
-        apiResponse.setMessage("Success");
-        return apiResponse;
-    }
-
-    @GetMapping("/filterByCarbs")
-    public ApiResponse<List<RecipeResponse>> filterByCarbs(
-            @RequestParam(required = false) Double minCarbs,
-            @RequestParam(required = false) Double maxCarbs) {
-        ApiResponse<List<RecipeResponse>> apiResponse = new ApiResponse<>();
-        apiResponse.setData(recipeService.getRecipesByCarbsRange(minCarbs, maxCarbs));
-        apiResponse.setMessage("Success");
-        return apiResponse;
-    }
-
-    @GetMapping("/filterByFat")
-    public ApiResponse<List<RecipeResponse>> filterByFat(
-            @RequestParam(required = false) Double minFat,
-            @RequestParam(required = false) Double maxFat) {
-        ApiResponse<List<RecipeResponse>> apiResponse = new ApiResponse<>();
-        apiResponse.setData(recipeService.getRecipesByFatRange(minFat, maxFat));
+        apiResponse.setData(recipeService.getRecipesByMacroNutrients(macroNutrient, minMacro, maxMacro));
         apiResponse.setMessage("Success");
         return apiResponse;
     }
