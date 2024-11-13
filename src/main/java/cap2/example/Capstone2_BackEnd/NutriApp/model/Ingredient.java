@@ -2,10 +2,7 @@ package cap2.example.Capstone2_BackEnd.NutriApp.model;
 
 
 import cap2.example.Capstone2_BackEnd.NutriApp.enums.IngredientType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -23,6 +20,7 @@ public class Ingredient {
     String Ingredient_ID;
     String ingredientName;
     IngredientType ingredientType;
+    @Column(name = "ingredient_description", length = 1000)
     String ingredientDescription;
     String unit;
 

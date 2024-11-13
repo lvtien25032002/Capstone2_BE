@@ -24,7 +24,9 @@ public class Recipe {
     @GeneratedValue(strategy = GenerationType.UUID)
     String Recipe_ID;
     String recipeName;
+    @Column(name = "description", length = 1000)
     String description;
+    @Column(name = "cooking_instructions", length = 2000)
     String cookingInstructions;
     String imageURL;
     Double totalCalories;

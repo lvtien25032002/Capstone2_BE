@@ -15,6 +15,7 @@ import java.util.List;
 public interface RecipeRepository extends JpaRepository<Recipe, String> {
     boolean existsByRecipeName(String recipeName);
 
+
     Recipe findRecipeByRecipeIngredients(Recipe_Ingredient recipeIngredients);
 
     Recipe findByRecipeName(String recipeName);

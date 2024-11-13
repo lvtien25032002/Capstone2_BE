@@ -12,6 +12,7 @@ import cap2.example.Capstone2_BackEnd.NutriApp.enums.MealType;
 import cap2.example.Capstone2_BackEnd.NutriApp.enums.NutritionalQuality;
 import cap2.example.Capstone2_BackEnd.NutriApp.exception.AppException;
 import cap2.example.Capstone2_BackEnd.NutriApp.mapper.RecipeMapper;
+import cap2.example.Capstone2_BackEnd.NutriApp.model.Ingredient;
 import cap2.example.Capstone2_BackEnd.NutriApp.model.Recipe;
 import cap2.example.Capstone2_BackEnd.NutriApp.model.Recipe_Ingredient;
 import cap2.example.Capstone2_BackEnd.NutriApp.repository.IngredientRepository;
@@ -120,9 +121,20 @@ public class RecipeService {
         }
         Set<Recipe_Ingredient> recipe_ingrediens_list = new HashSet<>();
         for (String ingredient : request.getIngredients()) {
-            List<Recipe_Ingredient> recipe_ingredient_obj = recipeIngredientRepository.findRecipe_IngredientByIngredient(
-                    ingredientRepository.findByIngredientName(ingredient)
-            );
+            List<Recipe_Ingredient> recipe_ingredient_obj = null;
+            if (ingredientRepository.existsByIngredientName(ingredient)) {
+                recipe_ingredient_obj = recipeIngredientRepository.findRecipe_IngredientByIngredient(
+                        ingredientRepository.findByIngredientName(ingredient)
+                );
+            } else {
+                List<Ingredient> ingredients = ingredientRepository.findByIngredientNameContaining(ingredient);
+                if (ingredients.isEmpty()) {
+                    throw new AppException(ErrorCode.INGREDIENT_NOT_FOUND);
+                }
+                for (Ingredient ingredient1 : ingredients) {
+                    recipe_ingredient_obj = recipeIngredientRepository.findRecipe_IngredientByIngredient(ingredient1);
+                }
+            }
             if (recipe_ingredient_obj == null) {
                 throw new AppException(ErrorCode.INGREDIENT_NOT_FOUND);
             }
