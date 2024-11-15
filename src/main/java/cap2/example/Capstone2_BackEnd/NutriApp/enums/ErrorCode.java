@@ -88,28 +88,29 @@ public enum ErrorCode {
     RECIPE_IN_DISHNAME_NOT_FOUND(4004, "Recipe in Dish name list request to daily nutrition tracking " +
             "not found in database", HttpStatus.NOT_FOUND),
     MEAL_TYPE_INVALID(4005, "Meal type in Daily Tracking Request is not suitable ", HttpStatus.BAD_REQUEST),
+    DATE_IS_NEED_FOR_REQUEST(4006, "Date is need for request", HttpStatus.BAD_REQUEST),
 
     // Lỗi liên quan đến giá trị calo
-    CALORIES_REQUIRED(4004, "Total calories is required", HttpStatus.BAD_REQUEST),
-    CALORIES_NEGATIVE(4005, "Total calories cannot be negative", HttpStatus.BAD_REQUEST),
+    CALORIES_REQUIRED(4020, "Total calories is required", HttpStatus.BAD_REQUEST),
+    CALORIES_NEGATIVE(4021, "Total calories cannot be negative", HttpStatus.BAD_REQUEST),
 
     // Lỗi liên quan đến giá trị carbohydrates
-    CARBS_REQUIRED(4006, "Total carbs is required", HttpStatus.BAD_REQUEST),
-    CARBS_NEGATIVE(4007, "Total carbs cannot be negative", HttpStatus.BAD_REQUEST),
+    CARBS_REQUIRED(4022, "Total carbs is required", HttpStatus.BAD_REQUEST),
+    CARBS_NEGATIVE(4023, "Total carbs cannot be negative", HttpStatus.BAD_REQUEST),
 
     // Lỗi liên quan đến giá trị protein
-    PROTEIN_REQUIRED(4008, "Total protein is required", HttpStatus.BAD_REQUEST),
-    PROTEIN_NEGATIVE(4009, "Total protein cannot be negative", HttpStatus.BAD_REQUEST),
+    PROTEIN_REQUIRED(4024, "Total protein is required", HttpStatus.BAD_REQUEST),
+    PROTEIN_NEGATIVE(4025, "Total protein cannot be negative", HttpStatus.BAD_REQUEST),
 
     // Lỗi liên quan đến giá trị chất béo
-    FAT_REQUIRED(4010, "Total fat is required", HttpStatus.BAD_REQUEST),
-    FAT_NEGATIVE(4011, "Total fat cannot be negative", HttpStatus.BAD_REQUEST),
+    FAT_REQUIRED(4026, "Total fat is required", HttpStatus.BAD_REQUEST),
+    FAT_NEGATIVE(4027, "Total fat cannot be negative", HttpStatus.BAD_REQUEST),
 
     // Lỗi liên quan đến giá trị dinh dưỡng
-    NUTRITION_TRACKING_NOT_FOUND(4012, "Nutrition Tracking not found", HttpStatus.NOT_FOUND),
-    DATE_OR_USER_NOT_VALID(4013, "Date or user in request to find daily nutrition tracking is not valid", HttpStatus.BAD_REQUEST),
-    DAILY_NUTRITION_TRACKING_FOR_DATE_IS_EMPTY_OR_NOT_FOUND(4014, "Daily nutrition tracking for date is emplty or not found", HttpStatus.NOT_FOUND),
-    NUTRITION_TRACKING_BY_USER_NOT_FOUND(4015, "Nutrition Tracking by user not found", HttpStatus.NOT_FOUND),
+    NUTRITION_TRACKING_NOT_FOUND(4028, "Nutrition Tracking not found", HttpStatus.NOT_FOUND),
+    DATE_OR_USER_NOT_VALID(4029, "Date or user in request to find daily nutrition tracking is not valid", HttpStatus.BAD_REQUEST),
+    DAILY_NUTRITION_TRACKING_FOR_DATE_IS_EMPTY(4030, "Daily nutrition tracking for date is empty", HttpStatus.NOT_FOUND),
+    NUTRITION_TRACKING_BY_USER_NOT_FOUND(4031, "Nutrition Tracking by user not found", HttpStatus.NOT_FOUND),
 
     ;
 

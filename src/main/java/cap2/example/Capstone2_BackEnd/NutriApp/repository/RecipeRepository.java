@@ -20,6 +20,8 @@ public interface RecipeRepository extends JpaRepository<Recipe, String> {
 
     Recipe findByRecipeName(String recipeName);
 
+    List<Recipe> findByRecipeNameContaining(String recipeName);
+
 
     @Query("SELECT r FROM Recipe r WHERE (:minCalories IS NULL OR r.totalCalories >= :minCalories) " +
             "AND (:maxCalories IS NULL OR r.totalCalories <= :maxCalories)")

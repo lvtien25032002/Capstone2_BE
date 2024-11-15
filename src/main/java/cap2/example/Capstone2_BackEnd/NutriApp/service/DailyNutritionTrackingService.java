@@ -1,9 +1,10 @@
 package cap2.example.Capstone2_BackEnd.NutriApp.service;
 
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.Daily_Nutrition_Tracking.MealRequest;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.Daily_Nutrition_Tracking.MealResponse;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.Daily_Nutrition_Tracking.request.DailyNutritionRequest;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.Daily_Nutrition_Tracking.request.MealRequest;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.Daily_Nutrition_Tracking.response.MealResponse;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.Daily_Nutrition_Tracking.response.NutritionResponse;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.Daily_Nutrition_Tracking.response.RecipeForDailyTrackingResponse;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.Daily_Nutrition_Tracking.response.TrackingResponseBasedOnDate;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.Daily_Nutrition_Tracking_Detail.DailyNutritionTrackingDetailRequest;
 import cap2.example.Capstone2_BackEnd.NutriApp.enums.ErrorCode;
@@ -85,15 +86,18 @@ public class DailyNutritionTrackingService {
 
     // Get Daily Nutrition Tracking by User and Date
     public TrackingResponseBasedOnDate getNutritionTrackingUserByDate(String userId, LocalDate date) {
+        if (!userRepository.existsById(userId)) {
+            throw new AppException(ErrorCode.USER_NOT_FOUND);
+        }
+        if (date == null) {
+            throw new AppException(ErrorCode.DATE_IS_NEED_FOR_REQUEST);
+        }
         Daily_Nutrition_Tracking nutritionTracking = nutritionTrackingRepository.findDaily_Nutrition_TrackingByUserAndDate(userId, date);
         if (nutritionTracking == null) {
-            throw new AppException(ErrorCode.DATE_OR_USER_NOT_VALID);
+            throw new AppException(ErrorCode.DAILY_NUTRITION_TRACKING_FOR_DATE_IS_EMPTY);
         }
         List<Daily_Nutrition_Tracking_Detail> dailyNutritionTrackingDetails =
                 dailyNutritionTrackingDetailRepository.findDaily_Nutrition_Tracking_DetailsByDaily_Nutrition_Tracking_ID(nutritionTracking.getDaily_Nutrition_Tracking_ID());
-        if (dailyNutritionTrackingDetails.isEmpty()) {
-            throw new AppException(ErrorCode.DAILY_NUTRITION_TRACKING_FOR_DATE_IS_EMPTY_OR_NOT_FOUND);
-        }
         List<MealResponse> meals = new ArrayList<>();
         for (MealType meal : MealType.values()) {
             MealResponse mealResponse = MealResponse.builder()
@@ -102,7 +106,16 @@ public class DailyNutritionTrackingService {
                     .build();
             for (Daily_Nutrition_Tracking_Detail detail : dailyNutritionTrackingDetails) {
                 if (detail.getMealType().equals(meal)) {
-                    mealResponse.getRecipeList().add(detail.getRecipe_ID().getRecipeName());
+                    mealResponse.getRecipeList().add(
+                            RecipeForDailyTrackingResponse.builder()
+                                    .recipeID(detail.getRecipe_ID().getRecipe_ID())
+                                    .recipeName(detail.getRecipe_ID().getRecipeName())
+                                    .calories(detail.getRecipe_ID().getTotalCalories())
+                                    .protein(detail.getRecipe_ID().getTotalProtein())
+                                    .carbs(detail.getRecipe_ID().getTotalCarbs())
+                                    .fat(detail.getRecipe_ID().getTotalFat())
+                                    .build()
+                    );
                 }
 
             }
