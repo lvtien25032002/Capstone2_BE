@@ -228,7 +228,21 @@ public class RecipeService {
         }).toList();
     }
 
+    public List<RecipeResponse> searchRecipeByName(String recipeName) {
+        List<Recipe> recipelist = recipeRepository.findByRecipeNameContaining(recipeName);
+        return recipelist.stream().map(recipe -> {
+            List<IngredientForRecipeResponse> ingredientList = recipeIngredientService.getIngredientsForRecipeResponse(recipe);
+            RecipeResponse recipeResponse = recipeMapper.toRecipeResponse(recipe);
+            recipeResponse.setIngredientList(ingredientList);
+            return recipeResponse;
+        }).toList();
+
+    }
+
+
+    // ----------------------------------------------
     // Private Methods for Business Logic
+    // ----------------------------------------------
     private Set<MealType> setMealTypeResponse(Set<MealType> mealTypes) {
         Set<MealType> mealTypeResponse = new HashSet<>();
         mealTypeResponse.addAll(mealTypes);
@@ -256,10 +270,10 @@ public class RecipeService {
         }
 
         // Logic for totalCalories, totalProtein, totalCarbs, totalFat and validation for ingredients
-        Double totalCalories = 0.0;
-        Double totalProtein = 0.0;
-        Double totalCarbs = 0.0;
-        Double totalFat = 0.0;
+        int totalCalories = 0;
+        int totalProtein = 0;
+        int totalCarbs = 0;
+        int totalFat = 0;
         for (IngredientForRecipeRequest ingredient : request.getIngredientList()) {
             if (ingredient.getIngredientId() == null) {
                 throw new AppException(ErrorCode.INGREDIENT_IN_LIST_NOT_NULL);

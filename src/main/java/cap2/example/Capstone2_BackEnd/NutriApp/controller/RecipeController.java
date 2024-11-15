@@ -132,4 +132,13 @@ public class RecipeController {
         apiResponse.setMessage("Success");
         return apiResponse;
     }
+
+    @GetMapping("/search")
+    public ApiResponse<List<RecipeResponse>> searchRecipeByName(
+            @RequestParam(required = true) String recipeName) {
+        ApiResponse<List<RecipeResponse>> apiResponse = new ApiResponse<>();
+        apiResponse.setData(recipeService.searchRecipeByName(recipeName));
+        apiResponse.setMessage("Success");
+        return apiResponse;
+    }
 }

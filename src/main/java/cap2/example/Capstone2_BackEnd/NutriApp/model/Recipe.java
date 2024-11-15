@@ -29,10 +29,10 @@ public class Recipe {
     @Column(name = "cooking_instructions", length = 2000)
     String cookingInstructions;
     String imageURL;
-    Double totalCalories;
-    Double totalProtein;
-    Double totalCarbs;
-    Double totalFat;
+    int totalCalories;
+    int totalProtein;
+    int totalCarbs;
+    int totalFat;
     Double prepTime;
     Double cookTime;
     DifficultyLevel difficultyLevel;
