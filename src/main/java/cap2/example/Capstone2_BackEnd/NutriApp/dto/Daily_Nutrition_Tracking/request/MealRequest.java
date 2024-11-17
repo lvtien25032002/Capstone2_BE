@@ -17,5 +17,5 @@ public class MealRequest {
     @NotNull(message = "MEAL_TYPE_REQUIRED")
     String mealType;
     @NotNull(message = "RECIPE_LIST_REQUIRED")
-    List<String> recipeList;
+    List<String> recipeIdList;
 }

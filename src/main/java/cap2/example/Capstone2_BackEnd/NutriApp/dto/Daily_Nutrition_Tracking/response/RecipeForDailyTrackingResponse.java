@@ -13,6 +13,7 @@ import lombok.experimental.FieldDefaults;
 public class RecipeForDailyTrackingResponse {
     String recipeID;
     String recipeName;
+    String imageURL;
     int calories;
     int protein;
     int carbs;

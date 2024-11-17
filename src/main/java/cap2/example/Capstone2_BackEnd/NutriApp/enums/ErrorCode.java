@@ -111,7 +111,7 @@ public enum ErrorCode {
     DATE_OR_USER_NOT_VALID(4029, "Date or user in request to find daily nutrition tracking is not valid", HttpStatus.BAD_REQUEST),
     DAILY_NUTRITION_TRACKING_FOR_DATE_IS_EMPTY(4030, "Daily nutrition tracking for date is empty", HttpStatus.NOT_FOUND),
     NUTRITION_TRACKING_BY_USER_NOT_FOUND(4031, "Nutrition Tracking by user not found", HttpStatus.NOT_FOUND),
-
+    RECIPE_LIST_IS_EMPTY(4032, "Recipe list in request to create daily tracking is not null or empty", HttpStatus.BAD_REQUEST),
     ;
 
     private int code;
