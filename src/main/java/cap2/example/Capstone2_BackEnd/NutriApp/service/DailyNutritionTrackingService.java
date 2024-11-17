@@ -110,6 +110,7 @@ public class DailyNutritionTrackingService {
                             RecipeForDailyTrackingResponse.builder()
                                     .recipeID(detail.getRecipe_ID().getRecipe_ID())
                                     .recipeName(detail.getRecipe_ID().getRecipeName())
+                                    .imageURL(detail.getRecipe_ID().getImageURL())
                                     .calories(detail.getRecipe_ID().getTotalCalories())
                                     .protein(detail.getRecipe_ID().getTotalProtein())
                                     .carbs(detail.getRecipe_ID().getTotalCarbs())
@@ -185,8 +186,9 @@ public class DailyNutritionTrackingService {
         // Duyệt qua từng bữa ăn trong danh sách meals
         for (MealRequest meal : request.getMeals()) {
             // Duyệt qua từng món ăn trong danh sách Recipe List
-            for (String dishName : meal.getRecipeList()) {
-                Recipe recipe = recipeRepository.findByRecipeName(dishName);
+            for (String recipeID : meal.getRecipeIdList()) {
+                Recipe recipe = recipeRepository.findById(recipeID)
+                        .orElseThrow(() -> new AppException(ErrorCode.RECIPE_NOT_FOUND));
                 totalCalories += recipe.getTotalCalories();
                 totalProtein += recipe.getTotalProtein();
                 totalCarbs += recipe.getTotalCarbs();
@@ -204,8 +206,9 @@ public class DailyNutritionTrackingService {
 
         for (MealRequest meal : request.getMeals()) {
             // Duyệt qua từng món ăn trong danh sách Recipe List
-            for (String dishName : meal.getRecipeList()) {
-                Recipe recipe = recipeRepository.findByRecipeName(dishName);
+            for (String recipeID : meal.getRecipeIdList()) {
+                Recipe recipe = recipeRepository.findById(recipeID)
+                        .orElseThrow(() -> new AppException(ErrorCode.RECIPE_NOT_FOUND));
                 dailyNutritionTrackingDetailService.createDailyNutritionTrackingDetail(
                         DailyNutritionTrackingDetailRequest.builder()
                                 .daily_Nutrition_Tracking_ID(dailyNutritionTracking.getDaily_Nutrition_Tracking_ID())
@@ -230,8 +233,12 @@ public class DailyNutritionTrackingService {
             } catch (IllegalArgumentException e) {
                 throw new AppException(ErrorCode.MEAL_TYPE_INVALID);
             }
-            for (String dishName : meal.getRecipeList()) {
-                Recipe recipe = recipeRepository.findByRecipeName(dishName);
+            if (meal.getRecipeIdList().isEmpty()) {
+                throw new AppException(ErrorCode.RECIPE_LIST_IS_EMPTY);
+            }
+            for (String recipeID : meal.getRecipeIdList()) {
+                Recipe recipe = recipeRepository.findById(recipeID)
+                        .orElseThrow(() -> new AppException(ErrorCode.RECIPE_NOT_FOUND));
                 if (recipe == null) {
                     throw new AppException(ErrorCode.RECIPE_IN_DISHNAME_NOT_FOUND);
                 }
