@@ -1,10 +1,10 @@
 package cap2.example.Capstone2_BackEnd.NutriApp.controller;
 
 
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.Daily_Nutrition_Tracking.request.DailyNutritionRequest;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.Daily_Nutrition_Tracking.response.NutritionResponse;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.Daily_Nutrition_Tracking.response.TrackingResponseBasedOnDate;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.common.response.ApiResponse;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.daily_nutrition_tracking.request.DailyMealRequest;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.daily_nutrition_tracking.response.NutritionResponse;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.daily_nutrition_tracking.response.TrackingResponseBasedOnDate;
 import cap2.example.Capstone2_BackEnd.NutriApp.service.DailyNutritionTrackingService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -24,8 +24,15 @@ import java.util.List;
 public class DailyNutritionTrackingController {
     DailyNutritionTrackingService dailyNutritionTrackingService;
 
+    //    @PostMapping("")
+//    public ApiResponse<NutritionResponse> createTrackingDailyNutrition(@RequestBody DailyNutritionRequest request) {
+//        ApiResponse<NutritionResponse> apiResponse = new ApiResponse<>();
+//        apiResponse.setData(dailyNutritionTrackingService.createDailyNutrition(request));
+//        apiResponse.setMessage("Create nutrition tracking successfully");
+//        return apiResponse;
+//    }
     @PostMapping("")
-    public ApiResponse<NutritionResponse> createTrackingDailyNutrition(@RequestBody DailyNutritionRequest request) {
+    public ApiResponse<NutritionResponse> createTrackingDailyNutrition(@RequestBody DailyMealRequest request) {
         ApiResponse<NutritionResponse> apiResponse = new ApiResponse<>();
         apiResponse.setData(dailyNutritionTrackingService.createDailyNutrition(request));
         apiResponse.setMessage("Create nutrition tracking successfully");
@@ -52,10 +59,10 @@ public class DailyNutritionTrackingController {
     @PutMapping("/{nutritionId}")
     public ApiResponse<NutritionResponse> updateNutritionTracking(
             @PathVariable String nutritionId,
-            @RequestBody DailyNutritionRequest request) {
+            @RequestBody DailyMealRequest request) {
         ApiResponse<NutritionResponse> apiResponse = new ApiResponse<>();
         apiResponse.setData(dailyNutritionTrackingService.updateNutrition(nutritionId, request));
-        apiResponse.setMessage("Create nutrition tracking successfully");
+        apiResponse.setMessage("Updated nutrition tracking successfully");
         return apiResponse;
     }
 
@@ -74,18 +81,9 @@ public class DailyNutritionTrackingController {
     ) {
         ApiResponse<TrackingResponseBasedOnDate> apiResponse = new ApiResponse<>();
         apiResponse.setData(dailyNutritionTrackingService.getNutritionTrackingUserByDate(userId, date));
-        apiResponse.setMessage("Get nutrition tracking detail successfully");
+        apiResponse.setMessage("Get nutrition tracking detail for Entry Date of User successfully");
         return apiResponse;
     }
 
-    @GetMapping("/user/{userId}")
-    ApiResponse<List<TrackingResponseBasedOnDate>> getNutritionTrackingByUser(
-            @PathVariable String userId
-    ) {
-        ApiResponse<List<TrackingResponseBasedOnDate>> apiResponse = new ApiResponse<>();
-        apiResponse.setData(dailyNutritionTrackingService.getNutritionTrackingByUser(userId));
-        apiResponse.setMessage("Get nutrition tracking of user successfully");
-        return apiResponse;
-    }
 
 }

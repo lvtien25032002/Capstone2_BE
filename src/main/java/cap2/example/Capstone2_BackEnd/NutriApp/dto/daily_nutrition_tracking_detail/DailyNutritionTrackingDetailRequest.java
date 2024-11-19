@@ -1,4 +1,4 @@
-package cap2.example.Capstone2_BackEnd.NutriApp.dto.Daily_Nutrition_Tracking_Detail;
+package cap2.example.Capstone2_BackEnd.NutriApp.dto.daily_nutrition_tracking_detail;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -13,5 +13,4 @@ import lombok.experimental.FieldDefaults;
 public class DailyNutritionTrackingDetailRequest {
     String daily_Nutrition_Tracking_ID;
     String recipe_ID;
-    String mealType;
 }

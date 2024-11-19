@@ -1,4 +1,4 @@
-package cap2.example.Capstone2_BackEnd.NutriApp.dto.Daily_Nutrition_Tracking.request;
+package cap2.example.Capstone2_BackEnd.NutriApp.dto.daily_nutrition_tracking.request;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -15,11 +15,13 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class DailyNutritionRequest {
+public class DailyMealRequest {
     @NotEmpty(message = "USER_ID_REQUIRED")
     String User_ID;
-    @NotNull(message = "MEALS_REQUIRED")
-    List<MealRequest> meals;
+    @NotNull(message = "RECIPE_LIST_REQUIRED")
+    List<String> recipeList;
+    @NotNull(message = "MEAL_TYPE_REQUIRED")
+    String mealType;
     @NotNull(message = "DATE_REQUIRED")
     LocalDate date;
 }
