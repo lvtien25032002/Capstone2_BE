@@ -1,12 +1,11 @@
 package cap2.example.Capstone2_BackEnd.NutriApp.service;
 
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.Daily_Nutrition_Tracking.request.DailyNutritionRequest;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.Daily_Nutrition_Tracking.request.MealRequest;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.Daily_Nutrition_Tracking.response.MealResponse;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.Daily_Nutrition_Tracking.response.NutritionResponse;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.Daily_Nutrition_Tracking.response.RecipeForDailyTrackingResponse;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.Daily_Nutrition_Tracking.response.TrackingResponseBasedOnDate;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.Daily_Nutrition_Tracking_Detail.DailyNutritionTrackingDetailRequest;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.daily_nutrition_tracking.request.DailyMealRequest;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.daily_nutrition_tracking.response.MealResponse;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.daily_nutrition_tracking.response.NutritionResponse;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.daily_nutrition_tracking.response.RecipeForDailyTrackingResponse;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.daily_nutrition_tracking.response.TrackingResponseBasedOnDate;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.daily_nutrition_tracking_detail.DailyNutritionTrackingDetailRequest;
 import cap2.example.Capstone2_BackEnd.NutriApp.enums.ErrorCode;
 import cap2.example.Capstone2_BackEnd.NutriApp.enums.MealType;
 import cap2.example.Capstone2_BackEnd.NutriApp.exception.AppException;
@@ -50,8 +49,7 @@ public class DailyNutritionTrackingService {
         List<Daily_Nutrition_Tracking> nutritions = nutritionTrackingRepository.findAll();
 
         return nutritions.stream().map(nutritionTracking -> {
-            NutritionResponse nutritionResponse = dailyNutritionTrackingMapper.toNutritionResponse(nutritionTracking);
-            nutritionResponse.setUser_ID(nutritionTracking.getUser().getUser_ID());
+            NutritionResponse nutritionResponse = toDailyNutritionResponse(nutritionTracking);
             return nutritionResponse;
         }).toList();
     }
@@ -60,8 +58,8 @@ public class DailyNutritionTrackingService {
         Daily_Nutrition_Tracking nutrition = nutritionTrackingRepository.findById(id).orElseThrow(
                 () -> new AppException(ErrorCode.NUTRITION_TRACKING_NOT_FOUND)
         );
-        NutritionResponse nutritionResponse = dailyNutritionTrackingMapper.toNutritionResponse(nutrition);
-        nutritionResponse.setUser_ID(nutrition.getUser().getUser_ID());
+        // Response for Nutrition Tracking
+        NutritionResponse nutritionResponse = toDailyNutritionResponse(nutrition);
         return nutritionResponse;
     }
 
@@ -72,16 +70,14 @@ public class DailyNutritionTrackingService {
         return "Nutrition Tracking deleted";
     }
 
-
-    //create daily
     @Transactional
-    public NutritionResponse createDailyNutrition(DailyNutritionRequest request) {
-        return saveAndReturnDailyNutritionTracking(request, null);
+    public NutritionResponse createDailyNutrition(DailyMealRequest request) {
+        return createAndUpdateDailyMeal(request, null);
     }
 
     @Transactional
-    public NutritionResponse updateNutrition(String nutritionTrackingId, DailyNutritionRequest request) {
-        return saveAndReturnDailyNutritionTracking(request, nutritionTrackingId);
+    public NutritionResponse updateNutrition(String nutritionTrackingId, DailyMealRequest request) {
+        return createAndUpdateDailyMeal(request, nutritionTrackingId);
     }
 
     // Get Daily Nutrition Tracking by User and Date
@@ -92,78 +88,83 @@ public class DailyNutritionTrackingService {
         if (date == null) {
             throw new AppException(ErrorCode.DATE_IS_NEED_FOR_REQUEST);
         }
-        Daily_Nutrition_Tracking nutritionTracking = nutritionTrackingRepository.findDaily_Nutrition_TrackingByUserAndDate(userId, date);
-        if (nutritionTracking == null) {
+        List<Daily_Nutrition_Tracking> nutritionTrackingList = nutritionTrackingRepository.findDaily_Nutrition_TrackingByUserAndDate(userId, date);
+        if (nutritionTrackingList == null || nutritionTrackingList.isEmpty()) {
             throw new AppException(ErrorCode.DAILY_NUTRITION_TRACKING_FOR_DATE_IS_EMPTY);
         }
-        List<Daily_Nutrition_Tracking_Detail> dailyNutritionTrackingDetails =
-                dailyNutritionTrackingDetailRepository.findDaily_Nutrition_Tracking_DetailsByDaily_Nutrition_Tracking_ID(nutritionTracking.getDaily_Nutrition_Tracking_ID());
-        List<MealResponse> meals = new ArrayList<>();
-        for (MealType meal : MealType.values()) {
-            MealResponse mealResponse = MealResponse.builder()
-                    .mealType(meal.toString())
-                    .recipeList(new ArrayList<>())
-                    .build();
-            for (Daily_Nutrition_Tracking_Detail detail : dailyNutritionTrackingDetails) {
-                if (detail.getMealType().equals(meal)) {
-                    mealResponse.getRecipeList().add(
-                            RecipeForDailyTrackingResponse.builder()
-                                    .recipeID(detail.getRecipe_ID().getRecipe_ID())
-                                    .recipeName(detail.getRecipe_ID().getRecipeName())
-                                    .imageURL(detail.getRecipe_ID().getImageURL())
-                                    .calories(detail.getRecipe_ID().getTotalCalories())
-                                    .protein(detail.getRecipe_ID().getTotalProtein())
-                                    .carbs(detail.getRecipe_ID().getTotalCarbs())
-                                    .fat(detail.getRecipe_ID().getTotalFat())
-                                    .build()
-                    );
-                }
 
-            }
-            if (!mealResponse.getRecipeList().isEmpty()) {
-                meals.add(mealResponse);
-            }
-        }
-        return TrackingResponseBasedOnDate.builder()
-                .date(date)
-                .calories(nutritionTracking.getCalories())
-                .protein(nutritionTracking.getProtein())
-                .fat(nutritionTracking.getFat())
-                .carbs(nutritionTracking.getCarbs())
-                .meals(meals)
-                .build();
-    }
+        // Initial Default Value for Tracking Response Based on Date
+        long totalCalories = 0;
+        long totalProtein = 0;
+        long totalFat = 0;
+        long totalCarbs = 0;
+        TrackingResponseBasedOnDate trackingResponseBasedOnDate = new TrackingResponseBasedOnDate();
+        trackingResponseBasedOnDate.setDate(date);
+        List<MealResponse> mealResponseList = new ArrayList<>();
 
-    public List<TrackingResponseBasedOnDate> getNutritionTrackingByUser(String userId) {
-        List<Daily_Nutrition_Tracking> nutritritionTrackingList = nutritionTrackingRepository.findDaily_Nutrition_TrackingByUser(userId);
-        if (nutritritionTrackingList.isEmpty()) {
-            throw new AppException(ErrorCode.NUTRITION_TRACKING_BY_USER_NOT_FOUND);
+        for (Daily_Nutrition_Tracking tracking : nutritionTrackingList) {
+            totalCalories += tracking.getCalories();
+            totalProtein += tracking.getProtein();
+            totalFat += tracking.getFat();
+            totalCarbs += tracking.getCarbs();
+
+            // Get List Nutrition Tracking Detail of user based on date and meal type => get recipe for each meal type
+            List<Daily_Nutrition_Tracking_Detail> dailyNutritionTrackingDetailList =
+                    dailyNutritionTrackingDetailRepository.findDaily_Nutrition_Tracking_DetailsByDaily_Nutrition_Tracking_ID(tracking.getDaily_Nutrition_Tracking_ID());
+
+            // Logic for Meal Response to add to List of Meal Response
+            MealResponse mealResponse = new MealResponse();
+            mealResponse.setMealType(tracking.getMealType().toString());
+
+            // Initial Default Value for Recipe List of Meal Response
+            List<RecipeForDailyTrackingResponse> recipeForDailyTrackingResponseList = new ArrayList<>();
+
+            // Logic for Recipe For Daily Tracking Response of Meal Response
+            for (Daily_Nutrition_Tracking_Detail detail : dailyNutritionTrackingDetailList) {
+                Recipe recipe = detail.getRecipe_ID();
+                RecipeForDailyTrackingResponse recipeForDailyTrackingResponse = RecipeForDailyTrackingResponse.builder()
+                        .recipeID(recipe.getRecipe_ID().toString())
+                        .recipeName(recipe.getRecipeName())
+                        .imageURL(recipe.getImageURL())
+                        .calories(recipe.getTotalCalories())
+                        .protein(recipe.getTotalProtein())
+                        .fat(recipe.getTotalFat())
+                        .carbs(recipe.getTotalCarbs())
+                        .build();
+                // Add Recipe to List Recipe
+                recipeForDailyTrackingResponseList.add(recipeForDailyTrackingResponse);
+            }
+            // Add Recipe List to Meal Response
+            mealResponse.setRecipeList(recipeForDailyTrackingResponseList);
+
+            // Add Meal Response to List Meal Response
+            mealResponseList.add(mealResponse);
         }
-        List<TrackingResponseBasedOnDate> trackingResponseBasedOnDateList = new ArrayList<>();
-        for (Daily_Nutrition_Tracking nutritionTracking : nutritritionTrackingList) {
-            trackingResponseBasedOnDateList.add(getNutritionTrackingUserByDate(userId, nutritionTracking.getDate()));
-        }
-        return trackingResponseBasedOnDateList;
+        trackingResponseBasedOnDate.setCalories(totalCalories);
+        trackingResponseBasedOnDate.setProtein(totalProtein);
+        trackingResponseBasedOnDate.setCarbs(totalCarbs);
+        trackingResponseBasedOnDate.setFat(totalFat);
+        trackingResponseBasedOnDate.setMeals(mealResponseList);
+        return trackingResponseBasedOnDate;
     }
 
 
     // --------------------------------------------------------------------------------
     // Private Method for Business Logic for Daily Nutrition Tracking
-
     @Transactional
-    protected NutritionResponse saveAndReturnDailyNutritionTracking(DailyNutritionRequest request, String nutritionTrackingId) {
-        validCheckerRequestForNutrionTracking(request);
+    protected NutritionResponse createAndUpdateDailyMeal(DailyMealRequest request, String nutritionTrackingId) {
+        validCheckerDailyMealRequest(request);
         if (nutritionTrackingId == null) {
-            if (nutritionTrackingRepository.existsByUserAndDate(request.getUser_ID(), request.getDate())) {
-                throw new AppException(ErrorCode.DATE_DUPLICATE);
+            if (nutritionTrackingRepository.existsByUserAndDateAndMealType(request.getUser_ID(), request.getDate(), MealType.valueOf(request.getMealType()))) {
+                throw new AppException(ErrorCode.DATE_WITH_MEAL_TYPE_IS_DUPLICATE);
             }
         }
 
         // Khởi tạo tổng giá trị dinh dưỡng
-        double totalCalories = 0;
-        double totalProtein = 0;
-        double totalCarbs = 0;
-        double totalFat = 0;
+        double calories = 0;
+        double protein = 0;
+        double fat = 0;
+        double carbs = 0;
 
         // Lấy thông tin người dùng từ database
         User user = userRepository.findById(request.getUser_ID())
@@ -174,78 +175,83 @@ public class DailyNutritionTrackingService {
         if (nutritionTrackingId != null) {
             dailyNutritionTracking = nutritionTrackingRepository.findById(nutritionTrackingId)
                     .orElseThrow(() -> new AppException(ErrorCode.NUTRITION_TRACKING_NOT_FOUND));
+            if (!request.getMealType().equals(dailyNutritionTracking.getMealType().toString())) {
+                throw new AppException(ErrorCode.CANT_CHANGE_MEAL_TYPE);
+            }
+            if (!request.getDate().equals(dailyNutritionTracking.getDate())) {
+                throw new AppException(ErrorCode.CANT_CHANGE_DATE);
+            }
             dailyNutritionTrackingDetailRepository.DeleteDaily_Nutrition_Tracking_DetailsByDaily_Nutrition_Tracking_ID(nutritionTrackingId);
-            dailyNutritionTrackingMapper.updateDaily_Nutrition_Tracking(dailyNutritionTracking, request);
-
         } else {
             UUID uuid = UUID.randomUUID();
             dailyNutritionTracking.setDaily_Nutrition_Tracking_ID(uuid.toString());
+            dailyNutritionTracking.setMealType(MealType.valueOf(request.getMealType().toString()));
         }
 
 
-        // Duyệt qua từng bữa ăn trong danh sách meals
-        for (MealRequest meal : request.getMeals()) {
-            // Duyệt qua từng món ăn trong danh sách Recipe List
-            for (String recipeID : meal.getRecipeIdList()) {
-                Recipe recipe = recipeRepository.findById(recipeID)
-                        .orElseThrow(() -> new AppException(ErrorCode.RECIPE_NOT_FOUND));
-                totalCalories += recipe.getTotalCalories();
-                totalProtein += recipe.getTotalProtein();
-                totalCarbs += recipe.getTotalCarbs();
-                totalFat += recipe.getTotalFat();
-            }
+        // Duyệt qua từng món ăn trong danh sách Recipe  to get total nutrition for this meal type
+        for (String recipeID : request.getRecipeList()) {
+            Recipe recipe = recipeRepository.findById(recipeID)
+                    .orElseThrow(() -> new AppException(ErrorCode.RECIPE_NOT_FOUND));
+            calories += recipe.getTotalCalories();
+            protein += recipe.getTotalProtein();
+            fat += recipe.getTotalFat();
+            carbs += recipe.getTotalCarbs();
         }
         // Lưu đối tượng Daily_Nutrition_Tracking
         dailyNutritionTracking.setUser(user);
         dailyNutritionTracking.setDate(request.getDate());
-        dailyNutritionTracking.setCalories(totalCalories);
-        dailyNutritionTracking.setProtein(totalProtein);
-        dailyNutritionTracking.setCarbs(totalCarbs);
-        dailyNutritionTracking.setFat(totalFat);
+        dailyNutritionTracking.setCalories(calories);
+        dailyNutritionTracking.setProtein(protein);
+        dailyNutritionTracking.setCarbs(carbs);
+        dailyNutritionTracking.setFat(fat);
         dailyNutritionTracking = nutritionTrackingRepository.save(dailyNutritionTracking);
 
-        for (MealRequest meal : request.getMeals()) {
-            // Duyệt qua từng món ăn trong danh sách Recipe List
-            for (String recipeID : meal.getRecipeIdList()) {
-                Recipe recipe = recipeRepository.findById(recipeID)
-                        .orElseThrow(() -> new AppException(ErrorCode.RECIPE_NOT_FOUND));
-                dailyNutritionTrackingDetailService.createDailyNutritionTrackingDetail(
-                        DailyNutritionTrackingDetailRequest.builder()
-                                .daily_Nutrition_Tracking_ID(dailyNutritionTracking.getDaily_Nutrition_Tracking_ID())
-                                .recipe_ID(recipe.getRecipe_ID())
-                                .mealType(meal.getMealType())
-                                .build()
-                );
-            }
+
+        // Logic for create Daily Nutrition Tracking Detail
+
+        // Duyệt qua từng món ăn trong danh sách Recipe List
+        for (String recipeID : request.getRecipeList()) {
+            Recipe recipe = recipeRepository.findById(recipeID)
+                    .orElseThrow(() -> new AppException(ErrorCode.RECIPE_NOT_FOUND));
+            dailyNutritionTrackingDetailService.createDailyNutritionTrackingDetail(
+                    DailyNutritionTrackingDetailRequest.builder()
+                            .daily_Nutrition_Tracking_ID(dailyNutritionTracking.getDaily_Nutrition_Tracking_ID())
+                            .recipe_ID(recipe.getRecipe_ID())
+                            .build()
+            );
         }
-        // Lưu đối tượng Daily_Nutrition_Tracking vào database
-        NutritionResponse nutritionResponse = dailyNutritionTrackingMapper.toNutritionResponse(nutritionTrackingRepository.save(dailyNutritionTracking));
-        nutritionResponse.setUser_ID(user.getUser_ID());
+        // Response for Nutrition Tracking
+        NutritionResponse nutritionResponse = toDailyNutritionResponse(dailyNutritionTracking);
         return nutritionResponse;
     }
 
 
-    // Checker Method
-    void validCheckerRequestForNutrionTracking(DailyNutritionRequest request) {
-        for (MealRequest meal : request.getMeals()) {
-            try {
-                var checkMealType = MealType.valueOf(meal.getMealType());
-            } catch (IllegalArgumentException e) {
-                throw new AppException(ErrorCode.MEAL_TYPE_INVALID);
-            }
-            if (meal.getRecipeIdList().isEmpty()) {
-                throw new AppException(ErrorCode.RECIPE_LIST_IS_EMPTY);
-            }
-            for (String recipeID : meal.getRecipeIdList()) {
-                Recipe recipe = recipeRepository.findById(recipeID)
-                        .orElseThrow(() -> new AppException(ErrorCode.RECIPE_NOT_FOUND));
-                if (recipe == null) {
-                    throw new AppException(ErrorCode.RECIPE_IN_DISHNAME_NOT_FOUND);
-                }
-
-            }
+    void validCheckerDailyMealRequest(DailyMealRequest request) {
+        if (request.getRecipeList().isEmpty()) {
+            throw new AppException(ErrorCode.RECIPE_LIST_IS_EMPTY);
         }
+        for (String recipeID : request.getRecipeList()) {
+            Recipe recipe = recipeRepository.findById(recipeID)
+                    .orElseThrow(() -> new AppException(ErrorCode.RECIPE_NOT_FOUND));
+        }
+        if (request.getDate() == null) {
+            throw new AppException(ErrorCode.DATE_IS_NEED_FOR_REQUEST);
+        }
+        try {
+            var checkMealType = MealType.valueOf(request.getMealType());
+        } catch (IllegalArgumentException e) {
+            throw new AppException(ErrorCode.MEAL_TYPE_IS_INVALID);
+        }
+    }
 
+    // --------------------------------------------------------------------------------
+    // Method to convert Daily_Nutrition_Tracking to NutritionResponse
+    protected NutritionResponse toDailyNutritionResponse(Daily_Nutrition_Tracking dailyNutritionTracking) {
+        NutritionResponse nutritionResponse = dailyNutritionTrackingMapper.toNutritionResponse(dailyNutritionTracking);
+        nutritionResponse.setUser_ID(dailyNutritionTracking.getUser().getUser_ID());
+        nutritionResponse.setMealType(dailyNutritionTracking.getMealType().toString());
+        return nutritionResponse;
     }
 
 }

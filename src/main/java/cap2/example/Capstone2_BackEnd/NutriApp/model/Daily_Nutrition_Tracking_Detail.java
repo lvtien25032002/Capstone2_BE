@@ -1,7 +1,6 @@
 package cap2.example.Capstone2_BackEnd.NutriApp.model;
 
 
-import cap2.example.Capstone2_BackEnd.NutriApp.enums.MealType;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -23,8 +22,5 @@ public class Daily_Nutrition_Tracking_Detail {
 
     @ManyToOne
     Recipe recipe_ID;
-
-    MealType mealType;
-
-
+    
 }

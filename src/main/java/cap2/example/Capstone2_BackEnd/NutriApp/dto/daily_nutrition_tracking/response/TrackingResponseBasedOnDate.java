@@ -1,10 +1,11 @@
-package cap2.example.Capstone2_BackEnd.NutriApp.dto.Daily_Nutrition_Tracking.response;
+package cap2.example.Capstone2_BackEnd.NutriApp.dto.daily_nutrition_tracking.response;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
 import java.util.List;
+
 
 @Data
 @Getter
@@ -13,8 +14,12 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class DailyNutritionResponse {
-    String User_ID;
-    List<RecipeForDailyTrackingResponse> meals;
+public class TrackingResponseBasedOnDate {
     LocalDate date;
+    long calories;
+    long protein;
+    long fat;
+    long carbs;
+    List<MealResponse> meals;
+
 }

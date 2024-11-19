@@ -1,4 +1,4 @@
-package cap2.example.Capstone2_BackEnd.NutriApp.dto.Daily_Nutrition_Tracking.request;
+package cap2.example.Capstone2_BackEnd.NutriApp.dto.daily_nutrition_tracking.request;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.*;

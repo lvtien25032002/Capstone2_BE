@@ -1,9 +1,8 @@
 package cap2.example.Capstone2_BackEnd.NutriApp.service;
 
 
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.Daily_Nutrition_Tracking_Detail.DailyNutritionTrackingDetailRequest;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.daily_nutrition_tracking_detail.DailyNutritionTrackingDetailRequest;
 import cap2.example.Capstone2_BackEnd.NutriApp.enums.ErrorCode;
-import cap2.example.Capstone2_BackEnd.NutriApp.enums.MealType;
 import cap2.example.Capstone2_BackEnd.NutriApp.exception.AppException;
 import cap2.example.Capstone2_BackEnd.NutriApp.model.Daily_Nutrition_Tracking_Detail;
 import cap2.example.Capstone2_BackEnd.NutriApp.repository.DailyNutritionTrackingDetailRepository;
@@ -34,13 +33,6 @@ public class DailyNutritionTrackingDetailService {
                 recipeRepository.findById(request.getRecipe_ID())
                         .orElseThrow(() -> new AppException(ErrorCode.RECIPE_NOT_FOUND))
         );
-        try {
-            dailyNutritionTrackingDetail.setMealType(MealType.valueOf(request.getMealType()));
-        } catch (IllegalArgumentException e) {
-            throw new AppException(ErrorCode.MEAL_TYPE_INVALID);
-        }
-
-
         return dailyNutritionTrackingDetailRepository.save(dailyNutritionTrackingDetail);
     }
 

@@ -78,17 +78,14 @@ public enum ErrorCode {
     DIFFICULTY_LEVEL_REQUIRED(3020, "Difficulty level is required", HttpStatus.BAD_REQUEST),
     DIFFICULTY_LEVEL_IS_INVALID(3021, "Difficulty level is invalid", HttpStatus.BAD_REQUEST),
 
-    // Recipe Ingredient Errors
-    RECIPE_INGREDIENT_NOT_FOUND(3030, "Recipe Ingredient not found", HttpStatus.NOT_FOUND),
 
     // Daily_Nutrition_Tracking Errors
-    DATE_REQUIRED(4001, "Date cannot be null", HttpStatus.BAD_REQUEST),
-    DATE_DUPLICATE(4002, "Date already exists for this user", HttpStatus.CONFLICT),
+    DATE_WITH_MEAL_TYPE_IS_DUPLICATE(4002, "This Meal Type in this date is already exists for this user", HttpStatus.CONFLICT),
     DATE_INVALID(4003, "Invalid date format", HttpStatus.BAD_REQUEST),
     RECIPE_IN_DISHNAME_NOT_FOUND(4004, "Recipe in Dish name list request to daily nutrition tracking " +
             "not found in database", HttpStatus.NOT_FOUND),
     MEAL_TYPE_INVALID(4005, "Meal type in Daily Tracking Request is not suitable ", HttpStatus.BAD_REQUEST),
-    DATE_IS_NEED_FOR_REQUEST(4006, "Date is need for request", HttpStatus.BAD_REQUEST),
+    DATE_IS_NEED_FOR_REQUEST(4006, "Date is need in query", HttpStatus.BAD_REQUEST),
 
     // Lỗi liên quan đến giá trị calo
     CALORIES_REQUIRED(4020, "Total calories is required", HttpStatus.BAD_REQUEST),
@@ -111,8 +108,12 @@ public enum ErrorCode {
     DATE_OR_USER_NOT_VALID(4029, "Date or user in request to find daily nutrition tracking is not valid", HttpStatus.BAD_REQUEST),
     DAILY_NUTRITION_TRACKING_FOR_DATE_IS_EMPTY(4030, "Daily nutrition tracking for date is empty", HttpStatus.NOT_FOUND),
     NUTRITION_TRACKING_BY_USER_NOT_FOUND(4031, "Nutrition Tracking by user not found", HttpStatus.NOT_FOUND),
-    RECIPE_LIST_IS_EMPTY(4032, "Recipe list in request to create daily tracking is not null or empty", HttpStatus.BAD_REQUEST),
-    ;
+    RECIPE_LIST_IS_EMPTY(4032, "Recipe list in request is not null or empty", HttpStatus.BAD_REQUEST),
+    CANT_CHANGE_MEAL_TYPE(4033, "Can't change meal type in update request", HttpStatus.BAD_REQUEST),
+    CANT_CHANGE_DATE(4033, "Can't change date in update request", HttpStatus.BAD_REQUEST),
+    // Lỗi liên quan đến Favorite
+    FAVORITE_NOT_FOUND(4050, "Favorite recipe not found", HttpStatus.NOT_FOUND);
+
 
     private int code;
     private String message;
