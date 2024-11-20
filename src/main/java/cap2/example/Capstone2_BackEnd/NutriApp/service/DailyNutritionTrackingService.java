@@ -136,14 +136,15 @@ public class DailyNutritionTrackingService {
             }
             // Add Recipe List to Meal Response
             mealResponse.setRecipeList(recipeForDailyTrackingResponseList);
+            mealResponse.setDailyNutritionTrackingID(tracking.getDaily_Nutrition_Tracking_ID());
 
             // Add Meal Response to List Meal Response
             mealResponseList.add(mealResponse);
         }
-        trackingResponseBasedOnDate.setCalories(totalCalories);
-        trackingResponseBasedOnDate.setProtein(totalProtein);
-        trackingResponseBasedOnDate.setCarbs(totalCarbs);
-        trackingResponseBasedOnDate.setFat(totalFat);
+        trackingResponseBasedOnDate.setTotalCalories(totalCalories);
+        trackingResponseBasedOnDate.setTotalProtein(totalProtein);
+        trackingResponseBasedOnDate.setTotalCarbs(totalCarbs);
+        trackingResponseBasedOnDate.setTotalFat(totalFat);
         trackingResponseBasedOnDate.setMeals(mealResponseList);
         return trackingResponseBasedOnDate;
     }

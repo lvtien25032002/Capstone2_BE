@@ -16,10 +16,10 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class TrackingResponseBasedOnDate {
     LocalDate date;
-    long calories;
-    long protein;
-    long fat;
-    long carbs;
+    long totalCalories;
+    long totalProtein;
+    long totalFat;
+    long totalCarbs;
     List<MealResponse> meals;
 
 }
