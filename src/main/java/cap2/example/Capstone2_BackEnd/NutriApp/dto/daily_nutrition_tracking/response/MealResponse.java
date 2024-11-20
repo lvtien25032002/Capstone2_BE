@@ -13,6 +13,7 @@ import java.util.List;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class MealResponse {
+    String DailyNutritionTrackingID;
     String mealType;
     List<RecipeForDailyTrackingResponse> recipeList;
 }
