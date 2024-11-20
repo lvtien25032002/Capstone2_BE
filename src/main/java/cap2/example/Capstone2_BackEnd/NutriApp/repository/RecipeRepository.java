@@ -1,8 +1,8 @@
 package cap2.example.Capstone2_BackEnd.NutriApp.repository;
 
-import cap2.example.Capstone2_BackEnd.NutriApp.enums.DifficultyLevel;
-import cap2.example.Capstone2_BackEnd.NutriApp.enums.MealType;
-import cap2.example.Capstone2_BackEnd.NutriApp.enums.NutritionalQuality;
+import cap2.example.Capstone2_BackEnd.NutriApp.enums.recipe.DifficultyLevel;
+import cap2.example.Capstone2_BackEnd.NutriApp.enums.recipe.MealType;
+import cap2.example.Capstone2_BackEnd.NutriApp.enums.recipe.NutritionalQuality;
 import cap2.example.Capstone2_BackEnd.NutriApp.model.Recipe;
 import cap2.example.Capstone2_BackEnd.NutriApp.model.Recipe_Ingredient;
 import org.springframework.data.jpa.repository.JpaRepository;

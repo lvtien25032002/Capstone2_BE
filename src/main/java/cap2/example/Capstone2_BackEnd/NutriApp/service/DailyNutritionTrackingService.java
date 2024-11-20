@@ -1,13 +1,10 @@
 package cap2.example.Capstone2_BackEnd.NutriApp.service;
 
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.daily_nutrition_tracking.request.DailyMealRequest;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.daily_nutrition_tracking.response.MealResponse;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.daily_nutrition_tracking.response.NutritionResponse;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.daily_nutrition_tracking.response.RecipeForDailyTrackingResponse;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.daily_nutrition_tracking.response.TrackingResponseBasedOnDate;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.daily_nutrition_tracking.response.*;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.daily_nutrition_tracking_detail.DailyNutritionTrackingDetailRequest;
-import cap2.example.Capstone2_BackEnd.NutriApp.enums.ErrorCode;
-import cap2.example.Capstone2_BackEnd.NutriApp.enums.MealType;
+import cap2.example.Capstone2_BackEnd.NutriApp.enums.error.ErrorCode;
+import cap2.example.Capstone2_BackEnd.NutriApp.enums.recipe.MealType;
 import cap2.example.Capstone2_BackEnd.NutriApp.exception.AppException;
 import cap2.example.Capstone2_BackEnd.NutriApp.mapper.Daily_Nutrition_TrackingMapper;
 import cap2.example.Capstone2_BackEnd.NutriApp.model.Daily_Nutrition_Tracking;
@@ -54,12 +51,25 @@ public class DailyNutritionTrackingService {
         }).toList();
     }
 
-    public NutritionResponse getNutritionTrackingById(String id) {
+    public NutritionResponseForMealType getNutritionTrackingById(String id) {
         Daily_Nutrition_Tracking nutrition = nutritionTrackingRepository.findById(id).orElseThrow(
                 () -> new AppException(ErrorCode.NUTRITION_TRACKING_NOT_FOUND)
         );
         // Response for Nutrition Tracking
-        NutritionResponse nutritionResponse = toDailyNutritionResponse(nutrition);
+        List<String> recipeList = new ArrayList<>();
+        List<Daily_Nutrition_Tracking_Detail> dailyNutritionTrackingDetailList =
+                dailyNutritionTrackingDetailRepository.findDaily_Nutrition_Tracking_DetailsByDaily_Nutrition_Tracking_ID(id);
+        for (Daily_Nutrition_Tracking_Detail detail : dailyNutritionTrackingDetailList) {
+            recipeList.add(detail.getRecipe_ID().getRecipe_ID().toString());
+        }
+        //
+        NutritionResponseForMealType nutritionResponse = NutritionResponseForMealType.builder()
+                .Daily_Nutrition_Tracking_ID(nutrition.getDaily_Nutrition_Tracking_ID())
+                .user_ID(nutrition.getUser().getUser_ID())
+                .date(nutrition.getDate())
+                .MealType(nutrition.getMealType().toString())
+                .recipeList(recipeList)
+                .build();
         return nutritionResponse;
     }
 

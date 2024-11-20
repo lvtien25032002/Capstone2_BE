@@ -1,4 +1,4 @@
-package cap2.example.Capstone2_BackEnd.NutriApp.enums;
+package cap2.example.Capstone2_BackEnd.NutriApp.enums.ingredient;
 
 public enum IngredientType {
     VEGETABLE,

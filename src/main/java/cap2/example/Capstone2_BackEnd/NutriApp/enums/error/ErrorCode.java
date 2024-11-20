@@ -1,4 +1,4 @@
-package cap2.example.Capstone2_BackEnd.NutriApp.enums;
+package cap2.example.Capstone2_BackEnd.NutriApp.enums.error;
 
 import lombok.Getter;
 import org.springframework.http.HttpStatus;

@@ -1,7 +1,7 @@
 package cap2.example.Capstone2_BackEnd.NutriApp.exception;
 
 
-import cap2.example.Capstone2_BackEnd.NutriApp.enums.ErrorCode;
+import cap2.example.Capstone2_BackEnd.NutriApp.enums.error.ErrorCode;
 
 public class AppException extends RuntimeException {
     private ErrorCode errorCode;

@@ -2,7 +2,7 @@ package cap2.example.Capstone2_BackEnd.NutriApp.exception;
 
 
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.common.response.ApiResponse;
-import cap2.example.Capstone2_BackEnd.NutriApp.enums.ErrorCode;
+import cap2.example.Capstone2_BackEnd.NutriApp.enums.error.ErrorCode;
 import org.springframework.beans.InvalidPropertyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

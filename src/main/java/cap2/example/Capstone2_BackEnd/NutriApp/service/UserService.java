@@ -2,12 +2,10 @@ package cap2.example.Capstone2_BackEnd.NutriApp.service;
 
 
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.common.response.PagingAndSortingAPIResponse;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.user.UpdateDietaryPreference;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.user.UserCreateRequest;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.user.UserUpdateRequest;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.user.UserResponse;
-import cap2.example.Capstone2_BackEnd.NutriApp.enums.DietaryPreference;
-import cap2.example.Capstone2_BackEnd.NutriApp.enums.ErrorCode;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.user.UserUpdateRequest;
+import cap2.example.Capstone2_BackEnd.NutriApp.enums.error.ErrorCode;
 import cap2.example.Capstone2_BackEnd.NutriApp.exception.AppException;
 import cap2.example.Capstone2_BackEnd.NutriApp.mapper.userMapper.UserMapper;
 import cap2.example.Capstone2_BackEnd.NutriApp.model.Role;
@@ -103,13 +101,13 @@ public class UserService {
     public UserResponse updateUser(String id, UserUpdateRequest request) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
-        if (request.getRoles() == null || request.getRoles().isEmpty()) {
-            throw new AppException(ErrorCode.ROLES_NOT_PROVIDED);
-        }
-        var roles = roleRepository.findAllById(request.getRoles());
-        if (roles.isEmpty()) {
-            throw new AppException(ErrorCode.ROLES_NOT_FOUND);
-        }
+//        if (request.getRoles() == null || request.getRoles().isEmpty()) {
+//            throw new AppException(ErrorCode.ROLES_NOT_PROVIDED);
+//        }
+        var roles = user.getRoles();
+//        if (roles.isEmpty()) {
+//            throw new AppException(ErrorCode.ROLES_NOT_FOUND);
+//        }
         userMapper.updateUser(user, request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRoles(new HashSet<>(roles));
@@ -129,19 +127,19 @@ public class UserService {
 
     ;
 
-    @PostAuthorize("returnObject.username == authentication.username")
-    public String updateDietaryPreference(String id, UpdateDietaryPreference request) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
-        DietaryPreference validPreference;
-        try {
-            validPreference = DietaryPreference.valueOf(String.valueOf(request.getDietaryPreference()));
-        } catch (IllegalArgumentException e) {
-            throw new AppException(ErrorCode.INVALID_DIETARY_PREFERENCE);
-        }
-        user.setDietaryPreference(validPreference);
-        userRepository.save(user);
-        return "Update dietary preference successfully";
-    }
+//    @PostAuthorize("returnObject.username == authentication.username")
+//    public String updateDietaryPreference(String id, UpdateDietaryPreference request) {
+//        User user = userRepository.findById(id)
+//                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+//        DietaryPreference validPreference;
+//        try {
+//            validPreference = DietaryPreference.valueOf(String.valueOf(request.getDietaryPreference()));
+//        } catch (IllegalArgumentException e) {
+//            throw new AppException(ErrorCode.INVALID_DIETARY_PREFERENCE);
+//        }
+//        user.setDietaryPreference(validPreference);
+//        userRepository.save(user);
+//        return "Update dietary preference successfully";
+//    }
 
 }

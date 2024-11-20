@@ -1,6 +1,6 @@
 package cap2.example.Capstone2_BackEnd.NutriApp.repository;
 
-import cap2.example.Capstone2_BackEnd.NutriApp.enums.MealType;
+import cap2.example.Capstone2_BackEnd.NutriApp.enums.recipe.MealType;
 import cap2.example.Capstone2_BackEnd.NutriApp.model.Daily_Nutrition_Tracking;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

@@ -1,7 +1,7 @@
 package cap2.example.Capstone2_BackEnd.NutriApp.model;
 
 
-import cap2.example.Capstone2_BackEnd.NutriApp.enums.IngredientType;
+import cap2.example.Capstone2_BackEnd.NutriApp.enums.ingredient.IngredientType;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
