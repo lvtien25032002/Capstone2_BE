@@ -1,23 +1,30 @@
 package cap2.example.Capstone2_BackEnd.NutriApp.service;
 
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.common.response.PagingAndSortingAPIResponse;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.recipe.RecipeRequest;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.recipe.RecipeResponse;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.recipe.SearchRecipeByIngredientsRequest;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.nutritionalCalculation.NutritionalCalculationResponse;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.recipe.request.RecipeRequest;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.recipe.request.SearchRecipeByIngredientsRequest;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.recipe.response.MealResponseForNutritionPlan;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.recipe.response.RecipeResponse;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.recipe.response.RecipeResponseBaseOnNutritionPlan;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.recipe.response.SimpleRecipeResponse;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.recipe_ingredient.IngredientForRecipeRequest;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.recipe_ingredient.IngredientForRecipeResponse;
-import cap2.example.Capstone2_BackEnd.NutriApp.enums.DifficultyLevel;
-import cap2.example.Capstone2_BackEnd.NutriApp.enums.ErrorCode;
-import cap2.example.Capstone2_BackEnd.NutriApp.enums.MealType;
-import cap2.example.Capstone2_BackEnd.NutriApp.enums.NutritionalQuality;
+import cap2.example.Capstone2_BackEnd.NutriApp.enums.error.ErrorCode;
+import cap2.example.Capstone2_BackEnd.NutriApp.enums.recipe.DifficultyLevel;
+import cap2.example.Capstone2_BackEnd.NutriApp.enums.recipe.MealType;
+import cap2.example.Capstone2_BackEnd.NutriApp.enums.recipe.NutritionalQuality;
+import cap2.example.Capstone2_BackEnd.NutriApp.enums.user.DietType;
 import cap2.example.Capstone2_BackEnd.NutriApp.exception.AppException;
 import cap2.example.Capstone2_BackEnd.NutriApp.mapper.RecipeMapper;
 import cap2.example.Capstone2_BackEnd.NutriApp.model.Ingredient;
 import cap2.example.Capstone2_BackEnd.NutriApp.model.Recipe;
 import cap2.example.Capstone2_BackEnd.NutriApp.model.Recipe_Ingredient;
+import cap2.example.Capstone2_BackEnd.NutriApp.model.User;
 import cap2.example.Capstone2_BackEnd.NutriApp.repository.IngredientRepository;
 import cap2.example.Capstone2_BackEnd.NutriApp.repository.RecipeIngredientRepository;
 import cap2.example.Capstone2_BackEnd.NutriApp.repository.RecipeRepository;
+import cap2.example.Capstone2_BackEnd.NutriApp.repository.userRepository.UserRepository;
 import cap2.example.Capstone2_BackEnd.NutriApp.service.commonService.GenericPagingAndSortingService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -42,6 +49,8 @@ public class RecipeService {
     RecipeIngredientService recipeIngredientService;
     RecipeIngredientRepository recipeIngredientRepository;
     GenericPagingAndSortingService genericPagingAndSortingService;
+    private final UserRepository userRepository;
+    private final NutritionalCalculationService nutritionalCalculationService;
 
 
     public PagingAndSortingAPIResponse<RecipeResponse> getPagingAllRecipes(int page, int size, String[] sort) {
@@ -179,7 +188,7 @@ public class RecipeService {
         try {
             NutritionalQuality.valueOf(nutritionalQuality);
         } catch (Exception e) {
-            throw new AppException(ErrorCode.NUTRITIONAL_QUALITY_IS_iNVALID);
+            throw new AppException(ErrorCode.NUTRITIONAL_QUALITY_IS_INVALID);
         }
         List<Recipe> recipelist = recipeRepository.findByNutritionalQuality(NutritionalQuality.valueOf(nutritionalQuality));
         return recipelist.stream().map(recipe -> {
@@ -236,7 +245,52 @@ public class RecipeService {
             recipeResponse.setIngredientList(ingredientList);
             return recipeResponse;
         }).toList();
+    }
 
+    // Get Recipe Based On Nutritional Calculation for Each User
+    public RecipeResponseBaseOnNutritionPlan getRecipeBasedOnNutritionalCalculation(String userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        NutritionalCalculationResponse nutritionCalculation = nutritionalCalculationService.calculateNutrition(user);
+        DietType dietType = user.getDietType();
+        List<Recipe> recipeList;
+        try {
+            recipeList = recipeRepository.findByNutritionalQuality(NutritionalQuality.valueOf(user.getNutritionPlan().toString()));
+        } catch (Exception e) {
+            throw new AppException(ErrorCode.NUTRITIONAL_QUALITY_OF_RECIPE_AND_NUTRITION_PLSN_IS_NOT_MATCH);
+        }
+        // Initialize RecipeResponseBaseOnNutritionPlan
+        RecipeResponseBaseOnNutritionPlan recipeResponseBaseOnNutritionPlan =
+                new RecipeResponseBaseOnNutritionPlan().builder()
+                        .meals(new ArrayList<>())
+                        .build();
+
+        // Logic for create Meal Response to add to Recipe Response
+        MealResponseForNutritionPlan mealResponseForNutritionPlan;
+        for (MealType mealType : MealType.values()) {
+            mealResponseForNutritionPlan = MealResponseForNutritionPlan.builder()
+                    .mealType(mealType.toString())
+                    .recipeList(new ArrayList<>())
+                    .build();
+            for (Recipe recipe : recipeList) {
+                if (recipe.getMealType().equals(mealType)) {
+                    mealResponseForNutritionPlan.getRecipeList().add(
+                            new SimpleRecipeResponse().builder()
+                                    .recipeID(recipe.getRecipe_ID())
+                                    .recipeName(recipe.getRecipeName())
+                                    .imageURL(recipe.getImageURL())
+                                    .calories(recipe.getTotalCalories())
+                                    .protein(recipe.getTotalProtein())
+                                    .fat(recipe.getTotalFat())
+                                    .carbs(recipe.getTotalCarbs())
+                                    .build()
+                    );
+                }
+            }
+            // Add Meal Response to Recipe Response
+            recipeResponseBaseOnNutritionPlan.getMeals().add(mealResponseForNutritionPlan);
+        }
+        return recipeResponseBaseOnNutritionPlan;
     }
 
 
@@ -349,7 +403,7 @@ public class RecipeService {
         try {
             NutritionalQuality.valueOf(request.getNutritionalQuality());
         } catch (Exception e) {
-            throw new AppException(ErrorCode.NUTRITIONAL_QUALITY_IS_iNVALID);
+            throw new AppException(ErrorCode.NUTRITIONAL_QUALITY_IS_INVALID);
         }
     }
 }

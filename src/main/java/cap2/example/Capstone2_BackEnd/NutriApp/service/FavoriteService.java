@@ -4,7 +4,7 @@ package cap2.example.Capstone2_BackEnd.NutriApp.service;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.favorite.request.FavoriteRequest;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.favorite.response.FavoriteResponse;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.favorite.response.TrendingRecipe;
-import cap2.example.Capstone2_BackEnd.NutriApp.enums.ErrorCode;
+import cap2.example.Capstone2_BackEnd.NutriApp.enums.error.ErrorCode;
 import cap2.example.Capstone2_BackEnd.NutriApp.exception.AppException;
 import cap2.example.Capstone2_BackEnd.NutriApp.mapper.FavoriteMapper;
 import cap2.example.Capstone2_BackEnd.NutriApp.model.Favorite;

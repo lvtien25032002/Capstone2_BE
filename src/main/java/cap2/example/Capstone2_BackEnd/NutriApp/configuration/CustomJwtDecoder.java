@@ -1,7 +1,7 @@
 package cap2.example.Capstone2_BackEnd.NutriApp.configuration;
 
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.authenAndAuthor.authen.IntrospectRequest;
-import cap2.example.Capstone2_BackEnd.NutriApp.enums.ErrorCode;
+import cap2.example.Capstone2_BackEnd.NutriApp.enums.error.ErrorCode;
 import cap2.example.Capstone2_BackEnd.NutriApp.exception.AppException;
 import cap2.example.Capstone2_BackEnd.NutriApp.service.authenAndAuthorService.AuthenticationService;
 import com.nimbusds.jose.JOSEException;

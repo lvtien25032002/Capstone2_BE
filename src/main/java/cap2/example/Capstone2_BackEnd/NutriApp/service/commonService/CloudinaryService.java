@@ -2,7 +2,7 @@ package cap2.example.Capstone2_BackEnd.NutriApp.service.commonService;
 
 
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.common.response.CloudinaryReponse;
-import cap2.example.Capstone2_BackEnd.NutriApp.enums.ErrorCode;
+import cap2.example.Capstone2_BackEnd.NutriApp.enums.error.ErrorCode;
 import cap2.example.Capstone2_BackEnd.NutriApp.exception.AppException;
 import com.cloudinary.Cloudinary;
 import jakarta.transaction.Transactional;

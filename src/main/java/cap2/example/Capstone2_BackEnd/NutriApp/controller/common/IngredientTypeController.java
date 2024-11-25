@@ -1,7 +1,7 @@
 package cap2.example.Capstone2_BackEnd.NutriApp.controller.common;
 
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.common.response.ApiResponse;
-import cap2.example.Capstone2_BackEnd.NutriApp.enums.IngredientType;
+import cap2.example.Capstone2_BackEnd.NutriApp.enums.ingredient.IngredientType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,7 +17,7 @@ public class IngredientTypeController {
         ApiResponse<List<IngredientType>> response = new ApiResponse<>();
         List<IngredientType> ingredientTypes = Arrays.asList(IngredientType.values());
         response.setData(ingredientTypes);
-        response.setMessage("All meal types retrieved successfully");
+        response.setMessage("All ingredient types retrieved successfully");
         return response;
     }
 }

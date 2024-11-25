@@ -1,9 +1,9 @@
 package cap2.example.Capstone2_BackEnd.NutriApp.model;
 
 
-import cap2.example.Capstone2_BackEnd.NutriApp.enums.DifficultyLevel;
-import cap2.example.Capstone2_BackEnd.NutriApp.enums.MealType;
-import cap2.example.Capstone2_BackEnd.NutriApp.enums.NutritionalQuality;
+import cap2.example.Capstone2_BackEnd.NutriApp.enums.recipe.DifficultyLevel;
+import cap2.example.Capstone2_BackEnd.NutriApp.enums.recipe.MealType;
+import cap2.example.Capstone2_BackEnd.NutriApp.enums.recipe.NutritionalQuality;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

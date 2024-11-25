@@ -1,7 +1,7 @@
 package cap2.example.Capstone2_BackEnd.NutriApp.util;
 
 
-import cap2.example.Capstone2_BackEnd.NutriApp.enums.ErrorCode;
+import cap2.example.Capstone2_BackEnd.NutriApp.enums.error.ErrorCode;
 import cap2.example.Capstone2_BackEnd.NutriApp.exception.AppException;
 import lombok.experimental.UtilityClass;
 import org.apache.commons.io.FilenameUtils;

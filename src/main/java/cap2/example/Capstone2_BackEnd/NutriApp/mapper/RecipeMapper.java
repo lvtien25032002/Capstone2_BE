@@ -1,7 +1,7 @@
 package cap2.example.Capstone2_BackEnd.NutriApp.mapper;
 
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.recipe.RecipeRequest;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.recipe.RecipeResponse;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.recipe.request.RecipeRequest;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.recipe.response.RecipeResponse;
 import cap2.example.Capstone2_BackEnd.NutriApp.model.Recipe;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

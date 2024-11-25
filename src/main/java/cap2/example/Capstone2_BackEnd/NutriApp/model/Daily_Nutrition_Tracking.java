@@ -1,7 +1,7 @@
 package cap2.example.Capstone2_BackEnd.NutriApp.model;
 
 
-import cap2.example.Capstone2_BackEnd.NutriApp.enums.MealType;
+import cap2.example.Capstone2_BackEnd.NutriApp.enums.recipe.MealType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

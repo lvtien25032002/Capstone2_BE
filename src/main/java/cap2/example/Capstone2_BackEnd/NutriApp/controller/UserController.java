@@ -2,10 +2,9 @@ package cap2.example.Capstone2_BackEnd.NutriApp.controller;
 
 
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.common.response.ApiResponse;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.user.UpdateDietaryPreference;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.user.UserCreateRequest;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.user.UserUpdateRequest;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.user.UserResponse;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.user.UserUpdateRequest;
 import cap2.example.Capstone2_BackEnd.NutriApp.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -38,7 +37,6 @@ public class UserController {
             response.setData(userService.getAllUsers()); // Call your existing method to get all users
             return response;
         } else {
-
             pageNo = pageNo - 1;
             if (pageSize == null) {
                 pageSize = 10;
@@ -67,29 +65,19 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ApiResponse<UserResponse> updateUser(@PathVariable String id, @RequestBody UserUpdateRequest request) {
+    public ApiResponse<UserResponse> updateUser(@PathVariable String id, @RequestBody @Valid UserUpdateRequest request) {
         ApiResponse<UserResponse> userApiResponse = new ApiResponse<>();
-        try {
-            userApiResponse.setMessage("Update User successfully");
-            userApiResponse.setData(userService.updateUser(id, request));
-            return userApiResponse;
-        } catch (Exception e) {
-            userApiResponse.setMessage(e.getMessage());
-            return userApiResponse;
-        }
+        userApiResponse.setMessage("Update User successfully");
+        userApiResponse.setData(userService.updateUser(id, request));
+        return userApiResponse;
     }
 
     @PostMapping("")
     public ApiResponse<UserResponse> createUser(@RequestBody @Valid UserCreateRequest request) {
         ApiResponse<UserResponse> userApiResponse = new ApiResponse<>();
-        try {
-            userApiResponse.setMessage("Create User successfully");
-            userApiResponse.setData(userService.createUser(request));
-            return userApiResponse;
-        } catch (Exception e) {
-            userApiResponse.setMessage(e.getMessage());
-            return userApiResponse;
-        }
+        userApiResponse.setMessage("Create User successfully");
+        userApiResponse.setData(userService.createUser(request));
+        return userApiResponse;
     }
 
     @DeleteMapping("/{id}")
@@ -98,18 +86,16 @@ public class UserController {
         apiResponse.setMessage(userService.deleteUser(id));
         return apiResponse;
     }
-
-
-    @PutMapping("/dietary/{id}")
-    public ApiResponse<String> updateUser(@PathVariable String id, @RequestBody UpdateDietaryPreference request) {
-        ApiResponse<String> userApiResponse = new ApiResponse<>();
-        try {
-            userApiResponse.setMessage("Update User successfully");
-            userApiResponse.setData(userService.updateDietaryPreference(id, request));
-            return userApiResponse;
-        } catch (Exception e) {
-            userApiResponse.setMessage(e.getMessage());
-            return userApiResponse;
-        }
-    }
+//    @PutMapping("/dietary/{id}")
+//    public ApiResponse<String> updateUser(@PathVariable String id, @RequestBody UpdateDietaryPreference request) {
+//        ApiResponse<String> userApiResponse = new ApiResponse<>();
+//        try {
+//            userApiResponse.setMessage("Update User successfully");
+//            userApiResponse.setData(userService.updateDietaryPreference(id, request));
+//            return userApiResponse;
+//        } catch (Exception e) {
+//            userApiResponse.setMessage(e.getMessage());
+//            return userApiResponse;
+//        }
+//    }
 }

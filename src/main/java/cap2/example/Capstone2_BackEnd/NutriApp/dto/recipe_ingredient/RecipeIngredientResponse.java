@@ -1,7 +1,7 @@
 package cap2.example.Capstone2_BackEnd.NutriApp.dto.recipe_ingredient;
 
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.ingredient.IngredientResponse;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.recipe.RecipeResponse;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.recipe.response.RecipeResponse;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 

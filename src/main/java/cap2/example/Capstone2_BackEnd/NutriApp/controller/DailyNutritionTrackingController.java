@@ -4,6 +4,7 @@ package cap2.example.Capstone2_BackEnd.NutriApp.controller;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.common.response.ApiResponse;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.daily_nutrition_tracking.request.DailyMealRequest;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.daily_nutrition_tracking.response.NutritionResponse;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.daily_nutrition_tracking.response.NutritionResponseForMealType;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.daily_nutrition_tracking.response.TrackingResponseBasedOnDate;
 import cap2.example.Capstone2_BackEnd.NutriApp.service.DailyNutritionTrackingService;
 import lombok.AccessLevel;
@@ -49,8 +50,8 @@ public class DailyNutritionTrackingController {
 
 
     @GetMapping("/{nutritionId}")
-    ApiResponse<NutritionResponse> getNutritionTracking(@PathVariable String nutritionId) {
-        ApiResponse<NutritionResponse> apiResponse = new ApiResponse<>();
+    ApiResponse<NutritionResponseForMealType> getNutritionTracking(@PathVariable String nutritionId) {
+        ApiResponse<NutritionResponseForMealType> apiResponse = new ApiResponse<>();
         apiResponse.setData(dailyNutritionTrackingService.getNutritionTrackingById(nutritionId));
         apiResponse.setMessage("Get nutrition tracking successfully");
         return apiResponse;

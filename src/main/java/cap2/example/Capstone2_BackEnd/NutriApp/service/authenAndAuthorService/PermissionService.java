@@ -3,7 +3,7 @@ package cap2.example.Capstone2_BackEnd.NutriApp.service.authenAndAuthorService;
 
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.authenAndAuthor.author.permission.PermissionRequest;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.authenAndAuthor.author.permission.PermissionResponse;
-import cap2.example.Capstone2_BackEnd.NutriApp.enums.ErrorCode;
+import cap2.example.Capstone2_BackEnd.NutriApp.enums.error.ErrorCode;
 import cap2.example.Capstone2_BackEnd.NutriApp.exception.AppException;
 import cap2.example.Capstone2_BackEnd.NutriApp.mapper.authenAndAuthorMapper.PermissionMapper;
 import cap2.example.Capstone2_BackEnd.NutriApp.model.Permission;
