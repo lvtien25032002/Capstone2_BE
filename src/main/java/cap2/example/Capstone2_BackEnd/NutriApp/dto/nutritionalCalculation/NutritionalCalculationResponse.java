@@ -8,7 +8,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class NutrionalCalculationResponse {
+public class NutritionalCalculationResponse {
     int caloriesNeeded;
     int proteinNeeded;
     int fatNeeded;

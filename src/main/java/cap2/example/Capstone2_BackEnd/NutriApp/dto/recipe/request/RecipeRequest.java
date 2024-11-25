@@ -1,4 +1,4 @@
-package cap2.example.Capstone2_BackEnd.NutriApp.dto.recipe;
+package cap2.example.Capstone2_BackEnd.NutriApp.dto.recipe.request;
 
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.recipe_ingredient.IngredientForRecipeRequest;
 import lombok.*;

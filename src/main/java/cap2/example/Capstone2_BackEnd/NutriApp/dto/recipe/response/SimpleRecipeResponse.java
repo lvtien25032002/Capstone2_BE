@@ -1,4 +1,4 @@
-package cap2.example.Capstone2_BackEnd.NutriApp.dto.daily_nutrition_tracking.response;
+package cap2.example.Capstone2_BackEnd.NutriApp.dto.recipe.response;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -10,7 +10,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class RecipeForDailyTrackingResponse {
+public class SimpleRecipeResponse {
     String recipeID;
     String recipeName;
     String imageURL;

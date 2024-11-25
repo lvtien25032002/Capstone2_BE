@@ -97,7 +97,7 @@ public class UserService {
 
     ;
 
-    @PostAuthorize("returnObject.username == authentication.username")
+    //    @PostAuthorize("returnObject.username == authentication.username")
     public UserResponse updateUser(String id, UserUpdateRequest request) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));

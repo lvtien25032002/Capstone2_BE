@@ -1,6 +1,6 @@
 package cap2.example.Capstone2_BackEnd.NutriApp.service;
 
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.nutritionalCalculation.NutrionalCalculationResponse;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.nutritionalCalculation.NutritionalCalculationResponse;
 import cap2.example.Capstone2_BackEnd.NutriApp.model.User;
 import cap2.example.Capstone2_BackEnd.NutriApp.repository.userRepository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,7 @@ public class NutritionalCalculationService {
     UserRepository userRepository;
 
 
-    public NutrionalCalculationResponse calculateNutrition(User user) {
+    public NutritionalCalculationResponse calculateNutrition(User user) {
         // BMR (Basal Metabolic Rate) là lượng calo cơ bản mà cơ thể cần để duy trì các chức năng sống ở trạng thái nghỉ.
         double bmr = 0;
         if (user.isGender()) {
@@ -48,13 +48,13 @@ public class NutritionalCalculationService {
         int fatNeeded = (int) (caloriesNeeded * user.getNutritionPlan().getProtein() / 100 / 9);
         int carbsNeeded = (int) (caloriesNeeded * user.getNutritionPlan().getCarbs() / 100 / 4);
 
-        return NutrionalCalculationResponse.builder()
+        return NutritionalCalculationResponse.builder()
                 .caloriesNeeded((int) caloriesNeeded)
                 .proteinNeeded(proteinNeeded)
                 .fatNeeded(fatNeeded)
                 .carbsNeeded(carbsNeeded)
                 .build();
-
-
     }
+
+
 }

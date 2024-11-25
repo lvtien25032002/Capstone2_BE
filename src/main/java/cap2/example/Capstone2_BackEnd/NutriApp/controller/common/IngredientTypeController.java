@@ -17,7 +17,7 @@ public class IngredientTypeController {
         ApiResponse<List<IngredientType>> response = new ApiResponse<>();
         List<IngredientType> ingredientTypes = Arrays.asList(IngredientType.values());
         response.setData(ingredientTypes);
-        response.setMessage("All meal types retrieved successfully");
+        response.setMessage("All ingredient types retrieved successfully");
         return response;
     }
 }

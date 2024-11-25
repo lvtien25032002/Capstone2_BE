@@ -34,6 +34,7 @@ public enum ErrorCode {
     PERMISSIONS_IN_LIST_NOT_FOUND(1019, "One permission in list not found", HttpStatus.BAD_REQUEST),
     INVALID_DIETARY_PREFERENCE(1020, "Invalid dietary preference in the Enum", HttpStatus.BAD_REQUEST),
     INVALID_TOKEN(1021, "Invalid token", HttpStatus.UNAUTHORIZED),
+    EMAIL_REQUIRED(1022, "Email is required in request", HttpStatus.BAD_REQUEST),
 
     // File Errors
 
@@ -65,7 +66,7 @@ public enum ErrorCode {
     RECIPE_COOKING_INSTRUCTIONS_INVALID(3003, "Cooking instructions must be between 10 and 200 characters", HttpStatus.BAD_REQUEST),
     RECIPE_EXIST(3008, "Recipe exist", HttpStatus.BAD_REQUEST),
     RECIPE_NOT_FOUND(3009, "Recipe not found", HttpStatus.NOT_FOUND),
-    NUTRITIONAL_QUALITY_IS_iNVALID(3010, "Nutritional quality is invalid", HttpStatus.BAD_REQUEST),
+    NUTRITIONAL_QUALITY_IS_INVALID(3010, "Nutritional quality is invalid", HttpStatus.BAD_REQUEST),
     COOKING_INSTRUCTIONS_REQUIRED(3011, "Cooking instructions is required", HttpStatus.BAD_REQUEST),
     IMAGE_URL_REQUIRED(3012, "Image URL is required", HttpStatus.BAD_REQUEST),
     PREP_TIME_REQUIRED(3013, "Prep time is required", HttpStatus.BAD_REQUEST),
@@ -77,6 +78,7 @@ public enum ErrorCode {
     MEAL_TYPE_IS_INVALID(3019, "Meal type is invalid", HttpStatus.BAD_REQUEST),
     DIFFICULTY_LEVEL_REQUIRED(3020, "Difficulty level is required", HttpStatus.BAD_REQUEST),
     DIFFICULTY_LEVEL_IS_INVALID(3021, "Difficulty level is invalid", HttpStatus.BAD_REQUEST),
+    NUTRITIONAL_QUALITY_OF_RECIPE_AND_NUTRITION_PLSN_IS_NOT_MATCH(3022, "Nutritional quality of recipe and nutrition plan is not match", HttpStatus.BAD_REQUEST),
 
 
     // Daily_Nutrition_Tracking Errors

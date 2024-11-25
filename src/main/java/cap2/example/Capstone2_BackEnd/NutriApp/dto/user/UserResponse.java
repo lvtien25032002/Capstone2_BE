@@ -3,8 +3,6 @@ package cap2.example.Capstone2_BackEnd.NutriApp.dto.user;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDateTime;
-
 
 @Data
 @NoArgsConstructor
@@ -18,10 +16,11 @@ public class UserResponse {
     String email;
     String fullname;
     int age;
+    // True = Male ; False = Female
     boolean gender;
     double weight;
     double height;
-    String goal;
-    LocalDateTime createdAt;
-//    Set<RoleResponse> roles;
+    String activityFactor;
+    String nutritionPlan;
+    String dietType;
 }

@@ -1,8 +1,12 @@
 package cap2.example.Capstone2_BackEnd.NutriApp.service;
 
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.daily_nutrition_tracking.request.DailyMealRequest;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.daily_nutrition_tracking.response.*;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.daily_nutrition_tracking.response.MealResponse;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.daily_nutrition_tracking.response.NutritionResponse;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.daily_nutrition_tracking.response.NutritionResponseForMealType;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.daily_nutrition_tracking.response.TrackingResponseBasedOnDate;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.daily_nutrition_tracking_detail.DailyNutritionTrackingDetailRequest;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.recipe.response.SimpleRecipeResponse;
 import cap2.example.Capstone2_BackEnd.NutriApp.enums.error.ErrorCode;
 import cap2.example.Capstone2_BackEnd.NutriApp.enums.recipe.MealType;
 import cap2.example.Capstone2_BackEnd.NutriApp.exception.AppException;
@@ -127,12 +131,12 @@ public class DailyNutritionTrackingService {
             mealResponse.setMealType(tracking.getMealType().toString());
 
             // Initial Default Value for Recipe List of Meal Response
-            List<RecipeForDailyTrackingResponse> recipeForDailyTrackingResponseList = new ArrayList<>();
+            List<SimpleRecipeResponse> recipeForDailyTrackingResponseList = new ArrayList<>();
 
             // Logic for Recipe For Daily Tracking Response of Meal Response
             for (Daily_Nutrition_Tracking_Detail detail : dailyNutritionTrackingDetailList) {
                 Recipe recipe = detail.getRecipe_ID();
-                RecipeForDailyTrackingResponse recipeForDailyTrackingResponse = RecipeForDailyTrackingResponse.builder()
+                SimpleRecipeResponse recipeForDailyTrackingResponse = SimpleRecipeResponse.builder()
                         .recipeID(recipe.getRecipe_ID().toString())
                         .recipeName(recipe.getRecipeName())
                         .imageURL(recipe.getImageURL())

@@ -1,4 +1,4 @@
-package cap2.example.Capstone2_BackEnd.NutriApp.dto.recipe;
+package cap2.example.Capstone2_BackEnd.NutriApp.dto.recipe.request;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;

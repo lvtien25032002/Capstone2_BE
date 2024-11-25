@@ -25,10 +25,17 @@ public class AuthenticationController {
 
     @PostMapping("user/login")
     public ApiResponse<AuthenticationResponse> userLogin(@RequestBody AuthenticationRequest request) {
+        ApiResponse<AuthenticationResponse> response = new ApiResponse<>();
         var result = authenticationService.authenticate(request);
-        return ApiResponse.<AuthenticationResponse>builder()
-                .data(result)
-                .build();
+        if (result.isAuthenticated()) {
+            response.setCode(1000);
+            response.setMessage("Login successfully");
+        } else {
+            response.setCode(1000);
+            response.setMessage("Login failed");
+        }
+        response.setData(result);
+        return response;
     }
 
     @PostMapping("user/introspect")
