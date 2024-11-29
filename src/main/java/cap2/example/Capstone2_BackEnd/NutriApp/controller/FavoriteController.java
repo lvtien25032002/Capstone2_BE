@@ -4,7 +4,6 @@ package cap2.example.Capstone2_BackEnd.NutriApp.controller;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.common.response.ApiResponse;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.favorite.request.FavoriteRequest;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.favorite.response.FavoriteResponse;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.favorite.response.TrendingRecipe;
 import cap2.example.Capstone2_BackEnd.NutriApp.service.FavoriteService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -74,8 +73,8 @@ public class FavoriteController {
     }
 
     @GetMapping("/trending")
-    public ApiResponse<List<TrendingRecipe>> getTrendingFavoriteRecipe() {
-        ApiResponse<List<TrendingRecipe>> apiResponse = new ApiResponse<>();
+    public ApiResponse<List<FavoriteResponse>> getTrendingFavoriteRecipe() {
+        ApiResponse<List<FavoriteResponse>> apiResponse = new ApiResponse<>();
         apiResponse.setData(favoriteService.getTrendingRecipe());
         apiResponse.setMessage("Get trending favorite recipe successfully");
         return apiResponse;

@@ -43,6 +43,9 @@ public enum ErrorCode {
     UPLOAD_IMAGE_FAILED(1024, "Upload image failed", HttpStatus.BAD_REQUEST),
     DELETE_IMAGE_FAILED(1025, "Delete image failed", HttpStatus.BAD_REQUEST),
     IMAGE_NOT_FOUND(1026, "Image not found", HttpStatus.NOT_FOUND),
+    PAGE_NUMBER_INVALID(1027, "Page number is higher than 0 or equal -1 to get All", HttpStatus.BAD_REQUEST),
+    PAGE_NUMBER_HIGHER_THAN_TOTAL_PAGES(1028, "Page number is higher than total pages", HttpStatus.BAD_REQUEST),
+
     // Ingredient Errors
 
     INGREDIENT_NAME_INVALID(2001, "Ingredient name must be between 2 and 50 characters", HttpStatus.BAD_REQUEST),
@@ -59,6 +62,7 @@ public enum ErrorCode {
     INGREDIENT_LIST_NOT_NULL(2011, "Ingredient list must not be null", HttpStatus.BAD_REQUEST),
     INGREDIENT_TYPE_INVALID(2012, "Ingredient type is invalid", HttpStatus.BAD_REQUEST),
     INGREDIENT_UNIT_REQUIRED(2013, "Unit is required", HttpStatus.BAD_REQUEST),
+
 
     // Recipe Errors
     RECIPE_NAME_INVALID(3001, "Recipe name must be between 5 and 100 characters", HttpStatus.BAD_REQUEST),
@@ -79,7 +83,7 @@ public enum ErrorCode {
     DIFFICULTY_LEVEL_REQUIRED(3020, "Difficulty level is required", HttpStatus.BAD_REQUEST),
     DIFFICULTY_LEVEL_IS_INVALID(3021, "Difficulty level is invalid", HttpStatus.BAD_REQUEST),
     NUTRITIONAL_QUALITY_OF_RECIPE_AND_NUTRITION_PLSN_IS_NOT_MATCH(3022, "Nutritional quality of recipe and nutrition plan is not match", HttpStatus.BAD_REQUEST),
-
+    MACRO_NUTRIENT_IS_INVALID(3023, "Macro nutrient is must be calories, protein, fat or carbs", HttpStatus.BAD_REQUEST),
 
     // Daily_Nutrition_Tracking Errors
     DATE_WITH_MEAL_TYPE_IS_DUPLICATE(4002, "This Meal Type in this date is already exists for this user", HttpStatus.CONFLICT),

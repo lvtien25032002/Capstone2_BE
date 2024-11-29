@@ -1,6 +1,7 @@
 package cap2.example.Capstone2_BackEnd.NutriApp.controller;
 
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.common.response.ApiResponse;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.common.response.PagingAndSortingAPIResponse;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.recipe.request.RecipeRequest;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.recipe.request.SearchRecipeByIngredientsRequest;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.recipe.response.RecipeResponse;
@@ -12,7 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Set;
 
 
 @Slf4j
@@ -32,7 +32,7 @@ public class RecipeController {
         if (pageNo == null) {
             throw new IllegalArgumentException("Page number must be not null");
         }
-        if ((pageNo == null && pageSize == null && sort == null) || pageNo == -1) {
+        if (pageNo == -1) {
             ApiResponse<List<RecipeResponse>> apiResponse = new ApiResponse<>();
             apiResponse.setData(recipeService.getAllRecipes());
             apiResponse.setMessage("Success");
@@ -58,16 +58,18 @@ public class RecipeController {
     }
 
     @PostMapping("/searchByIngredient")
-    ApiResponse<Set<RecipeResponse>> searchByIngredient(@RequestBody SearchRecipeByIngredientsRequest request) {
-        ApiResponse<Set<RecipeResponse>> apiResponse = new ApiResponse<>();
-        Set<RecipeResponse> recipeResponses = recipeService.searchByIngredient(request);
-        if (recipeResponses.isEmpty()) {
-            apiResponse.setMessage("No recipes found with the given ingredients");
+    PagingAndSortingAPIResponse<RecipeResponse> searchByIngredient(
+            @RequestBody SearchRecipeByIngredientsRequest request,
+            @RequestParam(required = false) Integer pageNo,
+            @RequestParam(required = false) Integer pageSize,
+            @RequestParam(required = false) String[] sort) {
+        PagingAndSortingAPIResponse<RecipeResponse> recipeResponses = recipeService.searchByIngredient(request, pageNo, pageSize, sort);
+        if (recipeResponses.getData().isEmpty()) {
+            recipeResponses.setMessage("No recipes found with the given ingredients");
         } else {
-            apiResponse.setMessage("Success");
+            recipeResponses.setMessage("Success");
         }
-        apiResponse.setData(recipeService.searchByIngredient(request));
-        return apiResponse;
+        return recipeResponses;
     }
 
     @PostMapping
@@ -103,42 +105,46 @@ public class RecipeController {
 
 
     @GetMapping("/filter")
-    public ApiResponse<List<RecipeResponse>> filterByMealType(
+    public Object filterByMealType(
             @RequestParam(required = false) String mealType,
             @RequestParam(required = false) String nutritionalQuality,
-            @RequestParam(required = false) String difficultyLevel
+            @RequestParam(required = false) String difficultyLevel,
+            @RequestParam(required = false) Integer pageNo,
+            @RequestParam(required = false) Integer pageSize,
+            @RequestParam(required = false) String[] sort
     ) {
-        ApiResponse<List<RecipeResponse>> apiResponse = new ApiResponse<>();
+        pageNo = pageNo - 1;
         if (mealType != null) {
-            apiResponse.setData(recipeService.getRecipesByMealType(mealType));
+            return recipeService.getRecipesByMealType(mealType, pageNo, pageSize, sort);
         } else if (nutritionalQuality != null) {
-            apiResponse.setData(recipeService.getRecipesByNutritionalQuality(nutritionalQuality));
+            return recipeService.getRecipesByNutritionalQuality(nutritionalQuality, pageNo, pageSize, sort);
         } else if (difficultyLevel != null) {
-            apiResponse.setData(recipeService.getRecipesByDifficultyLevel(difficultyLevel));
+            return recipeService.getRecipesByDifficultyLevel(difficultyLevel, pageNo, pageSize, sort);
         } else {
             throw new IllegalArgumentException("Please provide either mealType or nutritionalQuality");
         }
-        apiResponse.setMessage("Successful");
-        return apiResponse;
     }
 
     @GetMapping("/filterByMacroNutrients")
-    public ApiResponse<List<RecipeResponse>> filterByMacroNutrients(
+    public Object filterByMacroNutrients(
             @RequestParam(required = true) String macroNutrient,
             @RequestParam(required = false) Double minMacro,
-            @RequestParam(required = false) Double maxMacro) {
-        ApiResponse<List<RecipeResponse>> apiResponse = new ApiResponse<>();
-        apiResponse.setData(recipeService.getRecipesByMacroNutrients(macroNutrient, minMacro, maxMacro));
-        apiResponse.setMessage("Success");
-        return apiResponse;
+            @RequestParam(required = false) Double maxMacro,
+            @RequestParam(required = false) Integer pageNo,
+            @RequestParam(required = false) Integer pageSize,
+            @RequestParam(required = false) String[] sort
+    ) {
+        pageNo = pageNo - 1;
+        return recipeService.getRecipesByMacroNutrients(macroNutrient, minMacro, maxMacro, pageNo, pageSize, sort);
     }
 
     @GetMapping("/search")
-    public ApiResponse<List<RecipeResponse>> searchRecipeByName(
-            @RequestParam(required = true) String recipeName) {
-        ApiResponse<List<RecipeResponse>> apiResponse = new ApiResponse<>();
-        apiResponse.setData(recipeService.searchRecipeByName(recipeName));
-        apiResponse.setMessage("Success");
-        return apiResponse;
+    public Object searchRecipeByName(
+            @RequestParam(required = true) String recipeName,
+            @RequestParam(required = false) Integer pageNo,
+            @RequestParam(required = false) Integer pageSize,
+            @RequestParam(required = false) String[] sort) {
+        pageNo = pageNo - 1;
+        return recipeService.searchRecipeByName(recipeName, pageNo, pageSize, sort);
     }
 }

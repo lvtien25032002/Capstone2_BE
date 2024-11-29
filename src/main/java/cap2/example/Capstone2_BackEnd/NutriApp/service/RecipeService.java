@@ -30,12 +30,10 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 
 @Slf4j
@@ -54,22 +52,14 @@ public class RecipeService {
 
 
     public PagingAndSortingAPIResponse<RecipeResponse> getPagingAllRecipes(int page, int size, String[] sort) {
-        Page<Recipe> recipes = recipeRepository.findAll(genericPagingAndSortingService.createPageable(page, size, sort));
-        List<RecipeResponse> recipeResponses = recipes.map(recipe -> {
+        List<Recipe> recipes = recipeRepository.findAll();
+        List<RecipeResponse> recipeResponses = recipes.stream().map(recipe -> {
             RecipeResponse recipeResponse = recipeMapper.toRecipeResponse(recipe);
             List<IngredientForRecipeResponse> ingredientList = recipeIngredientService.getIngredientsForRecipeResponse(recipe);
             recipeResponse.setIngredientList(ingredientList);
             return recipeResponse;
         }).toList();
-
-        return PagingAndSortingAPIResponse.<RecipeResponse>builder()
-                .message("Success")
-                .data(recipeResponses)
-                .totalRecords(recipes.getTotalElements())
-                .totalPages(recipes.getTotalPages())
-                .pageNo(recipes.getNumber() + 1)
-                .pageSize(recipes.getSize())
-                .build();
+        return genericPagingAndSortingService.getPagingResponse(recipeResponses, page, size, sort);
     }
 
 
@@ -83,7 +73,6 @@ public class RecipeService {
             recipeResponse.setMealType(setMealTypeResponse(recipe.getMealType()));
             return recipeResponse;
         }).toList();
-
     }
 
     @Transactional
@@ -124,7 +113,7 @@ public class RecipeService {
         return "Delete Recipe Successfully";
     }
 
-    public Set<RecipeResponse> searchByIngredient(SearchRecipeByIngredientsRequest request) {
+    public PagingAndSortingAPIResponse<RecipeResponse> searchByIngredient(SearchRecipeByIngredientsRequest request, int page, int size, String[] sort) {
         if (request.getIngredients() == null || request.getIngredients().isEmpty()) {
             throw new AppException(ErrorCode.INGREDIENT_LIST_NOT_NULL);
         }
@@ -161,61 +150,49 @@ public class RecipeService {
         if (recipes.isEmpty()) {
             throw new AppException(ErrorCode.RECIPE_NOT_FOUND);
         }
-        return recipes.stream().map(recipe -> {
+        List<RecipeResponse> response = recipes.stream().map(recipe -> {
             RecipeResponse recipeResponse = recipeMapper.toRecipeResponse(recipe);
-            List<IngredientForRecipeResponse> ingredientList = recipeIngredientService.getIngredientsForRecipeResponse(recipe);
-            recipeResponse.setIngredientList(ingredientList);
+            recipeResponse.setIngredientList(recipeIngredientService.getIngredientsForRecipeResponse(recipe));
             return recipeResponse;
-        }).collect(Collectors.toSet());
+        }).toList();
+
+        PagingAndSortingAPIResponse<RecipeResponse> recipePage = genericPagingAndSortingService.getPagingResponse(response, page, size, sort);
+        return recipePage;
     }
 
-    public List<RecipeResponse> getRecipesByMealType(String mealType) {
+    public PagingAndSortingAPIResponse<RecipeResponse> getRecipesByMealType(String mealType, int page, int size, String[] sort) {
         try {
             MealType.valueOf(mealType);
         } catch (Exception e) {
             throw new AppException(ErrorCode.MEAL_TYPE_IS_INVALID);
         }
         List<Recipe> recipelist = recipeRepository.findByMealType(MealType.valueOf(mealType));
-        return recipelist.stream().map(recipe -> {
-            List<IngredientForRecipeResponse> ingredientList = recipeIngredientService.getIngredientsForRecipeResponse(recipe);
-            RecipeResponse recipeResponse = recipeMapper.toRecipeResponse(recipe);
-            recipeResponse.setIngredientList(ingredientList);
-            return recipeResponse;
-        }).toList();
+        return getRecipeResponsePagingAndSortingAPIResponse(page, size, sort, recipelist);
     }
 
-    public List<RecipeResponse> getRecipesByNutritionalQuality(String nutritionalQuality) {
+    public PagingAndSortingAPIResponse<RecipeResponse> getRecipesByNutritionalQuality(String nutritionalQuality, int page, int size, String[] sort) {
         try {
             NutritionalQuality.valueOf(nutritionalQuality);
         } catch (Exception e) {
             throw new AppException(ErrorCode.NUTRITIONAL_QUALITY_IS_INVALID);
         }
         List<Recipe> recipelist = recipeRepository.findByNutritionalQuality(NutritionalQuality.valueOf(nutritionalQuality));
-        return recipelist.stream().map(recipe -> {
-            List<IngredientForRecipeResponse> ingredientList = recipeIngredientService.getIngredientsForRecipeResponse(recipe);
-            RecipeResponse recipeResponse = recipeMapper.toRecipeResponse(recipe);
-            recipeResponse.setIngredientList(ingredientList);
-            return recipeResponse;
-        }).toList();
+        return getRecipeResponsePagingAndSortingAPIResponse(page, size, sort, recipelist);
     }
 
-    public List<RecipeResponse> getRecipesByDifficultyLevel(String difficultyLevel) {
+    public PagingAndSortingAPIResponse<RecipeResponse> getRecipesByDifficultyLevel(String difficultyLevel, int page, int size, String[] sort) {
         try {
             DifficultyLevel.valueOf(difficultyLevel);
         } catch (Exception e) {
             throw new AppException(ErrorCode.DIFFICULTY_LEVEL_IS_INVALID);
         }
         List<Recipe> recipelist = recipeRepository.findByDifficultyLevel(DifficultyLevel.valueOf(difficultyLevel));
-        return recipelist.stream().map(recipe -> {
-            List<IngredientForRecipeResponse> ingredientList = recipeIngredientService.getIngredientsForRecipeResponse(recipe);
-            RecipeResponse recipeResponse = recipeMapper.toRecipeResponse(recipe);
-            recipeResponse.setIngredientList(ingredientList);
-            return recipeResponse;
-        }).toList();
+        return getRecipeResponsePagingAndSortingAPIResponse(page, size, sort, recipelist);
     }
 
-    public List<RecipeResponse> getRecipesByMacroNutrients(String macroNutrient, Double minMacro, Double maxMacro) {
-
+    public PagingAndSortingAPIResponse<RecipeResponse> getRecipesByMacroNutrients(String macroNutrient, Double minMacro, Double maxMacro, int page, int size, String[] sort) {
+        if (!Objects.equals(macroNutrient, "Calories") && !Objects.equals(macroNutrient, "Protein") && !Objects.equals(macroNutrient, "Carbs") && !Objects.equals(macroNutrient, "Fat"))
+            throw new AppException(ErrorCode.MACRO_NUTRIENT_IS_INVALID);
         List<Recipe> recipelist = null;
         if (Objects.equals(macroNutrient, "Calories")) {
             recipelist = recipeRepository.findByCaloriesRange(minMacro, maxMacro);
@@ -226,26 +203,18 @@ public class RecipeService {
             recipelist = recipeRepository.findByCarbsRange(minMacro, maxMacro);
         if (Objects.equals(macroNutrient, "Fat"))
             recipelist = recipeRepository.findByFatRange(minMacro, maxMacro);
+
         if (recipelist == null) {
             throw new AppException(ErrorCode.RECIPE_NOT_FOUND);
         }
-        return recipelist.stream().map(recipe -> {
-            List<IngredientForRecipeResponse> ingredientList = recipeIngredientService.getIngredientsForRecipeResponse(recipe);
-            RecipeResponse recipeResponse = recipeMapper.toRecipeResponse(recipe);
-            recipeResponse.setIngredientList(ingredientList);
-            return recipeResponse;
-        }).toList();
+        return getRecipeResponsePagingAndSortingAPIResponse(page, size, sort, recipelist);
     }
 
-    public List<RecipeResponse> searchRecipeByName(String recipeName) {
+    public PagingAndSortingAPIResponse<RecipeResponse> searchRecipeByName(String recipeName, int page, int size, String[] sort) {
         List<Recipe> recipelist = recipeRepository.findByRecipeNameContaining(recipeName);
-        return recipelist.stream().map(recipe -> {
-            List<IngredientForRecipeResponse> ingredientList = recipeIngredientService.getIngredientsForRecipeResponse(recipe);
-            RecipeResponse recipeResponse = recipeMapper.toRecipeResponse(recipe);
-            recipeResponse.setIngredientList(ingredientList);
-            return recipeResponse;
-        }).toList();
+        return getRecipeResponsePagingAndSortingAPIResponse(page, size, sort, recipelist);
     }
+
 
     // Get Recipe Based On Nutritional Calculation for Each User
     public RecipeResponseBaseOnNutritionPlan getRecipeBasedOnNutritionalCalculation(String userId) {
@@ -301,6 +270,16 @@ public class RecipeService {
         Set<MealType> mealTypeResponse = new HashSet<>();
         mealTypeResponse.addAll(mealTypes);
         return mealTypeResponse;
+    }
+
+    private PagingAndSortingAPIResponse<RecipeResponse> getRecipeResponsePagingAndSortingAPIResponse(int page, int size, String[] sort, List<Recipe> recipelist) {
+        List<RecipeResponse> recipeResponses = recipelist.stream().map(recipe -> {
+            List<IngredientForRecipeResponse> ingredientList = recipeIngredientService.getIngredientsForRecipeResponse(recipe);
+            RecipeResponse recipeResponse = recipeMapper.toRecipeResponse(recipe);
+            recipeResponse.setIngredientList(ingredientList);
+            return recipeResponse;
+        }).toList();
+        return genericPagingAndSortingService.getPagingResponse(recipeResponses, page, size, sort);
     }
 
 

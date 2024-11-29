@@ -91,4 +91,15 @@ public class IngredientController {
         return apiResponse;
     }
 
+    @GetMapping("/search")
+    Object searchIngreidentByName(
+            @RequestParam(required = false) Integer pageNo,
+            @RequestParam(required = false) Integer pageSize,
+            @RequestParam(required = false) String[] sort,
+            @RequestParam() String search
+    ) {
+        pageNo = pageNo - 1;
+        return ingredientService.searchIngredientByName(pageNo, pageSize, sort, search);
+    }
+
 }

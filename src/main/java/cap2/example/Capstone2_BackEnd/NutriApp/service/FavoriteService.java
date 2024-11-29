@@ -1,9 +1,9 @@
 package cap2.example.Capstone2_BackEnd.NutriApp.service;
 
 
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.common.response.PagingAndSortingAPIResponse;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.favorite.request.FavoriteRequest;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.favorite.response.FavoriteResponse;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.favorite.response.TrendingRecipe;
 import cap2.example.Capstone2_BackEnd.NutriApp.enums.error.ErrorCode;
 import cap2.example.Capstone2_BackEnd.NutriApp.exception.AppException;
 import cap2.example.Capstone2_BackEnd.NutriApp.mapper.FavoriteMapper;
@@ -16,7 +16,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -91,19 +90,18 @@ public class FavoriteService {
         ).toList();
     }
 
-    public List<TrendingRecipe> getTrendingRecipe() {
-        Page<Favorite> trendingRecipes = favoriteRepository.findAll(genericPagingAndSortingService.createPageable(0, 10, null));
-
-        List<TrendingRecipe> response = new ArrayList<>();
-        trendingRecipes.map(favorite -> {
-            TrendingRecipe trendingRecipe = TrendingRecipe.builder()
-                    .favoriteID(favorite.getFavorite_ID())
+    public List<FavoriteResponse> getTrendingRecipe() {
+        List<Favorite> trendingRecipes = favoriteRepository.findTrendingRecipe();
+        List<FavoriteResponse> trendingRecipeList = new ArrayList<>();
+        trendingRecipes.stream().map(favorite -> {
+            FavoriteResponse trendingRecipe = FavoriteResponse.builder()
                     .recipeID(favorite.getRecipe_ID().getRecipe_ID())
                     .build();
-            response.add(trendingRecipe);
+            trendingRecipeList.add(trendingRecipe);
             return favorite;
         });
-        return response;
+        PagingAndSortingAPIResponse<FavoriteResponse> response = genericPagingAndSortingService.getPagingResponse(trendingRecipeList, 0, 10, null);
+        return response.getData();
     }
 
     // Private Method

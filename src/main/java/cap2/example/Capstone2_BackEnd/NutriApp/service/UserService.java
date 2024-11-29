@@ -17,7 +17,6 @@ import cap2.example.Capstone2_BackEnd.NutriApp.service.commonService.GenericPagi
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -44,15 +43,10 @@ public class UserService {
 
 
     public PagingAndSortingAPIResponse<UserResponse> getPagingAllUsers(int page, int size, String[] sort) {
-        Page<User> users = userRepository.findAll(genericPagingAndSortingService.createPageable(page, size, sort));
-        List<UserResponse> usersResponse = users.map(userMapper::toUserResponse).toList();
-        return PagingAndSortingAPIResponse.<UserResponse>builder()
-                .data(usersResponse)
-                .totalRecords(users.getTotalElements())
-                .totalPages(users.getTotalPages())
-                .pageNo(users.getNumber() + 1)
-                .pageSize(users.getSize())
-                .build();
+        List<User> users = userRepository.findAll();
+        List<UserResponse> usersResponse = users.stream().map(userMapper::toUserResponse).toList();
+        PagingAndSortingAPIResponse<UserResponse> response = genericPagingAndSortingService.getPagingResponse(usersResponse, page, size, sort);
+        return response;
     }
 
     //    @PreAuthorize("hasAuthority('APPROVE_POST')")
