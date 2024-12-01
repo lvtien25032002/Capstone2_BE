@@ -13,4 +13,6 @@ public class IngredientForRecipeResponse {
     String ingredientName;
     int quantity;
     String unit;
+    int calories;
+    String imageURL;
 }
