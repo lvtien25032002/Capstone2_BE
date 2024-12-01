@@ -44,6 +44,8 @@ public class RecipeIngredientService {
             ingredientForRecipeResponse.setIngredientName(ingredient.getIngredientName());
             ingredientForRecipeResponse.setQuantity(recipe_ingredient.getQuantity());
             ingredientForRecipeResponse.setUnit(ingredient.getUnit());
+            ingredientForRecipeResponse.setImageURL(ingredient.getImageURL());
+            ingredientForRecipeResponse.setCalories((int) ingredient.getCalories());
             return ingredientForRecipeResponse;
         }).toList();
     }

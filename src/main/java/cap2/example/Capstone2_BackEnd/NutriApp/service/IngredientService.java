@@ -15,7 +15,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,16 +30,12 @@ public class IngredientService {
     GenericPagingAndSortingService genericPagingAndSortingService;
 
     public PagingAndSortingAPIResponse<IngredientResponse> getPagingAllIngredients(int page, int size, String[] sort) {
-        Page<Ingredient> ingredients = ingredientRepository.findAll(genericPagingAndSortingService.createPageable(page, size, sort));
-        List<IngredientResponse> ingredientsResponse = ingredients.map(ingredientMapper::toIngredientResponse).toList();
-        return PagingAndSortingAPIResponse.<IngredientResponse>builder()
-                .message("Success")
-                .data(ingredientsResponse)
-                .totalRecords(ingredients.getTotalElements())
-                .totalPages(ingredients.getTotalPages())
-                .pageNo(ingredients.getNumber() + 1)
-                .pageSize(ingredients.getSize())
-                .build();
+        List<Ingredient> ingredients = ingredientRepository.findAll();
+
+        List<IngredientResponse> ingredientsResponse = ingredients.stream().map(ingredientMapper::toIngredientResponse).toList();
+        PagingAndSortingAPIResponse<IngredientResponse> response = genericPagingAndSortingService.getPagingResponse(ingredientsResponse, page, size, sort);
+
+        return response;
     }
 
     public List<IngredientResponse> getAllIngredients() {
@@ -73,6 +68,16 @@ public class IngredientService {
 
         ingredientMapper.updateIngredient(ingredient, request);
         return ingredientMapper.toIngredientResponse(ingredientRepository.save(ingredient));
+    }
+
+    public PagingAndSortingAPIResponse<IngredientResponse> searchIngredientByName(int page, int size, String[] sort, String name) {
+        List<Ingredient> ingredients = ingredientRepository.findByIngredientNameContaining(name);
+        if (ingredients.isEmpty())
+            throw new AppException(ErrorCode.INGREDIENT_NOT_FOUND);
+        List<IngredientResponse> ingredientsResponse = ingredients.stream()
+                .map(ingredientMapper::toIngredientResponse).toList();
+        PagingAndSortingAPIResponse<IngredientResponse> response = genericPagingAndSortingService.getPagingResponse(ingredientsResponse, page, size, sort);
+        return response;
     }
 
     @Transactional

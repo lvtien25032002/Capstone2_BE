@@ -18,7 +18,7 @@ import java.util.List;
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 public class PagingAndSortingAPIResponse<T> {
     int code = 1000;
-    String message;
+    String message = "Success";
     List<T> data;
     long totalRecords;
     int totalPages;

@@ -1,8 +1,6 @@
 package cap2.example.Capstone2_BackEnd.NutriApp.repository;
 
 import cap2.example.Capstone2_BackEnd.NutriApp.model.Favorite;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -19,7 +17,7 @@ public interface FavoriteRepository extends JpaRepository<Favorite, String> {
             "FROM Favorite f JOIN f.Recipe_ID r " +
             "GROUP BY r " +
             "ORDER BY favoriteCount DESC")
-    Page<Object[]> findTrendingRecipe(Pageable pageable);
+    List<Favorite> findTrendingRecipe();
 
     ;
 }
