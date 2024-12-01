@@ -71,13 +71,13 @@ public class IngredientService {
     }
 
     public PagingAndSortingAPIResponse<IngredientResponse> searchIngredientByName(int page, int size, String[] sort, String name) {
+        log.info(name);
         List<Ingredient> ingredients = ingredientRepository.findByIngredientNameContaining(name);
         if (ingredients.isEmpty())
             throw new AppException(ErrorCode.INGREDIENT_NOT_FOUND);
         List<IngredientResponse> ingredientsResponse = ingredients.stream()
                 .map(ingredientMapper::toIngredientResponse).toList();
-        PagingAndSortingAPIResponse<IngredientResponse> response = genericPagingAndSortingService.getPagingResponse(ingredientsResponse, page, size, sort);
-        return response;
+        return genericPagingAndSortingService.getPagingResponse(ingredientsResponse, page, size, sort);
     }
 
     @Transactional

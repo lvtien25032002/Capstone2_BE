@@ -28,11 +28,17 @@ public class IngredientController {
     Object getAllIngredients(
             @RequestParam(required = false) Integer pageNo,
             @RequestParam(required = false) Integer pageSize,
-            @RequestParam(required = false) String[] sort) {
+            @RequestParam(required = false) String[] sort,
+            @RequestParam(required = false) String search
+    ) {
+        if (!(search == null)) {
+            pageNo = pageNo - 1;
+            return ingredientService.searchIngredientByName(pageNo, pageSize, sort, search);
+        }
         if (pageNo == null) {
             throw new IllegalArgumentException("Page number must be not null");
         }
-        if ((pageNo == null && pageSize == null && sort == null) || pageNo == -1) {
+        if (pageNo == -1) {
             ApiResponse<List<IngredientResponse>> response = new ApiResponse<>();
             response.setData(ingredientService.getAllIngredients());
             response.setMessage("Get all Ingredients successfully");
@@ -91,15 +97,5 @@ public class IngredientController {
         return apiResponse;
     }
 
-    @GetMapping("/search")
-    Object searchIngreidentByName(
-            @RequestParam(required = false) Integer pageNo,
-            @RequestParam(required = false) Integer pageSize,
-            @RequestParam(required = false) String[] sort,
-            @RequestParam() String search
-    ) {
-        pageNo = pageNo - 1;
-        return ingredientService.searchIngredientByName(pageNo, pageSize, sort, search);
-    }
 
 }
