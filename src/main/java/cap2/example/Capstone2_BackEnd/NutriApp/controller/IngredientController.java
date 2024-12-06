@@ -3,6 +3,8 @@ package cap2.example.Capstone2_BackEnd.NutriApp.controller;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.common.response.ApiResponse;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.ingredient.IngredientRequest;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.ingredient.IngredientResponse;
+import cap2.example.Capstone2_BackEnd.NutriApp.enums.error.ErrorCode;
+import cap2.example.Capstone2_BackEnd.NutriApp.exception.AppException;
 import cap2.example.Capstone2_BackEnd.NutriApp.service.IngredientService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -26,17 +28,23 @@ public class IngredientController {
 
     @GetMapping
     Object getAllIngredients(
-            @RequestParam(required = false) Integer pageNo,
-            @RequestParam(required = false) Integer pageSize,
+            @RequestParam(value = "pageNo", required = false) Integer pageNo,
+            @RequestParam(value = "pageSize", required = false) Integer pageSize,
             @RequestParam(required = false) String[] sort,
             @RequestParam(required = false) String search
     ) {
+        if (pageNo == null) {
+            throw new AppException(ErrorCode.PAGE_NUMBER_IS_NOT_NULL);
+        }
+        if (pageSize == null) {
+            pageSize = 10;
+        }
+        if (pageNo < 1 && pageNo != -1) {
+            throw new AppException(ErrorCode.PAGE_NUMBER_INVALID);
+        }
         if (!(search == null)) {
             pageNo = pageNo - 1;
             return ingredientService.searchIngredientByName(pageNo, pageSize, sort, search);
-        }
-        if (pageNo == null) {
-            throw new IllegalArgumentException("Page number must be not null");
         }
         if (pageNo == -1) {
             ApiResponse<List<IngredientResponse>> response = new ApiResponse<>();
@@ -44,14 +52,7 @@ public class IngredientController {
             response.setMessage("Get all Ingredients successfully");
             return response;
         } else {
-            if (pageSize < 1 && pageSize != -1) {
-                throw new IllegalArgumentException("Page size must be greater than 0");
-            }
             pageNo = pageNo - 1;
-            if (pageSize == null) {
-                pageSize = 10;
-            }
-
             return ingredientService.getPagingAllIngredients(pageNo, pageSize, sort);
         }
 

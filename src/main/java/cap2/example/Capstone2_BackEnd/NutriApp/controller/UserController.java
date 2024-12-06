@@ -5,6 +5,8 @@ import cap2.example.Capstone2_BackEnd.NutriApp.dto.common.response.ApiResponse;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.user.UserCreateRequest;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.user.UserResponse;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.user.UserUpdateRequest;
+import cap2.example.Capstone2_BackEnd.NutriApp.enums.error.ErrorCode;
+import cap2.example.Capstone2_BackEnd.NutriApp.exception.AppException;
 import cap2.example.Capstone2_BackEnd.NutriApp.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -25,12 +27,22 @@ public class UserController {
 
     @GetMapping("/all")
     public Object getAllUsers(
-            @RequestParam(required = false) Integer pageNo,
-            @RequestParam(required = false) Integer pageSize,
+            @RequestParam(value = "pageNo", required = false) Integer pageNo,
+            @RequestParam(value = "pageSize", required = false) Integer pageSize,
             @RequestParam(required = false) String[] sort) {
-
+        // Check parameters
+        if (pageNo == null) {
+            throw new AppException(ErrorCode.PAGE_NUMBER_IS_NOT_NULL);
+        }
+        if (pageSize == null) {
+            pageSize = 10;
+        }
+        if (pageNo < 1 && pageNo != -1) {
+            throw new AppException(ErrorCode.PAGE_NUMBER_INVALID);
+        }
+        //Logic
         // If no pagination parameters are provided, return all users
-        if ((pageNo == null && pageSize == null && sort == null) || pageNo == -1) {
+        if (pageNo == -1) {
             ApiResponse<List<UserResponse>> response = new ApiResponse<>();
             response.setCode(1000);
             response.setMessage("Get All Users successfully");
@@ -38,12 +50,6 @@ public class UserController {
             return response;
         } else {
             pageNo = pageNo - 1;
-            if (pageSize == null) {
-                pageSize = 10;
-            }
-            if (pageSize < 1) {
-                throw new IllegalArgumentException("Page size must be greater than 0");
-            }
             return userService.getPagingAllUsers(pageNo, pageSize, sort);
         }
     }

@@ -17,7 +17,7 @@ public interface FavoriteRepository extends JpaRepository<Favorite, String> {
             "FROM Favorite f JOIN f.Recipe_ID r " +
             "GROUP BY r " +
             "ORDER BY favoriteCount DESC")
-    List<Favorite> findTrendingRecipe();
+    List<Object[]> findTrendingRecipe();
 
     ;
 }
