@@ -5,6 +5,8 @@ import cap2.example.Capstone2_BackEnd.NutriApp.dto.common.response.PagingAndSort
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.recipe.request.RecipeRequest;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.recipe.request.SearchRecipeByIngredientsRequest;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.recipe.response.RecipeResponse;
+import cap2.example.Capstone2_BackEnd.NutriApp.enums.error.ErrorCode;
+import cap2.example.Capstone2_BackEnd.NutriApp.exception.AppException;
 import cap2.example.Capstone2_BackEnd.NutriApp.service.RecipeService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -26,11 +28,18 @@ public class RecipeController {
 
     @GetMapping
     Object getAllRecipes(
-            @RequestParam(required = false) Integer pageNo,
-            @RequestParam(required = false) Integer pageSize,
+            @RequestParam(value = "pageNo", required = false) Integer pageNo,
+            @RequestParam(value = "pageSize", required = false) Integer pageSize,
             @RequestParam(required = false) String[] sort) {
+        // Check parameters
         if (pageNo == null) {
-            throw new IllegalArgumentException("Page number must be not null");
+            throw new AppException(ErrorCode.PAGE_NUMBER_IS_NOT_NULL);
+        }
+        if (pageSize == null) {
+            pageSize = 10;
+        }
+        if (pageNo < 1 && pageNo != -1) {
+            throw new AppException(ErrorCode.PAGE_NUMBER_INVALID);
         }
         if (pageNo == -1) {
             ApiResponse<List<RecipeResponse>> apiResponse = new ApiResponse<>();
@@ -38,13 +47,7 @@ public class RecipeController {
             apiResponse.setMessage("Success");
             return apiResponse;
         } else {
-            if (pageSize < 1 && pageSize != -1) {
-                throw new IllegalArgumentException("Page size must be greater than 0");
-            }
             pageNo = pageNo - 1;
-            if (pageSize == null) {
-                pageSize = 10;
-            }
             return recipeService.getPagingAllRecipes(pageNo, pageSize, sort);
         }
     }
@@ -60,9 +63,22 @@ public class RecipeController {
     @PostMapping("/searchByIngredient")
     PagingAndSortingAPIResponse<RecipeResponse> searchByIngredient(
             @RequestBody SearchRecipeByIngredientsRequest request,
-            @RequestParam(required = false) Integer pageNo,
-            @RequestParam(required = false) Integer pageSize,
+            @RequestParam(value = "pageNo", required = false) Integer pageNo,
+            @RequestParam(value = "pageSize", required = false) Integer pageSize,
             @RequestParam(required = false) String[] sort) {
+        // Check parameters
+        if (pageNo == null) {
+            throw new AppException(ErrorCode.PAGE_NUMBER_IS_NOT_NULL);
+        }
+        if (pageSize == null) {
+            pageSize = 10;
+        }
+        if (pageNo < 1 && pageNo != -1) {
+            throw new AppException(ErrorCode.PAGE_NUMBER_INVALID);
+        }
+
+        // Logic
+        pageNo = pageNo - 1;
         PagingAndSortingAPIResponse<RecipeResponse> recipeResponses = recipeService.searchByIngredient(request, pageNo, pageSize, sort);
         if (recipeResponses.getData().isEmpty()) {
             recipeResponses.setMessage("No recipes found with the given ingredients");
@@ -109,10 +125,22 @@ public class RecipeController {
             @RequestParam(required = false) String mealType,
             @RequestParam(required = false) String nutritionalQuality,
             @RequestParam(required = false) String difficultyLevel,
-            @RequestParam(required = false) Integer pageNo,
-            @RequestParam(required = false) Integer pageSize,
+            @RequestParam(value = "pageNo", required = false) Integer pageNo,
+            @RequestParam(value = "pageSize", required = false) Integer pageSize,
             @RequestParam(required = false) String[] sort
     ) {
+        // Check parameters
+        if (pageNo == null) {
+            throw new AppException(ErrorCode.PAGE_NUMBER_IS_NOT_NULL);
+        }
+        if (pageSize == null) {
+            pageSize = 10;
+        }
+        if (pageNo < 1 && pageNo != -1) {
+            throw new AppException(ErrorCode.PAGE_NUMBER_INVALID);
+        }
+
+        // Logic
         pageNo = pageNo - 1;
         if (mealType != null) {
             return recipeService.getRecipesByMealType(mealType, pageNo, pageSize, sort);
@@ -130,10 +158,22 @@ public class RecipeController {
             @RequestParam(required = true) String macroNutrient,
             @RequestParam(required = false) Double minMacro,
             @RequestParam(required = false) Double maxMacro,
-            @RequestParam(required = false) Integer pageNo,
-            @RequestParam(required = false) Integer pageSize,
+            @RequestParam(value = "pageNo", required = false) Integer pageNo,
+            @RequestParam(value = "pageSize", required = false) Integer pageSize,
             @RequestParam(required = false) String[] sort
     ) {
+        // Check parameters
+        if (pageNo == null) {
+            throw new AppException(ErrorCode.PAGE_NUMBER_IS_NOT_NULL);
+        }
+        if (pageSize == null) {
+            pageSize = 10;
+        }
+        if (pageNo < 1 && pageNo != -1) {
+            throw new AppException(ErrorCode.PAGE_NUMBER_INVALID);
+        }
+
+        // Logic
         pageNo = pageNo - 1;
         return recipeService.getRecipesByMacroNutrients(macroNutrient, minMacro, maxMacro, pageNo, pageSize, sort);
     }
@@ -141,9 +181,21 @@ public class RecipeController {
     @GetMapping("/search")
     public Object searchRecipeByName(
             @RequestParam(required = true) String recipeName,
-            @RequestParam(required = false) Integer pageNo,
-            @RequestParam(required = false) Integer pageSize,
+            @RequestParam(value = "pageNo", required = false) Integer pageNo,
+            @RequestParam(value = "pageSize", required = false) Integer pageSize,
             @RequestParam(required = false) String[] sort) {
+        // Check parameters
+        if (pageNo == null) {
+            throw new AppException(ErrorCode.PAGE_NUMBER_IS_NOT_NULL);
+        }
+        if (pageSize == null) {
+            pageSize = 10;
+        }
+        if (pageNo < 1 && pageNo != -1) {
+            throw new AppException(ErrorCode.PAGE_NUMBER_INVALID);
+        }
+
+        // Logic
         pageNo = pageNo - 1;
         return recipeService.searchRecipeByName(recipeName, pageNo, pageSize, sort);
     }

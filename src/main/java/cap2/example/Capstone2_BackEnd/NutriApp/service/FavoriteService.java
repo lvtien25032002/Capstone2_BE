@@ -4,10 +4,12 @@ package cap2.example.Capstone2_BackEnd.NutriApp.service;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.common.response.PagingAndSortingAPIResponse;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.favorite.request.FavoriteRequest;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.favorite.response.FavoriteResponse;
+import cap2.example.Capstone2_BackEnd.NutriApp.dto.favorite.response.TrendingRecipeResponse;
 import cap2.example.Capstone2_BackEnd.NutriApp.enums.error.ErrorCode;
 import cap2.example.Capstone2_BackEnd.NutriApp.exception.AppException;
 import cap2.example.Capstone2_BackEnd.NutriApp.mapper.FavoriteMapper;
 import cap2.example.Capstone2_BackEnd.NutriApp.model.Favorite;
+import cap2.example.Capstone2_BackEnd.NutriApp.model.Recipe;
 import cap2.example.Capstone2_BackEnd.NutriApp.repository.FavoriteRepository;
 import cap2.example.Capstone2_BackEnd.NutriApp.repository.RecipeRepository;
 import cap2.example.Capstone2_BackEnd.NutriApp.repository.userRepository.UserRepository;
@@ -90,17 +92,15 @@ public class FavoriteService {
         ).toList();
     }
 
-    public List<FavoriteResponse> getTrendingRecipe() {
-        List<Favorite> trendingRecipes = favoriteRepository.findTrendingRecipe();
-        List<FavoriteResponse> trendingRecipeList = new ArrayList<>();
-        trendingRecipes.stream().map(favorite -> {
-            FavoriteResponse trendingRecipe = FavoriteResponse.builder()
-                    .recipeID(favorite.getRecipe_ID().getRecipe_ID())
-                    .build();
-            trendingRecipeList.add(trendingRecipe);
-            return favorite;
-        });
-        PagingAndSortingAPIResponse<FavoriteResponse> response = genericPagingAndSortingService.getPagingResponse(trendingRecipeList, 0, 10, null);
+    public List<TrendingRecipeResponse> getTrendingRecipe() {
+        List<TrendingRecipeResponse> trendingRecipes = new ArrayList<>();
+        List<Object[]> objects = favoriteRepository.findTrendingRecipe();
+        for (Object[] trendingRecipe : objects) {
+            Recipe recipe = (Recipe) trendingRecipe[0];
+            Long countRecipe = (Long) trendingRecipe[1];
+            trendingRecipes.add(new TrendingRecipeResponse(recipe, countRecipe));
+        }
+        PagingAndSortingAPIResponse<TrendingRecipeResponse> response = genericPagingAndSortingService.getPagingResponse(trendingRecipes, 0, 10, null);
         return response.getData();
     }
 

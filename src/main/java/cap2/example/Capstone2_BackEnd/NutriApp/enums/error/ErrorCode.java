@@ -45,7 +45,7 @@ public enum ErrorCode {
     IMAGE_NOT_FOUND(1026, "Image not found", HttpStatus.NOT_FOUND),
     PAGE_NUMBER_INVALID(1027, "Page number is higher than 0 or equal -1 to get All", HttpStatus.BAD_REQUEST),
     PAGE_NUMBER_HIGHER_THAN_TOTAL_PAGES(1028, "Page number is higher than total pages", HttpStatus.BAD_REQUEST),
-
+    PAGE_NUMBER_IS_NOT_NULL(1029, "Page number is not null", HttpStatus.BAD_REQUEST),
     // Ingredient Errors
 
     INGREDIENT_NAME_INVALID(2001, "Ingredient name must be between 2 and 50 characters", HttpStatus.BAD_REQUEST),
