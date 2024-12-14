@@ -2,20 +2,34 @@ package cap2.example.Capstone2_BackEnd.NutriApp.enums.user;
 
 public enum NutritionPlan {
     // Weight Loss
-    DURABLE(55, 15, 30, "Durable"),
-    HIGH_PROTEIN(50, 25, 25, "High Protein"),
-    LOW_CARB(35, 25, 40, "Low Carb"),
+    DURABLE(55, 15, 30, "This diet will help you lose weight with lasting results, allowing you to slim gradually while getting" +
+            "all the necessary nutrients. This diet is based on balanced, healthy foods in combination with a lowered energy and fats intake."),
+    HIGH_PROTEIN(50, 25, 25, "This diet contains all your daily required nutrients and is based on a high protein intake." +
+            "Protein help build a stronger, leaner body and make you less hungry, so you will find it easier to keep up the lower calorie intake of this weight loss plan."),
+    LOW_CARB(35, 25, 40, "This diet aim at quick a easy weight loss, although you may not get all your daily recommended nutrients." +
+            "We advice you to use this plan for a limited period of time, in example 6 to 8 weeks."),
 
     // Weight Maintain
-    BALANCED(60, 10, 30, "Balanced"),
-    AFTER_WEIGHT_LOSS(50, 20, 30, "After Weight Loss"),
-    MAINTAIN_MUSCLES(50, 25, 25, "Maintain Muscles"),
+    BALANCED(60, 10, 30, "If you have managed to maintain your weight (for some time) and would like to keep it like this, this diet will help you to maintain a healthy" +
+            "balance. It is baed on set guidelines of good nutrition and contains all daily nutrient needs."),
+    AFTER_WEIGHT_LOSS(50, 20, 30, "if you have recently lost substantial weight, this diet will help you keep it that way. It will" +
+            "provide you with all the necessary nutrients you need and the extra proteins wil help prevent your weight to increase again."),
+    MAINTAIN_MUSCLES(50, 25, 25, "This diet is aimed at (strength) athletes with substantial muscle mass. The increased amount of proteins wil help you with the upkeep" +
+            "and building of muscle mass. A balanced amount of fats and carbohydrates will provide you with all the necessary nutrients and energy."),
     // Weight Gain
-    HIGH_ENERGY(55, 10, 35, "High Energy"),
-    BUILD_MUSCLE(50, 25, 25, "Build Muscle"),
+    HIGH_ENERGY(55, 10, 35, "This diet is specifically designed for people who want to gain weight. " +
+            "An increased amount of carbohydrates and fats help you to take in sufficient energy to gain weight. Due to the balanced plan, " +
+            "it will help you get all the necessary nutrients you need."),
+    BUILD_MUSCLE(50, 25, 25, "This diet is aimed at(strength0 athletes who want to build up muscle mass. " +
+            "The increased amount of proteins will help you with the development and upkeep of muscle mass, while a balanced amount of fats and " +
+            "carbohydrates will give you all the necessary energy and nutrients you need."),
+
     // All
-    ATHLETE(55, 20, 25, "Athlete"),
-    CARDIO_TRAINING(60, 20, 20, "Cardio Training");
+    ATHLETE(55, 20, 25, "This plan has been designed for athletes who would like to build up a bit of extra muscle mass to increase performance" +
+            ". The increased amount of protein will help you with the upkeep and building of muscle mass, while a balanced amount of" +
+            "fats and carbohydrates will give you all the necessary energy ."),
+    CARDIO_TRAINING(60, 20, 20, "This diet is aimed at (cardio) athletes, that have a need for extra energy for high cardio performance," +
+            "like running. The high amount of carbohydrates will provide you with sufficient energy, while the proteins make sure lean muscle mass is well maintained");
 
 
     private final int protein;
