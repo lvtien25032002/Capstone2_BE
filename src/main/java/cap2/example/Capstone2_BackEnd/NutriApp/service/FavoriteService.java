@@ -104,6 +104,10 @@ public class FavoriteService {
         return response.getData();
     }
 
+    public boolean isFavorite(String userId, String recipeId) {
+        return favoriteRepository.existsByUser_IDAndRecipe_ID(userId, recipeId);
+    }
+
     // Private Method
 
     protected FavoriteResponse returnFavoriteResponse(Favorite favorite) {

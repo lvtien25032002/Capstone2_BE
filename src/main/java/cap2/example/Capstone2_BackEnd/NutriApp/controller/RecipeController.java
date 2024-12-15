@@ -31,7 +31,8 @@ public class RecipeController {
             @RequestParam(value = "pageNo", required = false) Integer pageNo,
             @RequestParam(value = "pageSize", required = false) Integer pageSize,
             @RequestParam(required = false) String[] sort,
-            @RequestParam(required = false) String search) {
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) String nutritionalQuality) {
         // Check parameters
 
         if (pageNo == null) {
@@ -43,13 +44,16 @@ public class RecipeController {
         if (pageNo < 1 && pageNo != -1) {
             throw new AppException(ErrorCode.PAGE_NUMBER_INVALID);
         }
-        if (search != null) {
+        if (search != null || nutritionalQuality != null) {
             if (pageNo == -1) {
                 ApiResponse<String> apiResponse = new ApiResponse<>();
                 apiResponse.setData("In search mode, pageNo must be not equal to -1");
             }
             pageNo = pageNo - 1;
-            return recipeService.searchRecipeByName(search, pageNo, pageSize, sort);
+            if (search == null) {
+                search = "";
+            }
+            return recipeService.searchAndFilterRecipeB(search, nutritionalQuality, pageNo, pageSize, sort);
         }
         if (pageNo == -1) {
             ApiResponse<List<RecipeResponse>> apiResponse = new ApiResponse<>();
