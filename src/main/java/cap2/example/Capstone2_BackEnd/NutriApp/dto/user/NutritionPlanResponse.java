@@ -14,6 +14,7 @@ import lombok.experimental.FieldDefaults;
 public class NutritionPlanResponse {
     String nutritionPlanName;
     String description;
+    String imageURL;
     int proteinPercentage;
     String proteinDescription = "Protein is essential for your overall health. It will help maintain and repair muscle tissue.";
     int fatPercentage;
