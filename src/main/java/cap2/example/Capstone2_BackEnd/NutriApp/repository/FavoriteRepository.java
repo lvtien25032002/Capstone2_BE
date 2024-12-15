@@ -20,4 +20,9 @@ public interface FavoriteRepository extends JpaRepository<Favorite, String> {
     List<Object[]> findTrendingRecipe();
 
     ;
+
+    @Query("SELECT CASE WHEN COUNT(f) > 0 THEN TRUE ELSE FALSE END " +
+            "FROM Favorite f " +
+            "WHERE f.User_ID.User_ID = :userID AND f.Recipe_ID.Recipe_ID = :recipeID")
+    Boolean existsByUser_IDAndRecipe_ID(@Param("userID") String userID, @Param("recipeID") String recipeID);
 }

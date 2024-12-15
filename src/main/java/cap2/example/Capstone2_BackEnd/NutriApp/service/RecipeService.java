@@ -1,7 +1,6 @@
 package cap2.example.Capstone2_BackEnd.NutriApp.service;
 
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.common.response.PagingAndSortingAPIResponse;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.nutritionalCalculation.NutritionalCalculationResponse;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.recipe.request.RecipeRequest;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.recipe.request.SearchRecipeByIngredientsRequest;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.recipe.response.MealResponseForNutritionPlan;
@@ -14,7 +13,6 @@ import cap2.example.Capstone2_BackEnd.NutriApp.enums.error.ErrorCode;
 import cap2.example.Capstone2_BackEnd.NutriApp.enums.recipe.DifficultyLevel;
 import cap2.example.Capstone2_BackEnd.NutriApp.enums.recipe.MealType;
 import cap2.example.Capstone2_BackEnd.NutriApp.enums.recipe.NutritionalQuality;
-import cap2.example.Capstone2_BackEnd.NutriApp.enums.user.DietType;
 import cap2.example.Capstone2_BackEnd.NutriApp.exception.AppException;
 import cap2.example.Capstone2_BackEnd.NutriApp.mapper.RecipeMapper;
 import cap2.example.Capstone2_BackEnd.NutriApp.model.Ingredient;
@@ -210,8 +208,13 @@ public class RecipeService {
         return getRecipeResponsePagingAndSortingAPIResponse(page, size, sort, recipelist);
     }
 
-    public PagingAndSortingAPIResponse<RecipeResponse> searchRecipeByName(String recipeName, int page, int size, String[] sort) {
+    public PagingAndSortingAPIResponse<RecipeResponse> searchAndFilterRecipeB(String recipeName, String nutritionalQuality, int page, int size, String[] sort) {
+
         List<Recipe> recipelist = recipeRepository.findByRecipeNameContaining(recipeName);
+        if (nutritionalQuality != null) {
+            List<Recipe> recipelist2 = recipeRepository.findByNutritionalQuality(NutritionalQuality.valueOf(nutritionalQuality));
+            recipelist.retainAll(recipelist2);
+        }
         return getRecipeResponsePagingAndSortingAPIResponse(page, size, sort, recipelist);
     }
 
@@ -220,11 +223,11 @@ public class RecipeService {
     public RecipeResponseBaseOnNutritionPlan getRecipeBasedOnNutritionalCalculation(String userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
-        NutritionalCalculationResponse nutritionCalculation = nutritionalCalculationService.calculateNutrition(user);
-        DietType dietType = user.getDietType();
+//        NutritionalCalculationResponse nutritionCalculation = nutritionalCalculationService.calculateNutrition(user);
+        String nutritionPlan = user.getNutritionPlan().name();
         List<Recipe> recipeList;
         try {
-            recipeList = recipeRepository.findByNutritionalQuality(NutritionalQuality.valueOf(user.getNutritionPlan().toString()));
+            recipeList = recipeRepository.findByNutritionalQuality(NutritionalQuality.valueOf(nutritionPlan));
         } catch (Exception e) {
             throw new AppException(ErrorCode.NUTRITIONAL_QUALITY_OF_RECIPE_AND_NUTRITION_PLSN_IS_NOT_MATCH);
         }
@@ -242,7 +245,7 @@ public class RecipeService {
                     .recipeList(new ArrayList<>())
                     .build();
             for (Recipe recipe : recipeList) {
-                if (recipe.getMealType().equals(mealType)) {
+                if (recipe.getMealType().contains(mealType)) {
                     mealResponseForNutritionPlan.getRecipeList().add(
                             new SimpleRecipeResponse().builder()
                                     .recipeID(recipe.getRecipe_ID())

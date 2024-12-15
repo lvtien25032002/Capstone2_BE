@@ -80,6 +80,17 @@ public class FavoriteController {
         apiResponse.setMessage("Get trending favorite recipe successfully");
         return apiResponse;
     }
+
+    @PostMapping("/checkFavorite")
+    public ApiResponse<Boolean> checkFavoriteRecipeOfUser(
+            @RequestBody String userId,
+            @RequestBody String recipeId
+    ) {
+        ApiResponse<Boolean> apiResponse = new ApiResponse<>();
+        apiResponse.setData(favoriteService.isFavorite(userId, recipeId));
+        apiResponse.setMessage("Check favorite recipe of User successfully");
+        return apiResponse;
+    }
 }
 
 

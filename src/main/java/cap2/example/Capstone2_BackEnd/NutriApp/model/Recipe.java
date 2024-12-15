@@ -36,7 +36,6 @@ public class Recipe {
     Double prepTime;
     Double cookTime;
     DifficultyLevel difficultyLevel;
-
     NutritionalQuality nutritionalQuality;
 
     @ElementCollection(targetClass = MealType.class)
