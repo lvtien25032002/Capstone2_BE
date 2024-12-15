@@ -27,6 +27,7 @@ public class NutritionPlanController {
             NutritionPlanResponse nutritionPlanResponse = new NutritionPlanResponse();
             nutritionPlanResponse.setNutritionPlanName(NutritionPlan.name());
             nutritionPlanResponse.setDescription(NutritionPlan.getDescription());
+            nutritionPlanResponse.setImageURL(NutritionPlan.getImageURL());
             nutritionPlanResponse.setProteinPercentage(NutritionPlan.getProtein());
             nutritionPlanResponse.setCarbsPercentage(NutritionPlan.getCarbs());
             nutritionPlanResponse.setFatPercentage(NutritionPlan.getFat());
@@ -51,6 +52,7 @@ public class NutritionPlanController {
         NutritionPlanResponse nutritionPlanResponse = new NutritionPlanResponse();
         nutritionPlanResponse.setNutritionPlanName(nutritionPlan.name());
         nutritionPlanResponse.setDescription(nutritionPlan.getDescription());
+        nutritionPlanResponse.setImageURL(nutritionPlan.getImageURL());
         nutritionPlanResponse.setProteinPercentage(nutritionPlan.getProtein());
         nutritionPlanResponse.setCarbsPercentage(nutritionPlan.getCarbs());
         nutritionPlanResponse.setFatPercentage(nutritionPlan.getFat());
@@ -93,6 +95,7 @@ public class NutritionPlanController {
                     NutritionPlanResponse nutritionPlanResponse = new NutritionPlanResponse();
                     nutritionPlanResponse.setNutritionPlanName(NutritionPlan.name());
                     nutritionPlanResponse.setDescription(NutritionPlan.getDescription());
+                    nutritionPlanResponse.setImageURL(NutritionPlan.getImageURL());
                     nutritionPlanResponse.setProteinPercentage(NutritionPlan.getProtein());
                     nutritionPlanResponse.setCarbsPercentage(NutritionPlan.getCarbs());
                     nutritionPlanResponse.setFatPercentage(NutritionPlan.getFat());
