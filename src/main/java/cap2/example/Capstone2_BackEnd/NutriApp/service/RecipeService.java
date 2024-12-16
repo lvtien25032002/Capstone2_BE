@@ -8,7 +8,6 @@ import cap2.example.Capstone2_BackEnd.NutriApp.dto.recipe.response.RecipeRespons
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.recipe.response.RecipeResponseBaseOnNutritionPlan;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.recipe.response.SimpleRecipeResponse;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.recipe_ingredient.IngredientForRecipeRequest;
-import cap2.example.Capstone2_BackEnd.NutriApp.dto.recipe_ingredient.IngredientForRecipeResponse;
 import cap2.example.Capstone2_BackEnd.NutriApp.enums.error.ErrorCode;
 import cap2.example.Capstone2_BackEnd.NutriApp.enums.recipe.DifficultyLevel;
 import cap2.example.Capstone2_BackEnd.NutriApp.enums.recipe.MealType;
@@ -51,26 +50,13 @@ public class RecipeService {
 
     public PagingAndSortingAPIResponse<RecipeResponse> getPagingAllRecipes(int page, int size, String[] sort) {
         List<Recipe> recipes = recipeRepository.findAll();
-        List<RecipeResponse> recipeResponses = recipes.stream().map(recipe -> {
-            RecipeResponse recipeResponse = recipeMapper.toRecipeResponse(recipe);
-            List<IngredientForRecipeResponse> ingredientList = recipeIngredientService.getIngredientsForRecipeResponse(recipe);
-            recipeResponse.setIngredientList(ingredientList);
-            return recipeResponse;
-        }).toList();
+        List<RecipeResponse> recipeResponses = recipes.stream().map(recipe -> toRecipeResponseForAPI(recipe)).toList();
         return genericPagingAndSortingService.getPagingResponse(recipeResponses, page, size, sort);
     }
 
 
     public List<RecipeResponse> getAllRecipes() {
-        return recipeRepository.findAll().stream().map(recipe -> {
-            RecipeResponse recipeResponse = recipeMapper.toRecipeResponse(recipe);
-            // Logic for Ingredient Response
-            recipeResponse.setIngredientList(recipeIngredientService.getIngredientsForRecipeResponse(recipe));
-
-            // Logic for MealType Response
-            recipeResponse.setMealType(setMealTypeResponse(recipe.getMealType()));
-            return recipeResponse;
-        }).toList();
+        return recipeRepository.findAll().stream().map(recipe -> toRecipeResponseForAPI(recipe)).toList();
     }
 
     @Transactional
@@ -85,14 +71,7 @@ public class RecipeService {
     public RecipeResponse getRecipe(String id) {
         Recipe recipe = recipeRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.RECIPE_NOT_FOUND));
-
-        //Logic for Ingredient Response
-        RecipeResponse recipeResponse = recipeMapper.toRecipeResponse(recipe);
-        recipeResponse.setIngredientList(recipeIngredientService.getIngredientsForRecipeResponse(recipe));
-
-        //Logic for MealType Response
-        recipeResponse.setMealType(setMealTypeResponse(recipe.getMealType()));
-        return recipeResponse;
+        return toRecipeResponseForAPI(recipe);
     }
 
     @Transactional
@@ -148,11 +127,7 @@ public class RecipeService {
         if (recipes.isEmpty()) {
             throw new AppException(ErrorCode.RECIPE_NOT_FOUND);
         }
-        List<RecipeResponse> response = recipes.stream().map(recipe -> {
-            RecipeResponse recipeResponse = recipeMapper.toRecipeResponse(recipe);
-            recipeResponse.setIngredientList(recipeIngredientService.getIngredientsForRecipeResponse(recipe));
-            return recipeResponse;
-        }).toList();
+        List<RecipeResponse> response = recipes.stream().map(recipe -> toRecipeResponseForAPI(recipe)).toList();
 
         PagingAndSortingAPIResponse<RecipeResponse> recipePage = genericPagingAndSortingService.getPagingResponse(response, page, size, sort);
         return recipePage;
@@ -275,13 +250,25 @@ public class RecipeService {
         return mealTypeResponse;
     }
 
+    private Set<String> setNutritionalQuality(Set<NutritionalQuality> nutritionalQualitySet) {
+        Set<String> nutritionalQualityResponse = new HashSet<>();
+        for (NutritionalQuality nutritionalQuality : nutritionalQualitySet) {
+            nutritionalQualityResponse.add(nutritionalQuality.toString());
+        }
+        return nutritionalQualityResponse;
+    }
+
+    private RecipeResponse toRecipeResponseForAPI(Recipe recipe) {
+        RecipeResponse recipeResponse = recipeMapper.toRecipeResponse(recipe);
+        recipeResponse.setIngredientList(recipeIngredientService.getIngredientsForRecipeResponse(recipe));
+        recipeResponse.setMealType(setMealTypeResponse(recipe.getMealType()));
+        recipeResponse.setNutritionalQuality(setNutritionalQuality(recipe.getNutritionalQuality()));
+
+        return recipeResponse;
+    }
+
     private PagingAndSortingAPIResponse<RecipeResponse> getRecipeResponsePagingAndSortingAPIResponse(int page, int size, String[] sort, List<Recipe> recipelist) {
-        List<RecipeResponse> recipeResponses = recipelist.stream().map(recipe -> {
-            List<IngredientForRecipeResponse> ingredientList = recipeIngredientService.getIngredientsForRecipeResponse(recipe);
-            RecipeResponse recipeResponse = recipeMapper.toRecipeResponse(recipe);
-            recipeResponse.setIngredientList(ingredientList);
-            return recipeResponse;
-        }).toList();
+        List<RecipeResponse> recipeResponses = recipelist.stream().map(recipe -> toRecipeResponseForAPI(recipe)).toList();
         return genericPagingAndSortingService.getPagingResponse(recipeResponses, page, size, sort);
     }
 
@@ -332,23 +319,30 @@ public class RecipeService {
             mealTypeSet.add(MealType.valueOf(meal));
         }
         recipe.setMealType(mealTypeSet);
+
+        // Logic for Nutritional Quality Create
+        Set<NutritionalQuality> nutritionalQualitySet = new HashSet<>();
+        for (String nutritionalQuality : request.getNutritionalQuality()) {
+            nutritionalQualitySet.add(NutritionalQuality.valueOf(nutritionalQuality));
+        }
+        recipe.setNutritionalQuality(nutritionalQualitySet);
+
+        // Save Recipe
         recipe = recipeRepository.save(recipe);
+
+
         // Logic for Recipe_Ingredient Create
-        RecipeResponse recipeResponse = recipeMapper.toRecipeResponse(recipe);
+
         for (IngredientForRecipeRequest ingredient : request.getIngredientList()) {
             recipeIngredientService.createRecipeIngredient(recipe, ingredient);
         }
-        //Logic for Ingredient Response
-        recipeResponse.setIngredientList(recipeIngredientService.getIngredientsForRecipeResponse(recipe));
 
-        //Logic for MealType Response
-        recipeResponse.setMealType(setMealTypeResponse(recipe.getMealType()));
-        return recipeResponse;
+        return toRecipeResponseForAPI(recipe);
     }
 
 
     // Check Method
-    public void RequestValidChecker(RecipeRequest request) {
+    private void RequestValidChecker(RecipeRequest request) {
         if (request.getRecipeName() == null) {
             throw new AppException(ErrorCode.RECIPE_NAME_REQUIRED);
         }
@@ -383,9 +377,18 @@ public class RecipeService {
             throw new AppException(ErrorCode.DIFFICULTY_LEVEL_REQUIRED);
         }
         try {
-            NutritionalQuality.valueOf(request.getNutritionalQuality());
+            for (String nutritionalQuality : request.getNutritionalQuality()) {
+                NutritionalQuality.valueOf(nutritionalQuality);
+            }
         } catch (Exception e) {
             throw new AppException(ErrorCode.NUTRITIONAL_QUALITY_IS_INVALID);
+        }
+        try {
+            for (String mealType : request.getMealType()) {
+                MealType.valueOf(mealType);
+            }
+        } catch (Exception e) {
+            throw new AppException(ErrorCode.MEAL_TYPE_IS_INVALID);
         }
     }
 }

@@ -23,8 +23,8 @@ public class RecipeRequest {
     String imageURL;
     Double prepTime;
     Double cookTime;
-    String nutritionalQuality;
     String difficultyLevel;
+    Set<String> nutritionalQuality;
     Set<String> mealType;
     List<IngredientForRecipeRequest> ingredientList;
 }

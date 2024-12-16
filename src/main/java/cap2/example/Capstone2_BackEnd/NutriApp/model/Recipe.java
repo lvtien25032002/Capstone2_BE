@@ -36,7 +36,11 @@ public class Recipe {
     Double prepTime;
     Double cookTime;
     DifficultyLevel difficultyLevel;
-    NutritionalQuality nutritionalQuality;
+
+
+    @ElementCollection(targetClass = NutritionalQuality.class)
+    @Enumerated(EnumType.STRING)
+    Set<NutritionalQuality> nutritionalQuality;
 
     @ElementCollection(targetClass = MealType.class)
     @Enumerated(EnumType.STRING)
