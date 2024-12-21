@@ -28,5 +28,5 @@ public class User extends BaseUser {
     ActivityFactor activityFactor;
     NutritionPlan nutritionPlan;
     DietType dietType;
-    boolean isActive;
+    boolean isActive = true;
 }

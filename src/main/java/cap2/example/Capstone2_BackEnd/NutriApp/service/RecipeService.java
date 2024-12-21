@@ -12,7 +12,6 @@ import cap2.example.Capstone2_BackEnd.NutriApp.enums.error.ErrorCode;
 import cap2.example.Capstone2_BackEnd.NutriApp.enums.recipe.DifficultyLevel;
 import cap2.example.Capstone2_BackEnd.NutriApp.enums.recipe.MealType;
 import cap2.example.Capstone2_BackEnd.NutriApp.enums.recipe.NutritionalQuality;
-import cap2.example.Capstone2_BackEnd.NutriApp.enums.user.NutritionPlan;
 import cap2.example.Capstone2_BackEnd.NutriApp.exception.AppException;
 import cap2.example.Capstone2_BackEnd.NutriApp.mapper.RecipeMapper;
 import cap2.example.Capstone2_BackEnd.NutriApp.model.Ingredient;
