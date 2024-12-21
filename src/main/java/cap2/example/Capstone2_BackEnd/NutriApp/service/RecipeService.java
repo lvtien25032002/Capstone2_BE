@@ -12,6 +12,7 @@ import cap2.example.Capstone2_BackEnd.NutriApp.enums.error.ErrorCode;
 import cap2.example.Capstone2_BackEnd.NutriApp.enums.recipe.DifficultyLevel;
 import cap2.example.Capstone2_BackEnd.NutriApp.enums.recipe.MealType;
 import cap2.example.Capstone2_BackEnd.NutriApp.enums.recipe.NutritionalQuality;
+import cap2.example.Capstone2_BackEnd.NutriApp.enums.user.NutritionPlan;
 import cap2.example.Capstone2_BackEnd.NutriApp.exception.AppException;
 import cap2.example.Capstone2_BackEnd.NutriApp.mapper.RecipeMapper;
 import cap2.example.Capstone2_BackEnd.NutriApp.model.Ingredient;
@@ -345,6 +346,8 @@ public class RecipeService {
             totalProtein += ingredientRepository.findById(ingredient.getIngredientId()).get().getProtein() * ingredient.getQuantity();
             totalCarbs += ingredientRepository.findById(ingredient.getIngredientId()).get().getCarbs() * ingredient.getQuantity();
             totalFat += ingredientRepository.findById(ingredient.getIngredientId()).get().getFat() * ingredient.getQuantity();
+
+
         }
         recipe.setTotalCalories(totalCalories);
         recipe.setTotalProtein(totalProtein);
@@ -371,14 +374,24 @@ public class RecipeService {
         // Logic for Recipe_Ingredient Create
 
         for (IngredientForRecipeRequest ingredient : request.getIngredientList()) {
+            Ingredient ingredient1 = ingredientRepository.findById(ingredient.getIngredientId()).get();
+            ingredient1.setIsActive(true);
+            ingredientRepository.save(ingredient1);
             recipeIngredientService.createRecipeIngredient(recipe, ingredient);
         }
 
         return toRecipeResponseForAPI(recipe);
     }
 
+    public NutritionalQuality getNutritionalQuality(NutritionPlan nutritionPlan) {
+        Recipe recipe = recipeRepository.findById(recipeId)
+                .orElseThrow(() -> new AppException(ErrorCode.RECIPE_NOT_FOUND));
+        return recipe.getNutritionalQuality().stream().findFirst().get();
+    }
 
-    // Check Method
+    // ----------------------------------------------
+    // Checking Methods
+    // ----------------------------------------------
     private void RequestValidChecker(RecipeRequest request) {
         if (request.getRecipeName() == null) {
             throw new AppException(ErrorCode.RECIPE_NAME_REQUIRED);

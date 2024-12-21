@@ -66,7 +66,6 @@ public class NutritionPlanController {
     public ApiResponse<List<NutritionPlanResponse>> getAllNutritionPlanBasedOnDietType(@PathVariable String dietType) {
         ApiResponse<List<NutritionPlanResponse>> response = new ApiResponse<>();
         List<NutritionPlanResponse> nutritionPlanResponses = new ArrayList<>();
-        log.info("Diet Type: {}", dietType);
         ArrayList<String> dietTypes = new ArrayList<>();
         if (dietType.equals("WEIGHT_LOSS")) {
             dietTypes.add("DURABLE");

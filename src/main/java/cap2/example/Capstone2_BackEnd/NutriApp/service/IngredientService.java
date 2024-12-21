@@ -45,7 +45,7 @@ public class IngredientService {
 
     public IngredientResponse createIngredient(IngredientRequest request) {
         // Valid Checker
-        IngredientValidChecker(request);
+        // IngredientValidChecker(request);
         if (ingredientRepository.existsByIngredientName(request.getIngredientName()))
             throw new AppException(ErrorCode.INGREDIENT_EXIST);
 
@@ -60,7 +60,7 @@ public class IngredientService {
 
     public IngredientResponse updateIngredient(String id, IngredientRequest request) {
         // Valid Checker
-        IngredientValidChecker(request);
+        // IngredientValidChecker(request);
 
 
         Ingredient ingredient = ingredientRepository.findById(id)
