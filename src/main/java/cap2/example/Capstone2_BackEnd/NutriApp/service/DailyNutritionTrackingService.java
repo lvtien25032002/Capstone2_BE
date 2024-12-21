@@ -205,14 +205,17 @@ public class DailyNutritionTrackingService {
 
 
         // Duyệt qua từng món ăn trong danh sách Recipe  to get total nutrition for this meal type
-        for (String recipeID : request.getRecipeList()) {
-            Recipe recipe = recipeRepository.findById(recipeID)
-                    .orElseThrow(() -> new AppException(ErrorCode.RECIPE_NOT_FOUND));
-            calories += recipe.getTotalCalories();
-            protein += recipe.getTotalProtein();
-            fat += recipe.getTotalFat();
-            carbs += recipe.getTotalCarbs();
+        if (!request.getRecipeList().isEmpty()) {
+            for (String recipeID : request.getRecipeList()) {
+                Recipe recipe = recipeRepository.findById(recipeID)
+                        .orElseThrow(() -> new AppException(ErrorCode.RECIPE_NOT_FOUND));
+                calories += recipe.getTotalCalories();
+                protein += recipe.getTotalProtein();
+                fat += recipe.getTotalFat();
+                carbs += recipe.getTotalCarbs();
+            }
         }
+
         // Lưu đối tượng Daily_Nutrition_Tracking
         dailyNutritionTracking.setUser(user);
         dailyNutritionTracking.setDate(request.getDate());
@@ -226,16 +229,19 @@ public class DailyNutritionTrackingService {
         // Logic for create Daily Nutrition Tracking Detail
 
         // Duyệt qua từng món ăn trong danh sách Recipe List
-        for (String recipeID : request.getRecipeList()) {
-            Recipe recipe = recipeRepository.findById(recipeID)
-                    .orElseThrow(() -> new AppException(ErrorCode.RECIPE_NOT_FOUND));
-            dailyNutritionTrackingDetailService.createDailyNutritionTrackingDetail(
-                    DailyNutritionTrackingDetailRequest.builder()
-                            .daily_Nutrition_Tracking_ID(dailyNutritionTracking.getDaily_Nutrition_Tracking_ID())
-                            .recipe_ID(recipe.getRecipe_ID())
-                            .build()
-            );
+        if (!request.getRecipeList().isEmpty()) {
+            for (String recipeID : request.getRecipeList()) {
+                Recipe recipe = recipeRepository.findById(recipeID)
+                        .orElseThrow(() -> new AppException(ErrorCode.RECIPE_NOT_FOUND));
+                dailyNutritionTrackingDetailService.createDailyNutritionTrackingDetail(
+                        DailyNutritionTrackingDetailRequest.builder()
+                                .daily_Nutrition_Tracking_ID(dailyNutritionTracking.getDaily_Nutrition_Tracking_ID())
+                                .recipe_ID(recipe.getRecipe_ID())
+                                .build()
+                );
+            }
         }
+
         // Response for Nutrition Tracking
         NutritionResponse nutritionResponse = toDailyNutritionResponse(dailyNutritionTracking);
         return nutritionResponse;
@@ -243,13 +249,14 @@ public class DailyNutritionTrackingService {
 
 
     void validCheckerDailyMealRequest(DailyMealRequest request) {
-        if (request.getRecipeList().isEmpty()) {
-            throw new AppException(ErrorCode.RECIPE_LIST_IS_EMPTY);
-        }
-        for (String recipeID : request.getRecipeList()) {
-            Recipe recipe = recipeRepository.findById(recipeID)
-                    .orElseThrow(() -> new AppException(ErrorCode.RECIPE_NOT_FOUND));
-        }
+//        if (request.getRecipeList().isEmpty()) {
+//            throw new AppException(ErrorCode.RECIPE_LIST_IS_EMPTY);
+//        }
+        if (!request.getRecipeList().isEmpty())
+            for (String recipeID : request.getRecipeList()) {
+                Recipe recipe = recipeRepository.findById(recipeID)
+                        .orElseThrow(() -> new AppException(ErrorCode.RECIPE_NOT_FOUND));
+            }
         if (request.getDate() == null) {
             throw new AppException(ErrorCode.DATE_IS_NEED_FOR_REQUEST);
         }
