@@ -71,7 +71,7 @@ public class IngredientService {
     }
 
     public PagingAndSortingAPIResponse<IngredientResponse> searchIngredientByName(int page, int size, String[] sort, String name) {
-        log.info(name);
+        log.info("Searching ingredient by name: {}", name);
         List<Ingredient> ingredients = ingredientRepository.findByIngredientNameContaining(name);
         if (ingredients.isEmpty())
             throw new AppException(ErrorCode.INGREDIENT_NOT_FOUND);
@@ -100,13 +100,13 @@ public class IngredientService {
             throw new AppException(ErrorCode.INGREDIENT_NAME_INVALID);
         if (request.getIngredientType() == null)
             throw new AppException(ErrorCode.INGREDIENT_TYPE_REQUIRED);
-        if (request.getCalories() == 0)
+        if (request.getCalories() < 0)
             throw new AppException(ErrorCode.INGREDIENT_CALORIES_REQUIRED);
-        if (request.getProtein() == 0)
+        if (request.getProtein() < 0)
             throw new AppException(ErrorCode.INGREDIENT_PROTEIN_REQUIRED);
-        if (request.getFat() == 0)
+        if (request.getFat() < 0)
             throw new AppException(ErrorCode.INGREDIENT_FAT_REQUIRED);
-        if (request.getCarbs() == 0)
+        if (request.getCarbs() < 0)
             throw new AppException(ErrorCode.INGREDIENT_CARBS_REQUIRED);
         if (request.getUnit() == null)
             throw new AppException(ErrorCode.INGREDIENT_UNIT_REQUIRED);
