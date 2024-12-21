@@ -12,6 +12,7 @@ import cap2.example.Capstone2_BackEnd.NutriApp.enums.error.ErrorCode;
 import cap2.example.Capstone2_BackEnd.NutriApp.enums.recipe.DifficultyLevel;
 import cap2.example.Capstone2_BackEnd.NutriApp.enums.recipe.MealType;
 import cap2.example.Capstone2_BackEnd.NutriApp.enums.recipe.NutritionalQuality;
+import cap2.example.Capstone2_BackEnd.NutriApp.enums.user.NutritionPlan;
 import cap2.example.Capstone2_BackEnd.NutriApp.exception.AppException;
 import cap2.example.Capstone2_BackEnd.NutriApp.mapper.RecipeMapper;
 import cap2.example.Capstone2_BackEnd.NutriApp.model.Ingredient;
@@ -381,12 +382,7 @@ public class RecipeService {
 
         return toRecipeResponseForAPI(recipe);
     }
-//
-//    public NutritionalQuality getNutritionalQuality(NutritionPlan nutritionPlan) {
-//        Recipe recipe = recipeRepository.findById(recipeId)
-//                .orElseThrow(() -> new AppException(ErrorCode.RECIPE_NOT_FOUND));
-//        return recipe.getNutritionalQuality().stream().findFirst().get();
-//    }
+
 
     // ----------------------------------------------
     // Checking Methods
