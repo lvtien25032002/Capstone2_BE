@@ -35,6 +35,7 @@ public class IngredientController {
         if (pageNo == null) {
             throw new AppException(ErrorCode.PAGE_NUMBER_IS_NOT_NULL);
         }
+        log.info("name: " + search);
         if (pageSize == null) {
             pageSize = 10;
         }

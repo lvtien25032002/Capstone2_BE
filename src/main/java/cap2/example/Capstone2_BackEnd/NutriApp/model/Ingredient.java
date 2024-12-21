@@ -30,4 +30,5 @@ public class Ingredient {
     double protein;
     double fat;
     double carbs;
+    Boolean isActive = false;
 }

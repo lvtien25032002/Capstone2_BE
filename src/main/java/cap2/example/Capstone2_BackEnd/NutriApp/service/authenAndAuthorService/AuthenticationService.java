@@ -5,6 +5,7 @@ import cap2.example.Capstone2_BackEnd.NutriApp.enums.error.ErrorCode;
 import cap2.example.Capstone2_BackEnd.NutriApp.exception.AppException;
 import cap2.example.Capstone2_BackEnd.NutriApp.model.BaseUser;
 import cap2.example.Capstone2_BackEnd.NutriApp.model.InvalidatedToken;
+import cap2.example.Capstone2_BackEnd.NutriApp.model.User;
 import cap2.example.Capstone2_BackEnd.NutriApp.repository.authenAndAuthorRepository.InvalidatedTokenRepository;
 import cap2.example.Capstone2_BackEnd.NutriApp.repository.userRepository.BaseUserRepository;
 import cap2.example.Capstone2_BackEnd.NutriApp.repository.userRepository.UserRepository;
@@ -66,6 +67,12 @@ public class AuthenticationService {
 
         // Lấy đối tượng BaseUser ra từ Optional
         BaseUser baseUser = baseUserOptional.get();
+        if (baseUser instanceof User) {
+            User user = userRepository.findByUsername(request.getUsername()).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+            if (!user.isActive()) {
+                throw new AppException(ErrorCode.USER_IS_NOT_ACTIVE);
+            }
+        }
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
 
         boolean authenticated = passwordEncoder.matches(request.getPassword(), baseUser.getPassword());

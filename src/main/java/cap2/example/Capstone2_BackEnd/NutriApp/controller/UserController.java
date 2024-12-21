@@ -1,6 +1,18 @@
 package cap2.example.Capstone2_BackEnd.NutriApp.controller;
 
 
+import java.util.List;
+
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.common.response.ApiResponse;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.user.UserCreateRequest;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.user.UserResponse;
@@ -12,9 +24,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/user")
@@ -73,6 +82,7 @@ public class UserController {
     @PutMapping("/{id}")
     public ApiResponse<UserResponse> updateUser(@PathVariable String id, @RequestBody @Valid UserUpdateRequest request) {
         ApiResponse<UserResponse> userApiResponse = new ApiResponse<>();
+        log.info(" levantienennenne"+id);
         userApiResponse.setMessage("Update User successfully");
         userApiResponse.setData(userService.updateUser(id, request));
         return userApiResponse;

@@ -19,5 +19,5 @@ public class IngredientResponse {
     double protein;
     double fat;
     double carbs;
-
+    boolean isActive;
 }

@@ -12,7 +12,7 @@ import lombok.experimental.FieldDefaults;
 public class UserResponse {
     String User_ID;
     String username;
-    String password;
+    //    String password;
     String email;
     String fullname;
     int age;
@@ -23,4 +23,5 @@ public class UserResponse {
     String activityFactor;
     String nutritionPlan;
     String dietType;
+    boolean isActive;
 }

@@ -1,13 +1,6 @@
 package cap2.example.Capstone2_BackEnd.NutriApp.dto.user;
 
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 
@@ -15,27 +8,19 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Getter
+@Setter
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 public class UserUpdateRequest {
     String password;
-    @NotEmpty(message = "EMAIL_REQUIRED")
     String email;
-    @NotEmpty(message = "Fullname is required")
     String fullname;
-    @NotNull(message = "Age is required")
-    @Min(value = 10, message = "AGE_INVALID")
-    @Max(value = 100, message = "AGE_INVALID")
     Integer age;
-    @NotNull(message = "Gender is required")
     Boolean gender;
-    @NotNull(message = "Weight is required")
     Double weight;
-    @NotNull(message = "Height is required")
     Double height;
-    @NotEmpty(message = "Activity Factor is required")
     String activityFactor;
-    @NotEmpty(message = "Nutrition Plan is required")
     String nutritionPlan;
-    @NotEmpty(message = "dietType is required")
     String dietType;
+    Boolean isActive;
 }

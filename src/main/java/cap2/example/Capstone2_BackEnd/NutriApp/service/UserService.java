@@ -6,6 +6,9 @@ import cap2.example.Capstone2_BackEnd.NutriApp.dto.user.UserCreateRequest;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.user.UserResponse;
 import cap2.example.Capstone2_BackEnd.NutriApp.dto.user.UserUpdateRequest;
 import cap2.example.Capstone2_BackEnd.NutriApp.enums.error.ErrorCode;
+import cap2.example.Capstone2_BackEnd.NutriApp.enums.user.ActivityFactor;
+import cap2.example.Capstone2_BackEnd.NutriApp.enums.user.DietType;
+import cap2.example.Capstone2_BackEnd.NutriApp.enums.user.NutritionPlan;
 import cap2.example.Capstone2_BackEnd.NutriApp.exception.AppException;
 import cap2.example.Capstone2_BackEnd.NutriApp.mapper.userMapper.UserMapper;
 import cap2.example.Capstone2_BackEnd.NutriApp.model.Role;
@@ -24,7 +27,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -44,7 +46,7 @@ public class UserService {
 
     public PagingAndSortingAPIResponse<UserResponse> getPagingAllUsers(int page, int size, String[] sort) {
         List<User> users = userRepository.findAll();
-        List<UserResponse> usersResponse = users.stream().map(userMapper::toUserResponse).toList();
+        List<UserResponse> usersResponse = users.stream().map(user -> toUserResponse(user)).toList();
         PagingAndSortingAPIResponse<UserResponse> response = genericPagingAndSortingService.getPagingResponse(usersResponse, page, size, sort);
         return response;
     }
@@ -53,13 +55,13 @@ public class UserService {
     @PreAuthorize("hasRole('ADMIN')")
     public List<UserResponse> getAllUsers() {
         var users = userRepository.findAll();
-        return users.stream().map(userMapper::toUserResponse).toList();
+        return users.stream().map(user -> toUserResponse(user)).toList();
     }
 
     ;
 
     public UserResponse getUserById(String id) {
-        return userMapper.toUserResponse(userRepository.findById(id)
+        return toUserResponse(userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found")));
     }
 
@@ -71,7 +73,7 @@ public class UserService {
         String name = context.getAuthentication().getName();
 
         User user = userRepository.findByUsername(name).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
-        return userMapper.toUserResponse(user);
+        return toUserResponse(user);
     }
 
     ;
@@ -86,26 +88,60 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setCreatedAt(new Timestamp(System.currentTimeMillis()).toLocalDateTime());
         user.setRoles(roles);
-        return userMapper.toUserResponse(userRepository.save(user));
+        user.setActive(true);
+        return toUserResponse(userRepository.save(user));
     }
 
     ;
 
-    //    @PostAuthorize("returnObject.username == authentication.username")
+    //
+//        @PostAuthorize("returnObject.username == authentication.username")
     public UserResponse updateUser(String id, UserUpdateRequest request) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
-//        if (request.getRoles() == null || request.getRoles().isEmpty()) {
-//            throw new AppException(ErrorCode.ROLES_NOT_PROVIDED);
-//        }
-        var roles = user.getRoles();
-//        if (roles.isEmpty()) {
-//            throw new AppException(ErrorCode.ROLES_NOT_FOUND);
-//        }
-        userMapper.updateUser(user, request);
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setRoles(new HashSet<>(roles));
-        return userMapper.toUserResponse(userRepository.save(user));
+        if (request.getIsActive() == null) {
+            request.setIsActive(user.isActive());
+        }
+        if (user.isActive() == false && request.getIsActive() != true) {
+            throw new AppException(ErrorCode.USER_NOT_ACTIVE);
+        }
+        if (user.isActive() != request.getIsActive()) {
+            user.setActive(request.getIsActive());
+            userRepository.save(user);
+            return toUserResponse(user);
+        }
+        // Update user information
+        if (request.getPassword() != null) {
+            user.setPassword(passwordEncoder.encode(request.getPassword()));
+        }
+        if (request.getFullname() != null) {
+            user.setFullname(request.getFullname());
+        }
+        if (request.getAge() != null)
+            if (request.getAge() != 0) {
+                user.setAge(request.getAge());
+            }
+        if (request.getGender() != null) {
+            user.setGender(request.getGender());
+        }
+        if (request.getWeight() != null)
+            if (request.getWeight() != 0) {
+                user.setWeight(request.getWeight());
+            }
+        if (request.getHeight() != null)
+            if (request.getHeight() != 0) {
+                user.setHeight(request.getHeight());
+            }
+        if (request.getActivityFactor() != null) {
+            user.setActivityFactor(ActivityFactor.valueOf(request.getActivityFactor()));
+        }
+        if (request.getDietType() != null) {
+            user.setDietType(DietType.valueOf(request.getDietType()));
+        }
+        if (request.getNutritionPlan() != null) {
+            user.setNutritionPlan(NutritionPlan.valueOf(request.getNutritionPlan()));
+        }
+        return toUserResponse(userRepository.save(user));
     }
 
     ;
@@ -121,19 +157,14 @@ public class UserService {
 
     ;
 
-//    @PostAuthorize("returnObject.username == authentication.username")
-//    public String updateDietaryPreference(String id, UpdateDietaryPreference request) {
-//        User user = userRepository.findById(id)
-//                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
-//        DietaryPreference validPreference;
-//        try {
-//            validPreference = DietaryPreference.valueOf(String.valueOf(request.getDietaryPreference()));
-//        } catch (IllegalArgumentException e) {
-//            throw new AppException(ErrorCode.INVALID_DIETARY_PREFERENCE);
-//        }
-//        user.setDietaryPreference(validPreference);
-//        userRepository.save(user);
-//        return "Update dietary preference successfully";
-//    }
+    // ----------------------------------------------
+    // Private Methods for Business Logic
+    // ----------------------------------------------
+    public UserResponse toUserResponse(User user) {
+        UserResponse response = userMapper.toUserResponse(user);
+        response.setActive(user.isActive());
+        return response;
+    }
+//
 
 }

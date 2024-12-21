@@ -20,9 +20,10 @@ public enum ErrorCode {
     AGE_INVALID(1007, "Age must be between 10 and 100", HttpStatus.BAD_REQUEST),
     FIELD_REQUIRED(1008, " is required ", HttpStatus.BAD_REQUEST),
     USER_NOT_EXISTED(1010, "User not existed", HttpStatus.NOT_FOUND),
-
+    USER_NOT_ACTIVE(1011, "User is not active.Can not update.", HttpStatus.BAD_REQUEST),
+    USER_IS_NOT_ACTIVE(1023, "User is not active", HttpStatus.BAD_REQUEST),
     // Authorization Errors and Permission Errors
-    UNAUTHORIZED(1011, "You do not have permission", HttpStatus.FORBIDDEN),
+    UNAUTHORIZED(1023, "You do not have permission", HttpStatus.FORBIDDEN),
     UNAUTHENTICATED(1009, "Unauthenticated", HttpStatus.UNAUTHORIZED),
     ROLES_NOT_PROVIDED(1012, "Roles not provided", HttpStatus.BAD_REQUEST),
     ROLES_NOT_FOUND(1013, "Role not found", HttpStatus.NOT_FOUND),
@@ -38,7 +39,7 @@ public enum ErrorCode {
 
     // File Errors
 
-    FILE_SIZE_EXCEEDED(1022, "File size exceeded", HttpStatus.BAD_REQUEST),
+    FILE_SIZE_EXCEEDED(1030, "File size exceeded", HttpStatus.BAD_REQUEST),
     FILE_TYPE_NOT_ALLOWED(1023, "File type not allowed. Only jpg,obg,gif,bmp files", HttpStatus.BAD_REQUEST),
     UPLOAD_IMAGE_FAILED(1024, "Upload image failed", HttpStatus.BAD_REQUEST),
     DELETE_IMAGE_FAILED(1025, "Delete image failed", HttpStatus.BAD_REQUEST),
@@ -46,6 +47,7 @@ public enum ErrorCode {
     PAGE_NUMBER_INVALID(1027, "Page number is higher than 0 or equal -1 to get All", HttpStatus.BAD_REQUEST),
     PAGE_NUMBER_HIGHER_THAN_TOTAL_PAGES(1028, "Page number is higher than total pages", HttpStatus.BAD_REQUEST),
     PAGE_NUMBER_IS_NOT_NULL(1029, "Page number is not null", HttpStatus.BAD_REQUEST),
+
     // Ingredient Errors
 
     INGREDIENT_NAME_INVALID(2001, "Ingredient name must be between 2 and 50 characters", HttpStatus.BAD_REQUEST),
