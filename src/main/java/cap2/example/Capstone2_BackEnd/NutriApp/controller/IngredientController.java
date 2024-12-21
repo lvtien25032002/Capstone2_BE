@@ -6,7 +6,6 @@ import cap2.example.Capstone2_BackEnd.NutriApp.dto.ingredient.IngredientResponse
 import cap2.example.Capstone2_BackEnd.NutriApp.enums.error.ErrorCode;
 import cap2.example.Capstone2_BackEnd.NutriApp.exception.AppException;
 import cap2.example.Capstone2_BackEnd.NutriApp.service.IngredientService;
-import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -67,7 +66,7 @@ public class IngredientController {
     }
 
     @PostMapping()
-    ApiResponse<IngredientResponse> createIngredient(@RequestBody @Valid IngredientRequest request) {
+    ApiResponse<IngredientResponse> createIngredient(@RequestBody IngredientRequest request) {
         ApiResponse<IngredientResponse> apiResponse = new ApiResponse<>();
         apiResponse.setData(ingredientService.createIngredient(request));
         apiResponse.setMessage("Ingredient created");
@@ -97,6 +96,4 @@ public class IngredientController {
         apiResponse.setData(ingredientService.deleteIngredient(ingredientId));
         return apiResponse;
     }
-
-
 }

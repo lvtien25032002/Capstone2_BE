@@ -1,6 +1,9 @@
 package cap2.example.Capstone2_BackEnd.NutriApp.dto.user;
 
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,8 +17,6 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 public class UserUpdateRequest {
-    @NotEmpty(message = "Password is required")
-    @Size(min = 8, max = 20, message = "PASSWORD_INVALID")
     String password;
     @NotEmpty(message = "EMAIL_REQUIRED")
     String email;

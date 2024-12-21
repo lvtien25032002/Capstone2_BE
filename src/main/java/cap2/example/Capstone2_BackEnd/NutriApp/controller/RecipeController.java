@@ -155,13 +155,27 @@ public class RecipeController {
         }
 
         // Logic
-        pageNo = pageNo - 1;
         if (mealType != null) {
-            return recipeService.getRecipesByMealType(mealType, pageNo, pageSize, sort);
+            if (pageNo == -1) {
+                return recipeService.getALlRecipesByMealType(mealType);
+            } else {
+                pageNo = pageNo - 1;
+                return recipeService.getRecipesByMealType(mealType, pageNo, pageSize, sort);
+            }
         } else if (nutritionalQuality != null) {
-            return recipeService.getRecipesByNutritionalQuality(nutritionalQuality, pageNo, pageSize, sort);
+            if (pageNo == -1) {
+                return recipeService.getAllRecipesByNutritionalQuality(nutritionalQuality);
+            } else {
+                pageNo = pageNo - 1;
+                return recipeService.getRecipesByNutritionalQuality(nutritionalQuality, pageNo, pageSize, sort);
+            }
         } else if (difficultyLevel != null) {
-            return recipeService.getRecipesByDifficultyLevel(difficultyLevel, pageNo, pageSize, sort);
+            if (pageNo == -1) {
+                return recipeService.getAllRecipesByDifficultyLevel(difficultyLevel);
+            } else {
+                pageNo = pageNo - 1;
+                return recipeService.getRecipesByDifficultyLevel(difficultyLevel, pageNo, pageSize, sort);
+            }
         } else {
             throw new IllegalArgumentException("Please provide either mealType or nutritionalQuality");
         }

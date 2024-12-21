@@ -7,6 +7,7 @@ import cap2.example.Capstone2_BackEnd.NutriApp.service.authenAndAuthorService.Au
 import com.nimbusds.jose.JOSEException;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.text.ParseException;
 
-
+@Slf4j
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
@@ -27,14 +28,8 @@ public class AuthenticationController {
     public ApiResponse<AuthenticationResponse> userLogin(@RequestBody AuthenticationRequest request) {
         ApiResponse<AuthenticationResponse> response = new ApiResponse<>();
         var result = authenticationService.authenticate(request);
-        if (result.isAuthenticated()) {
-            response.setCode(1000);
-            response.setMessage("Login successfully");
-        } else {
-            response.setCode(1000);
-            response.setMessage("Login failed");
-        }
         response.setData(result);
+        log.info("Login response: {}" + result.isAuthenticated());
         return response;
     }
 

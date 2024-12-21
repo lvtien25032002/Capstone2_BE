@@ -23,6 +23,7 @@ import cap2.example.Capstone2_BackEnd.NutriApp.repository.RecipeIngredientReposi
 import cap2.example.Capstone2_BackEnd.NutriApp.repository.RecipeRepository;
 import cap2.example.Capstone2_BackEnd.NutriApp.repository.userRepository.UserRepository;
 import cap2.example.Capstone2_BackEnd.NutriApp.service.commonService.GenericPagingAndSortingService;
+import cap2.example.Capstone2_BackEnd.NutriApp.util.NutritionPlanConst;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -143,6 +144,16 @@ public class RecipeService {
         return getRecipeResponsePagingAndSortingAPIResponse(page, size, sort, recipelist);
     }
 
+    public List<RecipeResponse> getALlRecipesByMealType(String mealType) {
+        try {
+            MealType.valueOf(mealType);
+        } catch (Exception e) {
+            throw new AppException(ErrorCode.MEAL_TYPE_IS_INVALID);
+        }
+        List<Recipe> recipelist = recipeRepository.findByMealType(MealType.valueOf(mealType));
+        return recipelist.stream().map(this::toRecipeResponseForAPI).toList();
+    }
+
     public PagingAndSortingAPIResponse<RecipeResponse> getRecipesByNutritionalQuality(String nutritionalQuality, int page, int size, String[] sort) {
         try {
             NutritionalQuality.valueOf(nutritionalQuality);
@@ -153,6 +164,16 @@ public class RecipeService {
         return getRecipeResponsePagingAndSortingAPIResponse(page, size, sort, recipelist);
     }
 
+    public List<RecipeResponse> getAllRecipesByNutritionalQuality(String nutritionalQuality) {
+        try {
+            NutritionalQuality.valueOf(nutritionalQuality);
+        } catch (Exception e) {
+            throw new AppException(ErrorCode.NUTRITIONAL_QUALITY_IS_INVALID);
+        }
+        List<Recipe> recipelist = recipeRepository.findByNutritionalQuality(NutritionalQuality.valueOf(nutritionalQuality));
+        return recipelist.stream().map(this::toRecipeResponseForAPI).toList();
+    }
+
     public PagingAndSortingAPIResponse<RecipeResponse> getRecipesByDifficultyLevel(String difficultyLevel, int page, int size, String[] sort) {
         try {
             DifficultyLevel.valueOf(difficultyLevel);
@@ -161,6 +182,16 @@ public class RecipeService {
         }
         List<Recipe> recipelist = recipeRepository.findByDifficultyLevel(DifficultyLevel.valueOf(difficultyLevel));
         return getRecipeResponsePagingAndSortingAPIResponse(page, size, sort, recipelist);
+    }
+
+    public List<RecipeResponse> getAllRecipesByDifficultyLevel(String difficultyLevel) {
+        try {
+            DifficultyLevel.valueOf(difficultyLevel);
+        } catch (Exception e) {
+            throw new AppException(ErrorCode.DIFFICULTY_LEVEL_IS_INVALID);
+        }
+        List<Recipe> recipelist = recipeRepository.findByDifficultyLevel(DifficultyLevel.valueOf(difficultyLevel));
+        return recipelist.stream().map(this::toRecipeResponseForAPI).toList();
     }
 
     public PagingAndSortingAPIResponse<RecipeResponse> getRecipesByMacroNutrients(String macroNutrient, Double minMacro, Double maxMacro, int page, int size, String[] sort) {
@@ -199,10 +230,16 @@ public class RecipeService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 //        NutritionalCalculationResponse nutritionCalculation = nutritionalCalculationService.calculateNutrition(user);
-        String nutritionPlan = user.getNutritionPlan().name();
-        List<Recipe> recipeList;
+        NutritionalQuality nutritionPlan;
         try {
-            recipeList = recipeRepository.findByNutritionalQuality(NutritionalQuality.valueOf(nutritionPlan));
+            nutritionPlan = NutritionPlanConst.NUTRITION_PLAN_MAP.get(user.getNutritionPlan().toString());
+        } catch (Exception e) {
+            throw new AppException(ErrorCode.NUTRITIONAL_QUALITY_OF_RECIPE_AND_NUTRITION_PLSN_IS_NOT_MATCH);
+        }
+        List<Recipe> recipeList;
+        log.info(nutritionPlan.toString());
+        try {
+            recipeList = recipeRepository.findByNutritionalQuality(NutritionalQuality.valueOf(String.valueOf(nutritionPlan)));
         } catch (Exception e) {
             throw new AppException(ErrorCode.NUTRITIONAL_QUALITY_OF_RECIPE_AND_NUTRITION_PLSN_IS_NOT_MATCH);
         }
